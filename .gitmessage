@@ -1,0 +1,13 @@
+<type>[+type]...: <short-summary up to 50 chars>
+# Types: fix, config, feat, feat-rm, update, experimental, chore, style, content, misc, refactor
+
+--- Changes ---
+Description:
+ - 
+
+Context:
+ - 
+
+--- Merged Branches (if any) ---
+# - <branch-name>
+

@@ -1,0 +1,22 @@
+source_dir: scripts
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: "*.{svelte,ts,json,css,html}"
+      run: bun lint:biome {staged_files}
+      stage_fixed: true
+    - name: md
+      glob: "*.md"
+      run: bun lint:md {staged_files}
+      stage_fixed: true
+
+pre-push:
+  jobs:
+    - name: test
+      run: bun run test
+
+commit-msg:
+  jobs:
+    - script: lint-title.ts
+      runner: bun

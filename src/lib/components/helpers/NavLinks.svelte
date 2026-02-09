@@ -1,0 +1,139 @@
+<script lang="ts">
+/** Navigation links with responsive mobile menu.
+ *  Desktop: links always visible in a row.
+ *  Mobile (< DesignTokens.breakpoint.md): hamburger button toggles menu.
+ *  Menu auto-closes on page navigation (via $effect on page.url.pathname)
+ *  and when sticky header hides.
+ *
+ *  isMobile initialized as null (not false) to prevent flash of links
+ *  before matchMedia resolves on first paint. See architecture-decisions.md. */
+import { fly } from "svelte/transition";
+import { page } from "$app/state";
+import { DesignTokens } from "$data/design-tokens";
+import { standard } from "$scripts/transition";
+
+let { isHidden }: { isHidden: boolean } = $props();
+let isMenuOpen = $state(false);
+
+// initalised null because false passes the !isMobile check before document loads, making links visible.
+let isMobile = $state<boolean | null>(null);
+
+$effect(() => {
+	const mediaQuery = window.matchMedia(
+		`(max-width: ${DesignTokens.breakpoint.md})`,
+	);
+	isMobile = mediaQuery.matches;
+
+	const getIsMobile = (e: MediaQueryListEvent) => {
+		isMobile = e.matches;
+	};
+	mediaQuery.addEventListener("change", getIsMobile);
+
+	return () => mediaQuery.removeEventListener("change", getIsMobile);
+});
+
+$effect(() => {
+	page.url.pathname;
+	isMenuOpen = false;
+});
+
+$effect(() => {
+	if (isHidden) isMenuOpen = false;
+});
+</script>
+
+{#snippet links()}
+	<ul id="links" class="center" transition:standard={[fly]}>
+		<!-- Add your navigation links here -->
+		<!-- Example:
+		<li class="lift">
+			<a
+				aria-current={page.url.pathname === '/about' ? 'page' : false}
+				href="/about"
+			>About</a>
+		</li>
+		-->
+	</ul>
+{/snippet}
+
+<!-- null check ensures we don't render before document loads -->
+{#if isMobile !== null && (isMenuOpen || !isMobile)}
+	{@render links()}
+{/if}
+
+{#if isMobile}
+	<button
+		type="button"
+		aria-label="Navigation menu"
+		aria-controls="links"
+		aria-expanded={isMenuOpen ? 'true' : 'false'}
+		onclick={() => isMenuOpen = !isMenuOpen}
+		class="btn avatar"
+	>
+		<svg
+			aria-hidden="true"
+			width="16px"
+			height="16px"
+			class:active={isMenuOpen}
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path d="M4 18L20 18" stroke-width="2" stroke-linecap="round" />
+			<path d="M4 12L20 12" stroke-width="2" stroke-linecap="round" />
+			<path d="M4 6L20 6" stroke-width="2" stroke-linecap="round" />
+		</svg>
+	</button>
+{/if}
+
+<style>
+#links {
+	gap: var(--space-6);
+
+	a {
+		font-size: var(--fs-4);
+
+		&:hover,
+		&:focus-visible {
+			text-decoration-color: unset; /* Forces link decoration color = link color instead of global value */
+		}
+
+		&.cta {
+			--_background: var(--color-primary-700);
+			font-size: var(--fs-4);
+		}
+	}
+}
+
+button {
+	--_background: var(--color-primary-300);
+
+	svg {
+		transition-property: transform;
+		stroke: var(--text-main);
+
+		&.active {
+			transform: rotate(90deg);
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	#links {
+		gap: var(--space-5);
+		background-color: var(--bg-main);
+		border-radius: var(--border-radius);
+		padding: var(--space-5) var(--space-4);
+
+		box-shadow: var(--shadow-strong);
+		flex-direction: column;
+
+		position: absolute;
+		inset: 50% calc(var(--space-4) + var(--space-2)) auto auto;
+
+		a {
+			font-size: var(--fs-4);
+		}
+	}
+}
+</style>

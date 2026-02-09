@@ -1,0 +1,42 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+img,
+picture,
+video,
+iframe,
+svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	font-style: italic; /* alt text */
+	font-size: unset;
+	border: 0;
+}
+
+html {
+	font-size: 62.5%; /* 62.5% of 16px = 10px for REM calculations */
+}
+
+ul {
+	list-style: none;
+	display: flex;
+
+	li {
+		text-decoration: none;
+		display: inline-block;
+	}
+}

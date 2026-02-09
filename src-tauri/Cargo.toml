@@ -1,0 +1,29 @@
+[package]
+name = "tauri-template"
+version = "1.0.0"
+description = "Modern, flexible Tauri+Sveltekit template"
+authors = ["Ali Hussain"]
+license = "MIT"
+repository = "https://github.com/ali-afk/Tauri-SvelteKit-Template.git"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "tauri_template_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2.0", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+specta = { version = "2.0.0-rc", features = ["derive"] }
+tauri-specta = { version = "2.0.0-rc", features = ["derive", "typescript"] }
+specta-typescript = "0.0"
+regex = "1.12.3"

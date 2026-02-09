@@ -1,0 +1,40 @@
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
+		transition-duration: 0.01ms;
+		scroll-behavior: auto;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-status-info);
+	outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+	outline-color: transparent;
+}
+
+[href^="http"]::after {
+	content: "";
+	display: inline-block;
+	width: 1.2rem;
+	height: 1.2rem;
+
+	background-color: var(--text-main);
+
+	mask: url("$assets/externalLinkIcon.svg") no-repeat center;
+	mask-size: contain;
+
+	vertical-align: middle;
+	margin-left: 4px;
+}

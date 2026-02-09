@@ -1,0 +1,96 @@
+:root {
+	color-scheme: light dark;
+
+	/* ========================================
+	   OPEN PROPS ALIASES
+	   Font weights, line heights, font sizes,
+	   spacing, and border/easing tokens are set
+	   in gen.css from design-tokens.ts, then
+	   overridden here with Open Props var() refs
+	   so variables.css wins the cascade.
+	   ======================================== */
+
+	/* Border Radius */
+	--border-radius: var(--radius-3);
+
+	/* ========================================
+	   TYPOGRAPHY
+	   ======================================== */
+
+	--font-head: ui-serif, serif;
+	--font-body: ui-serif, serif;
+
+	/* ========================================
+	   COMPONENT COLORS
+	   Semantic aliases that are not registered
+	   as @property tokens (no animation needed).
+	   ======================================== */
+	--color-mix-strength: 5%;
+	--accent: var(--color-primary-500);
+	--link: var(--color-status-info);
+
+	--bg-main: light-dark(var(--color-base-100), var(--color-base-700));
+	--bg-card: color-mix(in srgb, var(--bg-main), var(--accent) 5%);
+	--bg-contrast: color-mix(in srgb, var(--color-base-500), var(--accent) 5%);
+
+	--btn-primary: var(--color-primary-700);
+	--btn-danger: var(--color-status-danger);
+	--btn-info: var(--color-status-info);
+	--btn-warn: var(--color-status-warn);
+	--btn-success: var(--color-status-success);
+
+	/* ========================================
+	   EFFECTS & ANIMATION
+	   ======================================== */
+
+	--shadow-weak: 0 2px 4px var(--shadow-color);
+	--shadow-strong: 0 10px 40px var(--shadow-color);
+
+	--sb-thumb: light-dark(var(--color-primary-900), var(--color-primary-300));
+	--sb-track: light-dark(var(--color-primary-100), var(--color-primary-900));
+
+	--scale-hover: scale(1.02);
+	--scale-active: scale(0.98);
+
+	/* ========================================
+	   RESPONSIVE OVERRIDES
+	   Fonts shift down 1 level per breakpoint step.
+	   Spaces shift down 1 level at ≤768px, 2 levels at ≤480px.
+	   Container shrinks to match viewport.
+	   ======================================== */
+
+	@media (max-width: 1024px) {
+		--space-max: var(--breakpoint-lg);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
+	}
+
+	@media (max-width: 768px) {
+		--fs-2: var(--fs-1);
+		--fs-3: var(--fs-2);
+		--fs-4: var(--fs-3);
+
+		--space-2: var(--space-1);
+		--space-3: var(--space-2);
+		--space-4: var(--space-3);
+		--space-5: var(--space-4);
+		--space-6: var(--space-5);
+		--space-7: var(--space-6);
+
+		--space-max: var(--breakpoint-md);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
+	}
+
+	@media (max-width: 480px) {
+		--fs-3: var(--fs-1);
+		--fs-4: var(--fs-2);
+
+		--space-3: var(--space-1);
+		--space-4: var(--space-2);
+		--space-5: var(--space-3);
+		--space-6: var(--space-4);
+		--space-7: var(--space-5);
+
+		--space-max: var(--breakpoint-sm);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
+	}
+}

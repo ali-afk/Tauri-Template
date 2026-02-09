@@ -1,0 +1,34 @@
+.loading-item {
+	&::before {
+		content: "";
+		position: fixed;
+		width: 100vw;
+		height: 100dvh;
+		background: light-dark(
+			linear-gradient(
+				90deg,
+				var(--color-base-100) 0%,
+				var(--color-base-300) 50%,
+				var(--color-base-100) 100%
+			),
+			linear-gradient(
+				90deg,
+				var(--color-base-900) 0%,
+				var(--color-base-700) 50%,
+				var(--color-base-900) 100%
+			)
+		);
+		background-size: 200% 100%;
+		animation: shimmer 1.5s infinite;
+		z-index: 9999;
+	}
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}

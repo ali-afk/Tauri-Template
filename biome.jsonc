@@ -1,0 +1,44 @@
+{
+	"files": {
+		"includes": [
+			"**",
+			"!!node_modules",
+			"!!.svelte-kit",
+			"!!build",
+			"!!src-tauri",
+			"!!.vitest",
+			"!!src/lib/assets",
+			"!src/lib/styles/gen.css",
+			"!src/lib/bindings.ts",
+			"!bun-lock.yaml",
+			"!.env",
+			"!.env.*",
+			"!*.bak"
+		]
+	},
+	"linter": {
+		"rules": {
+			"preset": "recommended",
+			"complexity": {
+				// noPropertyAccessFromIndexSignature in tsconfig requires bracket notation on index signatures
+				"useLiteralKeys": "off"
+			},
+			"a11y": {
+				"useAriaPropsSupportedByRole": "off",
+				"useValidAriaValues": "off"
+			}
+		}
+	},
+	"formatter": { "enabled": true },
+	"html": {
+		"formatter": { "enabled": true },
+		"linter": { "enabled": true },
+		"experimentalFullSupportEnabled": true,
+		"assist": { "enabled": true }
+	},
+	"css": {
+		"formatter": { "enabled": true },
+		"linter": { "enabled": true },
+		"assist": { "enabled": true }
+	}
+}
