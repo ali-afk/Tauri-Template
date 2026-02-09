@@ -11,29 +11,28 @@
 		"prepare": "husky && svelte-kit sync",
 		"fix": "biome check --fix --staged --no-errors-on-unmatched",
 		"fix-all": "biome check --fix --no-errors-on-unmatched ./src && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"tauri:dev": "bun tauri dev",
+		"tauri:build": "bun tauri build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.14",
-		"@netlify/plugin-lighthouse": "^6.0.4",
-		"@sveltejs/adapter-netlify": "^5.2.4",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.50.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
+		"@tauri-apps/api": "^2.10.1",
+		"@tauri-apps/cli": "^2.10.0",
 		"bezier-easing": "^2.1.0",
-		"browserslist": "^4.28.1",
 		"husky": "^9.1.7",
 		"lightningcss": "^1.31.1",
-		"netlify-cli": "^23.15.1",
 		"svelte": "^5.50.0",
 		"svelte-check": "^4.3.6",
 		"typescript": "^5.9.3",
-		"vite": "^7.3.1",
-		"vite-plugin-devtools-json": "^1.0.0"
+		"vite": "^7.3.1"
 	},
 	"trustedDependencies": [
 		"@parcel/watcher",
 		"esbuild",
-		"netlify-cli",
 		"puppeteer",
 		"sharp",
 		"unix-dgram"
