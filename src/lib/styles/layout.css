@@ -1,0 +1,92 @@
+*,
+*::before,
+*::after {
+	transition-duration: var(--transition-duration-medium);
+	transition-timing-function: var(--transition-easing);
+
+	scrollbar-color: var(--sb-thumb) var(--sb-track);
+	scrollbar-width: thin;
+}
+
+body {
+	min-height: 100dvh;
+	height: auto;
+	overflow-y: auto;
+
+	color: var(--text-main);
+	background-color: var(--bg-main);
+
+	font: var(--fw-regular) var(--fs-3) / var(--lh-3) var(--font-body);
+	display: flex;
+	flex-direction: column;
+}
+
+header,
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-head);
+}
+
+main > section {
+	/* if 100% < container-max then use --space-5 */
+	padding-inline: max(var(--space-5), var(--gutter));
+	padding-block: var(--space-5);
+
+	> h1 {
+		font: var(--fw-bold) var(--fs-6) / var(--lh-1) var(--font-head);
+	}
+}
+
+a {
+	border: none;
+	color: var(--link);
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 5px;
+
+	transition-property: text-decoration-color, opacity;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration-color: var(--link);
+	}
+
+	&:active {
+		opacity: 0.7;
+	}
+}
+
+hr {
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+}
+
+summary {
+	cursor: pointer;
+}
+
+button {
+	border-radius: var(--border-radius);
+	border: 0;
+	font-weight: var(--fw-semibold);
+	cursor: pointer;
+}
+
+/* Hide-on-scroll header pattern */
+.sticky-header {
+	display: flex;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	background-color: var(--bg-main);
+	box-shadow: var(--shadow-weak);
+	transition-property: transform;
+	transition-duration: var(--transition-duration-long);
+	will-change: transform;
+
+	&.hidden {
+		transform: translateY(-100%);
+	}
+}

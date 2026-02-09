@@ -1,0 +1,47 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 4
+    assignees:
+      - "ali-afk"
+    target-branch: "dev"
+    labels:
+      - "dependencies"
+    groups:
+      production:
+        dependency-type: "production"
+      development-minor:
+        dependency-type: "development"
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"
+      development-major:
+        dependency-type: "development"
+        update-types:
+          - major
+        exclude-patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"
+      svelte-minor:
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"
+      svelte-major:
+        update-types:
+          - major
+        patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"

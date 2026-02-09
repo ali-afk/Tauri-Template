@@ -1,0 +1,13 @@
+node_modules/
+.svelte-kit/
+build/
+.netlify/
+*.bak
+.env
+.env.*
+!.env.test
+.vite
+
+# AI Tools
+.claude
+.serena

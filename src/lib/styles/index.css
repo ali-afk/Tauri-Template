@@ -1,0 +1,10 @@
+@import "./resets.css";
+@import "./variables.css";
+@import "./accessibility.css";
+@import "./document-loading.css";
+@import "./layout.css";
+@import "./utility.css";
+@import "./interactive.css";
+
+@import "@fontsource/girassol/latin-400.css" layer(base);
+@import "@fontsource/average/latin-400.css" layer(base);

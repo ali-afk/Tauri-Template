@@ -1,0 +1,9 @@
+node_modules/
+bun-lock.yaml
+.netlify
+.env
+.env.*
+*.bak
+.svelte-kit/
+build/
+src/lib/assets/

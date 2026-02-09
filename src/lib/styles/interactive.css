@@ -1,0 +1,102 @@
+/* ================================
+   INTERACTIVE ELEMENTS
+   ================================
+   
+   Two behavioral classes:
+   - .card  → hover-only (containers, testimonials)
+   - .btn   → hover + click (buttons, action links)
+   
+   Both use --_background as color input. Set via:
+   - Inline style: style="--_background: {color}"
+   - Component <style> block
+   
+   Auto-contrast system calculates text/border colors
+   from --_background using OKLCH relative color syntax.
+   ================================ */
+
+/* === SHARED INTERACTIVE FOUNDATION === */
+.card,
+.btn {
+	/* Contrast direction: -1 for light bg (darken), +1 for dark bg (lighten) */
+	--_contrast: sign(0.6 - l);
+
+	/* Auto-calculated colors from --_background */
+	--text-main: oklch(from var(--_background) clamp(0, var(--_contrast), 1) 0 0);
+	--text-mute: oklch(from var(--_background) 0.5 c h);
+
+	--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
+	--border-color: oklch(
+		from var(--_background) clamp(0, var(--border-brightness), 1) c h
+	);
+
+	--hover-brightness: calc(l + var(--_contrast) * var(--hover-degree));
+	--hover-color: oklch(
+		from var(--_background) clamp(0, var(--hover-brightness), 1) c h
+	);
+
+	background-color: var(--_background);
+	color: var(--text-main);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	box-shadow: var(--shadow-weak);
+	transition-property: transform, background-color, box-shadow, border-color;
+
+	&:hover {
+		--hover-border-brightness: calc(
+			l +
+			var(--_contrast) *
+			var(--hover-border-darkness)
+		);
+
+		--hover-border-color: oklch(
+			from var(--_background) clamp(0, var(--hover-border-brightness), 1) c h
+		);
+
+		border-color: var(--hover-border-color);
+		background-color: var(--hover-color);
+		transform: var(--scale-hover);
+		box-shadow: var(--shadow-strong);
+
+		hr {
+			border-color: var(--hover-border-color);
+		}
+	}
+
+	/* GPU Optimisations */
+	backface-visibility: hidden;
+	perspective: 1000px;
+	transform: translateZ(0);
+}
+
+/* === CLICKABLE ACTIONS === */
+.btn {
+	display: inline-block;
+	padding: var(--space-2) var(--space-4);
+	cursor: pointer;
+
+	&:active {
+		transform: var(--scale-active);
+	}
+}
+
+a.btn {
+	text-decoration: none;
+}
+
+/* === HOVER ELEVATION === */
+/*
+   Subtle lift effect on hover. Composable with .card/.btn.
+   - .lift        → -2px (nav items, subtle emphasis)
+   - .lift--strong → -4px (testimonials, featured cards)
+
+   Relies on global transition-duration from * selector.
+   Does NOT set transition-property to avoid overriding
+   .card/.btn multi-property transitions.
+*/
+.lift:hover {
+	transform: translateY(-2px);
+}
+
+.lift--strong:hover {
+	transform: translateY(-4px);
+}

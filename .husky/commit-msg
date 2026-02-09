@@ -1,0 +1,14 @@
+types="fix|config|feat|feat-rm|update|docs|chore|style|content|misc|refactor"
+
+pattern="^($types)(\+($types))*: .+"
+
+commit_msg=$(cat "$1" | sed -E 's/^(fixup! |squash! )//')
+
+if [[ ! $commit_msg =~ $pattern ]]; then
+  echo "--------------------------------------------------------"
+  echo "❌ INVALID COMMIT FORMAT"
+  echo "Expected: <type>: <summary>  OR  <type>+<type>: <summary>"
+  echo "Allowed: $types"
+  echo "--------------------------------------------------------"
+  exit 1
+fi

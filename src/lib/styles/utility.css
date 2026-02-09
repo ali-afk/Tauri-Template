@@ -1,0 +1,130 @@
+/* ================================
+   LAYOUT UTILITIES
+   ================================
+
+   Composable utility classes for common layout patterns.
+   Uses attribute selectors [class*="..."] to share base
+   styles across modifier variants.
+
+   Naming convention: .base--modifier
+   - .stack, .stack--tight, .stack--loose
+   - .row, .row--between, .row--tight
+   - .title--section, .title--page
+
+   Reserved class substrings (avoid in unrelated classes):
+   row, stack, title, card-grid, center
+
+   Usage:
+   - Combine utilities: class="wrapper stack row--between"
+   - Compose with components: class="card row lift--strong"
+   ================================ */
+
+/* === GRID LAYOUTS === */
+
+/* Centered wrapping grid for cards and buttons */
+[class*="card-grid"] {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.card-grid {
+	gap: var(--space-5);
+}
+
+.card-grid--tight {
+	gap: var(--space-4);
+}
+
+[class*="center"] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.center--column {
+	flex-direction: column;
+}
+
+/* Full-page centered section (errors, empty states) */
+.center--page {
+	flex-direction: column;
+	min-height: 60vh;
+	gap: var(--space-4);
+}
+
+/* === FLEX LAYOUTS === */
+
+/* Vertical flex layout (column direction) */
+[class*="stack"] {
+	display: flex;
+	flex-direction: column;
+}
+
+.stack {
+	gap: var(--space-4);
+}
+
+.stack--tight {
+	gap: var(--space-3);
+}
+
+.stack--loose {
+	gap: var(--space-5);
+}
+
+/* Horizontal flex layout (row direction, vertically centered) */
+[class*="row"] {
+	display: flex;
+	align-items: center;
+}
+
+.row {
+	gap: var(--space-4);
+}
+
+.row--between {
+	justify-content: space-between;
+}
+
+.row--tight {
+	gap: var(--space-3);
+}
+
+/* Circular image/avatar */
+.avatar {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: var(--bg-main);
+	padding: 4px;
+	object-fit: contain;
+}
+
+/* Generic container */
+.wrapper {
+	width: min(100% - var(--space-4), var(--container-max));
+	margin-inline: auto;
+}
+
+/* ================================
+   TYPOGRAPHY PATTERNS
+   ================================ */
+
+[class*="title"] {
+	font-weight: var(--fw-bold);
+	line-height: var(--lh-1);
+	margin-bottom: var(--space-4);
+}
+
+.title--section {
+	margin-top: var(--space-4);
+	font-size: var(--fs-6);
+}
+
+/* Main section/page title */
+.title--page {
+	font-size: var(--fs-7);
+	margin-bottom: var(--space-5);
+	text-align: center;
+}

@@ -1,0 +1,147 @@
+:root {
+	/* --- Dynamic Values --- */
+	--space-0: clamp(0.2rem, 0.175rem + 0.075vw, 0.3rem);
+	--space-1: clamp(0.4rem, 0.35rem + 0.15vw, 0.6rem);
+	--space-2: clamp(0.8rem, 0.7rem + 0.3vw, 1.2rem);
+	--space-3: clamp(1.2rem, 1.1rem + 0.3vw, 1.6rem);
+	--space-4: clamp(1.6rem, 1.4rem + 0.6vw, 2.4rem);
+	--space-5: clamp(2.4rem, 2rem + 1.2vw, 4rem);
+	--space-6: clamp(3.2rem, 2.4rem + 2.5vw, 6.4rem);
+	--space-7: clamp(4.8rem, 3.6rem + 3.7vw, 9.6rem);
+	--space-8: clamp(6.4rem, 4.8rem + 5vw, 12.8rem);
+
+	--fs-0: clamp(1rem, 0.95rem + 0.25vw, 1.2rem);
+	--fs-1: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem);
+	--fs-2: clamp(1.4rem, 1.35rem + 0.25vw, 1.6rem);
+	--fs-3: clamp(1.6rem, 1.55rem + 0.25vw, 1.8rem);
+	--fs-4: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem);
+	--fs-5: clamp(2.2rem, 2.05rem + 0.75vw, 2.8rem);
+	--fs-6: clamp(2.8rem, 2.5rem + 1.5vw, 4rem);
+	--fs-7: clamp(3.5rem, 2.8rem + 3.5vw, 6.5rem);
+
+	/* Calculates inline padding */
+	--gutter: calc((100% - var(--container-max)) / 2);
+
+	/* --- Typography --- */
+	--font-head: Girassol, ui-serif, serif;
+	--font-body: Average, ui-serif, serif;
+
+	/* --- Neutral Color Mix Logic --- */
+	--mix-strength: 5%;
+
+	--color-base-900: color-mix(
+		in srgb,
+		#000,
+		var(--color-primary-500) var(--mix-strength)
+	);
+	--color-base-700: color-mix(
+		in srgb,
+		#444,
+		var(--color-primary-500) var(--mix-strength)
+	);
+	--color-base-500: color-mix(
+		in srgb,
+		#888,
+		var(--color-primary-500) var(--mix-strength)
+	);
+	--color-base-300: color-mix(
+		in srgb,
+		#ccc,
+		var(--color-primary-500) var(--mix-strength)
+	);
+	--color-base-100: color-mix(
+		in srgb,
+		#fff,
+		var(--color-primary-500) var(--mix-strength)
+	);
+
+	/* --- Component Colors --- */
+	--accent: var(--color-primary-500);
+	--link: var(--color-status-info);
+
+	--bg-main: var(--color-base-100);
+	--bg-card: color-mix(in srgb, var(--color-base-100), var(--accent) 5%);
+	--bg-contrast: color-mix(in srgb, var(--color-base-500), var(--accent) 5%);
+
+	--btn-primary: var(--color-primary-700);
+	--btn-danger: var(--color-status-danger);
+	--btn-info: var(--color-status-info);
+	--btn-warn: var(--color-status-warn);
+	--btn-success: var(--color-status-success);
+
+	/* --- Effects & Animation --- */
+	--shadow-color: color-mix(in srgb, var(--color-base-900), transparent 80%);
+	--shadow-weak: 0 2px 4px var(--shadow-color);
+	--shadow-strong: 0 10px 40px var(--shadow-color);
+
+	--sb-thumb: var(--color-primary-900);
+	--sb-track: var(--color-primary-100);
+
+	--scale-hover: scale(1.02);
+	--scale-active: scale(0.98);
+
+	/* --- Breakpoints --- */
+	--bp-1: 480px;
+	--bp-2: 768px;
+	--bp-3: 1024px;
+	--bp-4: 1280px;
+
+	--container-min: var(--bp-1);
+	--container-max: var(--bp-4);
+
+	/* Responsive scaling: fonts shift more aggressively than spaces */
+	@media (max-width: 1024px) {
+		/* Font sizes: shift down 1 level */
+		--fs-1: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
+		--fs-2: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
+		--fs-3: clamp(1.4rem, 1.35rem + 0.25vw, 1.6rem); /* was fs-2 */
+		--fs-4: clamp(1.6rem, 1.55rem + 0.25vw, 1.8rem); /* was fs-3 */
+		--fs-5: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem); /* was fs-4 */
+		--fs-6: clamp(2.2rem, 2.05rem + 0.75vw, 2.8rem); /* was fs-5 */
+		--fs-7: clamp(2.8rem, 2.5rem + 1.5vw, 4rem); /* was fs-6 */
+
+		--container-max: var(--bp-3);
+	}
+
+	@media (max-width: 768px) {
+		/* Font sizes: shift down 2 levels */
+		--fs-2: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
+		--fs-3: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
+		--fs-4: clamp(1.4rem, 1.35rem + 0.25vw, 1.6rem); /* was fs-2 */
+		--fs-5: clamp(1.6rem, 1.55rem + 0.25vw, 1.8rem); /* was fs-3 */
+		--fs-6: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem); /* was fs-4 */
+		--fs-7: clamp(2.2rem, 2.05rem + 0.75vw, 2.8rem); /* was fs-5 */
+
+		/* Spaces: shift down 1 level */
+		--space-1: clamp(0.2rem, 0.175rem + 0.075vw, 0.3rem); /* was space-0 */
+		--space-2: clamp(0.4rem, 0.35rem + 0.15vw, 0.6rem); /* was space-1 */
+		--space-3: clamp(0.8rem, 0.7rem + 0.3vw, 1.2rem); /* was space-2 */
+		--space-4: clamp(1.2rem, 1.1rem + 0.3vw, 1.6rem); /* was space-3 */
+		--space-5: clamp(1.6rem, 1.4rem + 0.6vw, 2.4rem); /* was space-4 */
+		--space-6: clamp(2.4rem, 2rem + 1.2vw, 4rem); /* was space-5 */
+		--space-7: clamp(3.2rem, 2.4rem + 2.5vw, 6.4rem); /* was space-6 */
+		--space-8: clamp(4.8rem, 3.6rem + 3.7vw, 9.6rem); /* was space-7 */
+
+		--container-max: var(--bp-2);
+	}
+
+	@media (max-width: 480px) {
+		/* Font sizes: shift down 3 levels */
+		--fs-3: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
+		--fs-4: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
+		--fs-5: clamp(1.4rem, 1.35rem + 0.25vw, 1.6rem); /* was fs-2 */
+		--fs-6: clamp(1.6rem, 1.55rem + 0.25vw, 1.8rem); /* was fs-3 */
+		--fs-7: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem); /* was fs-4 */
+
+		/* Spaces: shift down 2 levels */
+		--space-2: clamp(0.2rem, 0.175rem + 0.075vw, 0.3rem); /* was space-0 */
+		--space-3: clamp(0.4rem, 0.35rem + 0.15vw, 0.6rem); /* was space-1 */
+		--space-4: clamp(0.8rem, 0.7rem + 0.3vw, 1.2rem); /* was space-2 */
+		--space-5: clamp(1.2rem, 1.1rem + 0.3vw, 1.6rem); /* was space-3 */
+		--space-6: clamp(1.6rem, 1.4rem + 0.6vw, 2.4rem); /* was space-4 */
+		--space-7: clamp(2.4rem, 2rem + 1.2vw, 4rem); /* was space-5 */
+		--space-8: clamp(3.2rem, 2.4rem + 2.5vw, 6.4rem); /* was space-6 */
+
+		--container-max: var(--bp-1);
+	}
+}
