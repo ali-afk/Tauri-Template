@@ -1,7 +1,6 @@
 <script lang="ts">
 import { fly } from "svelte/transition";
 import { page } from "$app/state";
-import { SiteProperties } from "$data/shared";
 import { standard } from "$scripts/transition";
 
 let { isHidden }: { isHidden: boolean } = $props();
@@ -34,34 +33,15 @@ $effect(() => {
 
 {#snippet links()}
 	<ul id="links" class="center" transition:standard={fly} role="list">
+		<!-- Add your navigation links here -->
+		<!-- Example:
 		<li class="lift">
 			<a
-				aria-current={page.url.pathname === '/councils' ? 'page' : undefined}
-				href="/councils"
-				class="councils"
-				>Councils</a
-			>
+				aria-current={page.url.pathname === '/about' ? 'page' : undefined}
+				href="/about"
+			>About</a>
 		</li>
-
-		<li class="lift">
-			<a
-				href={SiteProperties.resources.eventPhotos}
-				target="_blank"
-				rel="noopener noreferrer"
-				class="photos"
-				>Event Photos</a
-			>
-		</li>
-
-		<li class="lift">
-			<a
-				class="cta btn"
-				target="_blank"
-				rel="noreferrer noopener"
-				href={SiteProperties.resources.delegateAllocations}
-				>Delegate Allocations</a
-			>
-		</li>
+		-->
 	</ul>
 {/snippet}
 
@@ -108,14 +88,6 @@ $effect(() => {
 		&.cta {
 			--_background: var(--color-primary-700);
 			font-size: var(--fs-4);
-		}
-
-		&.councils {
-			color: var(--color-primary-700);
-		}
-
-		&.photos {
-			color: var(--color-secondary-500);
 		}
 	}
 }

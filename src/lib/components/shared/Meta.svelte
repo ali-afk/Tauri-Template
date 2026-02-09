@@ -17,10 +17,13 @@ type Props = BaseProps &
 
 let { title, description, keywords, pageURI = "/", children }: Props = $props();
 
-// Runtime validation for development
-if (import.meta.env.DEV && description === "NoIndex" && pageURI !== "/") {
+// --- Runtime validation for development ---
+const isNotIndexed = () => description === "NoIndex";
+const isNotRootURI = () => pageURI !== "/";
+
+if (import.meta.env.DEV && isNotIndexed() && isNotRootURI()) {
 	console.error(
-		`[Meta] NoIndex pages must use pageURI="/" (got "${pageURI}"). Canonical URLs should not point to non-indexed pages.`,
+		`[Meta] NoIndex pages must use pageURI="/" (got "${() => pageURI}"). Canonical URLs should not point to non-indexed pages.`,
 	);
 }
 
