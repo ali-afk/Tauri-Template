@@ -11,3 +11,7 @@ build/
 # AI Tools
 .claude
 .serena
+
+# Tauri
+src-tauri/target/
+src-tauri/Cargo.lock
