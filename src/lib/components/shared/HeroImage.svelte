@@ -1,15 +1,13 @@
 <script lang="ts">
 import type { Image } from "$types/component-props";
 
-let {
-	image,
-	title,
-	centeredTitle = false,
-}: {
+interface Props {
 	image: Image;
 	title?: string;
 	centeredTitle?: boolean;
-} = $props();
+}
+
+let { image, title, centeredTitle = false }: Props = $props();
 </script>
 
 {#snippet hero()}

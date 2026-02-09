@@ -7,11 +7,14 @@ import { generateId } from "$scripts/utils";
 
 const contentId = generateId("content");
 let isOpen = $state(false);
-let {
-	title,
-	name,
-	children,
-}: { title: string; name: string; children: Snippet } = $props();
+
+interface Props {
+	title: string;
+	name: string;
+	children: Snippet;
+}
+
+let { title, name, children }: Props = $props();
 </script>
 
 <article class="wrapper card">

@@ -7,15 +7,17 @@ type LinkGroup = {
 	links: DocumentLink[];
 };
 
+interface Props {
+	groups: LinkGroup[];
+	colorPalette?: "primary" | "secondary";
+	class?: string;
+}
+
 let {
 	groups,
 	colorPalette = "primary",
 	class: className = "",
-}: {
-	groups: LinkGroup[];
-	colorPalette?: "primary" | "secondary";
-	class?: string;
-} = $props();
+}: Props = $props();
 
 let colorSet = $derived(
 	colorPalette === "primary"

@@ -2,17 +2,14 @@
 import type { Snippet } from "svelte";
 import type { Image, LoadPriority } from "$types/component-props";
 
-let {
-	title,
-	avatar,
-	children,
-	loadPriority,
-}: {
+interface Props {
 	title: string;
 	avatar: Image;
 	children?: Snippet;
 	loadPriority: LoadPriority;
-} = $props();
+}
+
+let { title, avatar, children, loadPriority }: Props = $props();
 </script>
 
 <header class="center--column">

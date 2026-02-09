@@ -4,13 +4,13 @@ import { DesignTokens } from "$data/shared";
 import type { ColorDegrees } from "$types/colors";
 import type { LoadPriority, QuoteData } from "$types/component-props";
 
-interface QuoteCardProps extends QuoteData {
+interface Props extends QuoteData {
 	loadPriority: LoadPriority;
 	color: ColorDegrees;
 	direction: "left" | "right";
 }
 
-let { title, comment, avatar, loadPriority, color, direction }: QuoteCardProps =
+let { title, comment, avatar, loadPriority, color, direction }: Props =
 	$props();
 const colorSet = DesignTokens.color.primary;
 </script>
