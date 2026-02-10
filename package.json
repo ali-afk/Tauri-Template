@@ -13,7 +13,7 @@
 		"fix-all": "biome check --fix --no-errors-on-unmatched ./src && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"tauri:dev": "bun tauri dev",
-		"tauri:build": "bun tauri build"
+		"tauri:build": "NO_STRIP=true bun tauri build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.14",
@@ -22,6 +22,7 @@
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tauri-apps/api": "^2.10.1",
 		"@tauri-apps/cli": "^2.10.0",
+		"@types/node": "^25.2.2",
 		"bezier-easing": "^2.1.0",
 		"husky": "^9.1.7",
 		"lightningcss": "^1.31.1",
