@@ -82,11 +82,11 @@ article {
 
 ## Critical Limitation: Only Works on `.card` and `.btn`
 
-> **The auto variables (`--text-main`, `--border-color`, etc.) are ONLY calculated
-inside _interactive_ elements (`.card` or `.btn`).**
+> **The auto variables (`--text-main`, `--border-color`, etc.) are ONLY
+> calculated inside _interactive_ elements (`.card` or `.btn`).**
 
-This is because the calculations are defined in the
-`.card, .btn` selector block in `interactive.css`.
+This is because the calculations are defined in the `.card, .btn` selector
+block in `interactive.css`.
 
 ### What Works
 
@@ -113,7 +113,6 @@ This is because the calculations are defined in the
 <!-- Child inherits --_background but NOT the calculations -->
 <article class="card" style="--_background: {color}">
   <div class="nested-element">
-    <!-- This div uses inherited --text-main from parent .card -->
     <!-- If you set a different --_background here, it won't recalculate -->
   </div>
 </article>
@@ -134,14 +133,15 @@ Either:
 --_contrast: sign(0.6 - l);
 ```
 
-Human perception doesn't treat 50% lightness as the midpoint.
-Light colors appear lighter than they "should" due to how our eyes work.
-The 0.6 threshold accounts for this—it switches to dark text slightly
-earlier than pure middle gray.
+Human perception doesn't treat 50% lightness as the midpoint. Light colors
+appear lighter than they "should" due to how our eyes work. The 0.6 threshold
+accounts for this — it switches to dark text slightly earlier than pure
+middle gray.
 
 ### Why OKLCH?
 
-OKLCH (Oklab Lightness, Chroma, Hue) is a **perceptually uniform** color space:
+OKLCH (Oklab Lightness, Chroma, Hue) is a **perceptually uniform** color
+space:
 
 - Equal steps in `l` appear as equal brightness changes
 - Colors with same `l` value appear equally bright
@@ -168,7 +168,7 @@ This makes the lightness-based contrast calculation reliable across all hues.
 
 ## Usage Examples
 
-### Testimonial Cards (Dynamic Colors)
+### QuoteCard (Dynamic Colors)
 
 ```svelte
 <!-- Color passed from parent, changes per card -->
@@ -178,7 +178,7 @@ This makes the lightness-based contrast calculation reliable across all hues.
 >
 ```
 
-### FAQ Cards (Static Color)
+### Accordion (Static Color)
 
 ```svelte
 <article class="card">
@@ -202,26 +202,29 @@ article {
 
 **Text not readable?**
 
-1. Background might be near the 0.6 threshold—test with slightly lighter/darker
+1. Background might be near the 0.6 threshold — test with slightly
+   lighter/darker
 2. Check that `--text-main` is being applied (not overridden)
 
 ## Critical Rule: Only Set `--_background`
 
-> **When styling `.card` or `.btn`, NEVER manually set `color`, `background-color`,
-> or `border-color`. These are auto-calculated from `--_background`.**
+> **When styling `.card` or `.btn`, NEVER manually set `color`,
+> `background-color`, or `border-color`. These are auto-calculated from
+> `--_background`.**
 
-The only acceptable color override is `color: var(--text-mute)` for secondary text,
-since interactive elements default to `--text-main`.
+The only acceptable color override is `color: var(--text-mute)` for
+secondary text, since interactive elements default to `--text-main`.
 
 See [CSS Patterns](./css.md#critical-rule-do-not-manually-set-colors-on-interactive-elements)
 for detailed examples.
 
 ## Related Files
 
-- `src/lib/styles/interactive.css` — Core calculations
-- `src/lib/data/design-tokens.ts` — Tuning values (`--border-darkness`,
-`--hover-degree`, etc.)
-- `src/lib/scripts/register-design-tokens.ts` — Registers CSS properties for animations
-- [CSS Patterns](./css.md) — Usage patterns and utility classes
-- [Architecture Decisions](./architecture-decisions.md) — Why things are
-implemented this way
+- `src/lib/styles/interactive.css` — core calculations
+- `src/lib/data/design-tokens.ts` — tuning values (`--border-darkness`,
+  `--hover-degree`, etc.)
+- `src/lib/scripts/register-design-tokens.ts` — registers CSS properties for
+  animations
+- [CSS Patterns](./css.md) — usage patterns and utility classes
+- [Architecture Decisions](./architecture-decisions.md) — why things are
+  implemented this way
