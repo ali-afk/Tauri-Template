@@ -27,7 +27,7 @@
  * - Chrome 85+
  * - Safari 16.4+
  * - Firefox 128+
- * Site still works without registration, just loses smooth transitions
+ * App still works without registration, just loses smooth transitions
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CSS/registerProperty
  * @see src/lib/data/default-properties.ts for token definitions
@@ -155,11 +155,11 @@ export function registerDesignTokens() {
 	});
 
 	// Log failures in development for debugging
-	// In production, site still works (just without smooth transitions)
+	// In production, app still works (just without smooth transitions)
 	if (import.meta.env.DEV && failedProperties.length > 0) {
 		console.warn("⚠️ Some CSS properties failed to register:", failedProperties);
 		console.info(
-			"💡 Site will still work, but these properties won't animate smoothly",
+			"💡 App will still work, but these properties won't animate smoothly",
 		);
 	}
 }

@@ -6,7 +6,7 @@
  * The primary/secondary structure works for any color scheme.
  * Use https://oklch.com/ to pick OKLCH colors for optimal contrast and accessibility.
  *
- * This file defines all design tokens (colors, spacing, typography, etc.) for the entire site.
+ * This file defines all design tokens (colors, spacing, typography, etc.) for the entire app.
  * These values are automatically converted to CSS custom properties (CSS variables) and registered
  * with the browser for type-safe, animatable properties.
  *
