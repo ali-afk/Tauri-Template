@@ -1,7 +1,8 @@
 {
-	"productName": "SvelteKit Template",
+	"$schema": "https://schema.tauri.app/config/2",
+	"productName": "Tauri Template",
 	"version": "1.0.0",
-	"identifier": "com.template.sveltekit",
+	"identifier": "com.burglar.tauri-template",
 	"build": {
 		"beforeDevCommand": "bun dev",
 		"beforeBuildCommand": "bun run build",
@@ -21,13 +22,13 @@
 		"resources": [],
 		"copyright": "",
 		"category": "DeveloperTool",
-		"shortDescription": "Personal SvelteKit starter template",
-		"longDescription": "A modern, accessible web application built with SvelteKit, featuring design tokens, auto-contrast colors, and a component library."
+		"shortDescription": "Personal Tauri starter template",
+		"longDescription": "A modern, accessible desktop application built with Tauri + SvelteKit, featuring design tokens, auto-contrast colors, and a component library."
 	},
 	"app": {
 		"windows": [
 			{
-				"title": "SvelteKit Template",
+				"title": "Tauri Template",
 				"width": 1200,
 				"height": 800,
 				"resizable": true,
