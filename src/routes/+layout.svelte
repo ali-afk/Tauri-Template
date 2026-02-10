@@ -5,13 +5,13 @@ import {
 	SiteProperties,
 	WebSiteData,
 } from "$data/shared";
-import { registerProperties } from "$scripts/register-design-tokens";
+import { registerDesignTokens } from "$scripts/register-design-tokens";
 import { registerServiceWorker } from "$scripts/register-service-worker";
 import "$styles/index.css";
 import { onMount } from "svelte";
 
 onMount(() => {
-	registerProperties();
+	registerDesignTokens();
 	document.documentElement.classList.add("document-loaded");
 	registerServiceWorker();
 });

@@ -82,7 +82,7 @@ function toCssProperties(
  * // .button { background: var(--color-primary-500); transition: background 200ms; }
  * // Smoothly animates when --color-primary-500 changes
  */
-export function registerProperties() {
+export function registerDesignTokens() {
 	const properties = toCssProperties(DesignTokens);
 
 	const keys = Object.keys(properties);
@@ -131,18 +131,25 @@ export function registerProperties() {
 				inherits: inherits,
 				initialValue: initialValue,
 			});
-		} catch (e: any) {
+		} catch (e: unknown) {
 			// Property registration can fail if:
 			// - Already registered (multiple calls to registerProperties)
 			// - Invalid syntax specification
 			// - Initial value doesn't match syntax type
 			// - Browser doesn't support feature
+
+			const error = e as Error;
+			const errorMessage = error.message.split(":");
+
+			const errorReason = errorMessage[0] ?? "Unknown error reason";
+			const errorDetails = errorMessage[1] ?? "Unknown error details";
+
 			failedProperties.push({
 				Property: cssVarName,
 				Syntax: syntax,
 				Value: initialValue,
-				Reason: e.message.split(":")[0],
-				Details: e.message,
+				Reason: errorReason,
+				Details: errorDetails,
 			});
 		}
 	});
