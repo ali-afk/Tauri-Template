@@ -5,6 +5,7 @@ Personal template. Conventions for consistency:
 ## Formatting
 
 Biome auto-formats on commit. Key rules:
+
 - Tabs for indentation
 - Double quotes
 - Semicolons
@@ -21,14 +22,17 @@ Biome auto-formats on commit. Key rules:
 
 `<type>: <summary>`
 
-Types: `feat`, `fix`, `refactor`, `docs`, `style`, `config`, `chore`
+Types: `feat`, `feat-rm`, `fix`, `update`, `refactor`, `docs`,
+`style`, `config`, `content`, `chore`, `misc`
 
 Examples:
-```
+
+```bash
 feat: add QuoteCard component
 fix: correct auto-contrast calculation
 refactor: extract design tokens
 docs: update architecture decisions
+config: update Tauri window dimensions
 ```
 
 ## Resources
@@ -36,3 +40,4 @@ docs: update architecture decisions
 - [Architecture Decisions](docs/architecture-decisions.md)
 - [CSS System](docs/css.md)
 - [Color System](docs/color-system.md)
+- [SvelteKit Patterns](docs/sveltekit.md)

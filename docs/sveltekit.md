@@ -4,18 +4,12 @@
 
 ```text
 src/routes/
-├── +layout.svelte       # Root: CSS, global meta, JSON-LD, design tokens
+├── +layout.svelte       # Root: CSS, design tokens, onMount
 ├── +layout.ts           # SSR disabled (Tauri)
 ├── +error.svelte
-├── (main)/
-│   ├── +layout.svelte   # Wraps pages in <main>
-│   └── +page.svelte     # /
-├── sitemap.xml/
-├── robots.txt/
-├── humans.txt/
-├── llms.txt/
-├── site.webmanifest/
-└── .well-known/security.txt/
+└── (main)/
+    ├── +layout.svelte   # Wraps pages in <main>
+    └── +page.svelte     # /
 ```
 
 Add new pages under `(main)/`. Add new endpoints as `route-name/+server.ts`.
@@ -54,7 +48,7 @@ export const load: PageServerLoad = () => {
 };
 ```
 
-```svelte
+```ts
 <!-- +page.svelte -->
 let { data }: PageProps = $props();
 ```
@@ -62,29 +56,25 @@ let { data }: PageProps = $props();
 Access as `data.items` directly in the template — don't extract to local
 variables.
 
-## Meta / SEO
+## Window Title
 
-Global meta is set in `src/routes/+layout.svelte` via `<svelte:head>` using
-`SiteProperties` and `DesignTokens`.
-
-Per-page meta uses the `Meta` component:
+The `Meta` component sets the window title (`<title>` in `<svelte:head>`),
+formatted as `"Page | SiteName"`. Use it on every page:
 
 ```svelte
-<Meta
-  title="Page Title"
-  description="Page description"
-/>
+<Meta title="Home" />
 ```
+
+Pass a `children` snippet for any extra head tags you need.
 
 ## onMount
 
-Root layout (`+layout.svelte`) runs three things on mount:
+Root layout (`+layout.svelte`) runs two things on mount:
 
 ```typescript
 onMount(() => {
   registerDesignTokens();
   document.documentElement.classList.add("document-loaded"); // remove shimmer
-  registerServiceWorker();
 });
 ```
 
