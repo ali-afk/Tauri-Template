@@ -26,16 +26,9 @@
 		"bezier-easing": "^2.1.0",
 		"husky": "^9.1.7",
 		"lightningcss": "^1.31.1",
-		"svelte": "^5.50.0",
+		"svelte": "^5.50.1",
 		"svelte-check": "^4.3.6",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1"
-	},
-	"trustedDependencies": [
-		"@parcel/watcher",
-		"esbuild",
-		"puppeteer",
-		"sharp",
-		"unix-dgram"
-	]
+	}
 }

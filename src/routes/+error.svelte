@@ -3,7 +3,7 @@ import { page } from "$app/state";
 import { Meta } from "$components/shared";
 </script>
 
-<Meta title={page.status.toString()} description="NoIndex" />
+<Meta title={page.status.toString()} />
 
 <section class="center--page">
 	<h1 class="title--page">{page.status}</h1>
