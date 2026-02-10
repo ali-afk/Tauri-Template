@@ -1,56 +1,59 @@
 import { sveltekit } from "@sveltejs/kit/vite";
+import browserslist from "browserslist";
+import { browserslistToTargets } from "lightningcss";
 import { defineConfig } from "vite";
 
-// Target modern browsers/webviews (Tauri uses system webview)
-// Chrome 120+, Safari 17+, Firefox 121+
-const targets = {
-	chrome: 120 << 16,
-	safari: (17 << 16) | (4 << 8),
-	firefox: 121 << 16,
-};
+const browserVersions = { chrome: 120, safari: 16 };
+const targets = browserslistToTargets(
+	browserslist(
+		`chrome ${browserVersions.chrome}, safari ${browserVersions.safari}`,
+	),
+);
 
-const host = process.env.TAURI_DEV_HOST;
+const host = process.env["TAURI_DEV_HOST"];
+const isDebugBuild = Boolean(process.env["TAURI_ENV_DEBUG"]);
+const buildPlatform = process.env["TAURI_ENV_PLATFORM "];
 
+function getBuildTarget() {
+	switch (buildPlatform) {
+		case "windows":
+		case "android":
+			return `chrome${browserVersions.chrome}`;
+		case "linux":
+		case "macos":
+		case "ios":
+			return `safari${browserVersions.safari}`;
+		default:
+			return undefined;
+	}
+}
 export default defineConfig({
 	plugins: [sveltekit()],
 	css: {
 		transformer: "lightningcss",
-		lightningcss: {
-			targets,
-		},
+		lightningcss: { targets },
 	},
-	// prevent vite from obscuring rust errors
+	build: {
+		cssMinify: "lightningcss",
+		minify: isDebugBuild ? false : "esbuild",
+		sourcemap: isDebugBuild,
+		target: getBuildTarget(),
+	},
 	clearScreen: false,
 	server: {
-		// make sure this port matches the devUrl port in tauri.conf.json file
 		port: 5173,
-		// Tauri expects a fixed port, fail if that port is not available
 		strictPort: true,
-		// if the host Tauri is expecting is set, use it
 		host: host || false,
 		hmr: host
 			? {
 					protocol: "ws",
 					host,
-					port: 1421,
+					port: 5174,
 				}
 			: undefined,
-
 		watch: {
-			// tell vite to ignore watching `src-tauri`
 			ignored: ["**/src-tauri/**"],
 		},
 	},
-	// Env variables starting with the item of `envPrefix` will be exposed in tauri's source code through `import.meta.env`.
 	envPrefix: ["VITE_", "TAURI_ENV_*"],
-	build: {
-		// Tauri uses Chromium on Windows and WebKit on macOS and Linux
-		target:
-			process.env.TAURI_ENV_PLATFORM === "windows" ? "chrome105" : "safari13",
-		// don't minify for debug builds
-		minify: !process.env.TAURI_ENV_DEBUG ? "esbuild" : false,
-		// produce sourcemaps for debug builds
-		sourcemap: !!process.env.TAURI_ENV_DEBUG,
-		cssMinify: "lightningcss",
-	},
 });

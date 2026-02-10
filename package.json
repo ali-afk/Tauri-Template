@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "1.0.0",
 	"description": "Personal SvelteKit starter template with design tokens, auto-contrast colors, and component library",
+	"license": "MIT",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -12,23 +13,27 @@
 		"fix": "biome check --fix --staged --no-errors-on-unmatched",
 		"fix-all": "biome check --fix --no-errors-on-unmatched ./src && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"tauri:dev": "bun tauri dev",
-		"tauri:build": "NO_STRIP=true bun tauri build"
+		"tauri:dev": "tauri dev",
+		"tauri:build": "NO_STRIP=true tauri build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.14",
 		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.50.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
-		"@tauri-apps/api": "^2.10.1",
 		"@tauri-apps/cli": "^2.10.0",
-		"@types/node": "^25.2.2",
+		"@types/node": "^25.2.3",
 		"bezier-easing": "^2.1.0",
+		"browserslist": "^4.28.1",
 		"husky": "^9.1.7",
 		"lightningcss": "^1.31.1",
 		"svelte": "^5.50.1",
 		"svelte-check": "^4.3.6",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "^2.10.1",
+		"@tauri-apps/plugin-opener": "^2.5.3"
 	}
 }
