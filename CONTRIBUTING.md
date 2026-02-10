@@ -27,7 +27,7 @@ Types: `feat`, `feat-rm`, `fix`, `update`, `refactor`, `docs`,
 
 Examples:
 
-```bash
+```text
 feat: add QuoteCard component
 fix: correct auto-contrast calculation
 refactor: extract design tokens

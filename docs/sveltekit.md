@@ -48,7 +48,7 @@ export const load: PageServerLoad = () => {
 };
 ```
 
-```ts
+```typescript
 <!-- +page.svelte -->
 let { data }: PageProps = $props();
 ```
