@@ -12,7 +12,7 @@ const targets = browserslistToTargets(
 
 const host = process.env["TAURI_DEV_HOST"];
 const isDebugBuild = Boolean(process.env["TAURI_ENV_DEBUG"]);
-const buildPlatform = process.env["TAURI_ENV_PLATFORM "];
+const buildPlatform = process.env["TAURI_ENV_PLATFORM"];
 
 function getBuildTarget() {
 	switch (buildPlatform) {
