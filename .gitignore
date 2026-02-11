@@ -1,17 +1,12 @@
 node_modules/
 .svelte-kit/
 build/
-.netlify/
 *.bak
 .env
 .env.*
-!.env.test
 .vite
+src-tauri/target/
 
 # AI Tools
 .claude
 .serena
-
-# Tauri
-src-tauri/target/
-src-tauri/Cargo.lock

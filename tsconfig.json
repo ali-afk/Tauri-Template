@@ -10,12 +10,10 @@
 		"strict": true,
 		"moduleResolution": "bundler",
 		"noUncheckedIndexedAccess": true,
-		"verbatimModuleSyntax": true,
 		"noImplicitOverride": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"isolatedModules": true
+		"noUnusedParameters": true
 	}
 }

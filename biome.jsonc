@@ -1,5 +1,13 @@
 {
-	"linter": { "rules": { "recommended": true } },
+	"linter": {
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				// noPropertyAccessFromIndexSignature in tsconfig requires bracket notation on index signatures
+				"useLiteralKeys": "off"
+			}
+		}
+	},
 	"formatter": { "enabled": true },
 	"html": {
 		"formatter": { "enabled": true },

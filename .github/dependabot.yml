@@ -7,22 +7,18 @@ updates:
     open-pull-requests-limit: 4
     assignees:
       - "ali-afk"
-    target-branch: "dev"
+    target-branch: "main"
     labels:
       - "dependencies"
     groups:
       production:
         dependency-type: "production"
-      development-minor:
+      development:
         dependency-type: "development"
         update-types:
           - minor
           - patch
-        exclude-patterns:
-          - "svelte*"
-          - "@sveltejs/*"
-          - "vite*"
-      development-major:
+      misc-major:
         dependency-type: "development"
         update-types:
           - major
@@ -30,18 +26,12 @@ updates:
           - "svelte*"
           - "@sveltejs/*"
           - "vite*"
-      svelte-minor:
-        update-types:
-          - minor
-          - patch
-        patterns:
-          - "svelte*"
-          - "@sveltejs/*"
-          - "vite*"
-      svelte-major:
+          - "@tauri-apps/*"
+      app-major:
         update-types:
           - major
         patterns:
           - "svelte*"
           - "@sveltejs/*"
           - "vite*"
+          - "@tauri-apps/*"
