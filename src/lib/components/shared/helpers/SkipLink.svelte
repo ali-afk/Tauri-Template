@@ -11,7 +11,7 @@ a {
 	padding: var(--space-2) var(--space-4);
 	background: var(--bg-main);
 
-	&:focus {
+	&:focus-visible {
 		left: var(--space-4);
 		top: var(--space-4);
 	}

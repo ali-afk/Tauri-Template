@@ -4,16 +4,17 @@ import type { Image } from "$types/component-props";
 interface Props {
 	image: Image;
 	title?: string;
+	alt: string;
 	centeredTitle?: boolean;
 }
 
-let { image, title, centeredTitle = false }: Props = $props();
+let { image, title, alt, centeredTitle = false }: Props = $props();
 </script>
 
 {#snippet hero()}
 	<img
 		src={image.url}
-		alt="Through the Looking Glass"
+		{alt}
 		fetchpriority="high"
 		width={image.dimensions.width}
 		height={image.dimensions.height}
@@ -22,7 +23,7 @@ let { image, title, centeredTitle = false }: Props = $props();
 
 <section>
 	{#if title}
-		<h1 class="title--page" class:centeredTitle={centeredTitle}>{title}</h1>
+		<h1 class="title--page" class:centered-title={centeredTitle}>{title}</h1>
 		{@render hero()}
 	{:else}
 		<h1>{@render hero()}</h1>
@@ -38,7 +39,7 @@ section {
 	overflow: hidden;
 }
 
-.centeredTitle {
+.centered-title {
 	z-index: 999;
 	position: absolute;
 	inset: 0;

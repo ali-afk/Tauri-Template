@@ -30,7 +30,7 @@
  * App still works without registration, just loses smooth transitions
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CSS/registerProperty
- * @see src/lib/data/default-properties.ts for token definitions
+ * @see src/lib/data/shared/design-tokens.ts for token definitions
  */
 
 import { DesignTokens } from "$data/shared";

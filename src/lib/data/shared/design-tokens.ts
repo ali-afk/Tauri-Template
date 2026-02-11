@@ -11,8 +11,8 @@
  * with the browser for type-safe, animatable properties.
  *
  * This allows you to use these properties if you can't use CSS somewhere in the code (like in certain scripts).
- * Therefore, instead of querying for "--color-primary-500", reference "DefaultProperties.color.primary[500]"
- * if a leaf value is not an array, then use "DefaultProperties.[something1].[something2].value"
+ * Therefore, instead of querying for "--color-primary-500", reference "DesignTokens.color.primary[500]"
+ * if a leaf value is not an array, then use "DesignTokens.[something1].[something2].value"
  *
  * HOW IT WORKS:
  * 1. Nested objects are flattened: color.primary.500 → --color-primary-500
@@ -35,7 +35,7 @@
  * Be careful with: Syntax types in config (must match CSS spec)
  * Don't change: Object structure or property names (will break CSS references)
  *
- * @see src/lib/scripts/register-properties.ts for registration logic
+ * @see src/lib/scripts/register-design-tokens.ts for registration logic
  */
 
 import type { PropertyNode } from "$types/design-tokens";
@@ -81,7 +81,7 @@ export const DesignTokens = {
 	},
 	_background: {
 		config: { syntax: "<color>", inherits: true },
-		value: " #ffffff",
+		value: "#ffffff",
 	},
 	fw: {
 		config: { syntax: "<number>", inherits: true },
@@ -178,5 +178,12 @@ export const DesignTokens = {
 		config: { syntax: "<color>", inherits: true },
 		main: "#000",
 		mute: "#444",
+	},
+	breakpoint: {
+		config: { syntax: "<length>", inherits: true },
+		1: "480px",
+		2: "768px",
+		3: "1024px",
+		4: "1280px",
 	},
 } as const satisfies Record<string, PropertyNode>;
