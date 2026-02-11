@@ -1,6 +1,6 @@
 /* Loading animation before css properties load */
 html:not(.document-loaded) body {
-	background: #f0f0f0;
+	background: light-dark(#f0f0f0, #0f0f0f);
 
 	&::before {
 		content: "";

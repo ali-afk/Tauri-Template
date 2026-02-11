@@ -1,4 +1,6 @@
 :root {
+	color-scheme: light dark;
+
 	/* --- Dynamic Values --- */
 	--space-0: clamp(0.2rem, 0.175rem + 0.075vw, 0.3rem);
 	--space-1: clamp(0.4rem, 0.35rem + 0.15vw, 0.6rem);
@@ -23,8 +25,8 @@
 	--gutter: calc((100% - var(--container-max)) / 2);
 
 	/* --- Typography --- */
-	--font-head: Girassol, ui-serif, serif;
-	--font-body: Average, ui-serif, serif;
+	--font-head: ui-serif, serif;
+	--font-body: ui-serif, serif;
 
 	/* --- Neutral Color Mix Logic --- */
 	--mix-strength: 5%;
@@ -59,8 +61,11 @@
 	--accent: var(--color-primary-500);
 	--link: var(--color-status-info);
 
-	--bg-main: var(--color-base-100);
-	--bg-card: color-mix(in srgb, var(--color-base-100), var(--accent) 5%);
+	--text-main: light-dark(var(--color-base-900), var(--color-base-100));
+	--text-mute: light-dark(var(--color-base-700), var(--color-base-300));
+
+	--bg-main: light-dark(var(--color-base-100), var(--color-base-700));
+	--bg-card: color-mix(in srgb, var(--bg-main), var(--accent) 5%);
 	--bg-contrast: color-mix(in srgb, var(--color-base-500), var(--accent) 5%);
 
 	--btn-primary: var(--color-primary-700);
@@ -74,8 +79,8 @@
 	--shadow-weak: 0 2px 4px var(--shadow-color);
 	--shadow-strong: 0 10px 40px var(--shadow-color);
 
-	--sb-thumb: var(--color-primary-900);
-	--sb-track: var(--color-primary-100);
+	--sb-thumb: light-dark(var(--color-primary-900), var(--color-primary-300));
+	--sb-track: light-dark(var(--color-primary-100), var(--color-primary-900));
 
 	--scale-hover: scale(1.02);
 	--scale-active: scale(0.98);
