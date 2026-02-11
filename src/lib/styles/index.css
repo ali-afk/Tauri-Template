@@ -1,7 +1,9 @@
-@import "./resets.css";
-@import "./variables.css";
-@import "./document-loading.css";
-@import "./layout.css";
-@import "./utility.css";
-@import "./interactive.css";
-@import "./accessibility.css";
+@import "./resets.css" layer(base);
+@import "./variables.css" layer(base);
+@import "./document-loading.css" layer(loading-state);
+@import "./layout.css" layer(layout);
+@import "./utility.css" layer(utility);
+@import "./interactive.css" layer(utility);
+@import "./accessibility.css" layer(accessibility);
+
+@layer base, loading-state, layout, utility, accessibility;

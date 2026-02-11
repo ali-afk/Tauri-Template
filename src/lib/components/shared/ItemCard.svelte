@@ -52,7 +52,7 @@ a {
 	}
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) { /* DesignTokens.breakpoint[2] */
 	div {
 		flex: 0 1 150px;
 		min-height: 120px;

@@ -80,17 +80,11 @@
 	--scale-hover: scale(1.02);
 	--scale-active: scale(0.98);
 
-	/* --- Breakpoints --- */
-	--bp-1: 480px;
-	--bp-2: 768px;
-	--bp-3: 1024px;
-	--bp-4: 1280px;
-
-	--container-min: var(--bp-1);
-	--container-max: var(--bp-4);
+	--container-min: var(--breakpoint-1);
+	--container-max: var(--breakpoint-4);
 
 	/* Responsive scaling: fonts shift more aggressively than spaces */
-	@media (max-width: 1024px) {
+	@media (max-width: 1024px) { /* DesignTokens.breakpoint[3] */
 		/* Font sizes: shift down 1 level */
 		--fs-1: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
 		--fs-2: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
@@ -100,10 +94,10 @@
 		--fs-6: clamp(2.2rem, 2.05rem + 0.75vw, 2.8rem); /* was fs-5 */
 		--fs-7: clamp(2.8rem, 2.5rem + 1.5vw, 4rem); /* was fs-6 */
 
-		--container-max: var(--bp-3);
+		--container-max: var(--breakpoint-3);
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 768px) { /* DesignTokens.breakpoint[2] */
 		/* Font sizes: shift down 2 levels */
 		--fs-2: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
 		--fs-3: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
@@ -122,10 +116,10 @@
 		--space-7: clamp(3.2rem, 2.4rem + 2.5vw, 6.4rem); /* was space-6 */
 		--space-8: clamp(4.8rem, 3.6rem + 3.7vw, 9.6rem); /* was space-7 */
 
-		--container-max: var(--bp-2);
+		--container-max: var(--breakpoint-2);
 	}
 
-	@media (max-width: 480px) {
+	@media (max-width: 480px) { /* DesignTokens.breakpoint[1] */
 		/* Font sizes: shift down 3 levels */
 		--fs-3: clamp(1rem, 0.95rem + 0.25vw, 1.2rem); /* was fs-0 */
 		--fs-4: clamp(1.2rem, 1.15rem + 0.25vw, 1.4rem); /* was fs-1 */
@@ -142,6 +136,6 @@
 		--space-7: clamp(2.4rem, 2rem + 1.2vw, 4rem); /* was space-5 */
 		--space-8: clamp(3.2rem, 2.4rem + 2.5vw, 6.4rem); /* was space-6 */
 
-		--container-max: var(--bp-1);
+		--container-max: var(--breakpoint-1);
 	}
 }

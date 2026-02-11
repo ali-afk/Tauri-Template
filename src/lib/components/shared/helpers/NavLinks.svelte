@@ -1,6 +1,7 @@
 <script lang="ts">
 import { fly } from "svelte/transition";
 import { page } from "$app/state";
+import { DesignTokens } from "$data/shared";
 import { standard } from "$scripts/transition";
 
 let { isHidden }: { isHidden: boolean } = $props();
@@ -10,7 +11,9 @@ let isMenuOpen = $state(false);
 let isMobile = $state<boolean | null>(null);
 
 $effect(() => {
-	const mediaQuery = window.matchMedia("(max-width: 768px)");
+	const mediaQuery = window.matchMedia(
+		`(max-width: ${DesignTokens.breakpoint[2]})`,
+	);
 	isMobile = mediaQuery.matches;
 
 	const getIsMobile = (e: MediaQueryListEvent) => {
@@ -105,6 +108,7 @@ button {
 	}
 }
 
+/* DesignTokens.breakpoint[2] — media queries can't use CSS custom properties */
 @media (max-width: 768px) {
 	#links {
 		gap: var(--space-5);

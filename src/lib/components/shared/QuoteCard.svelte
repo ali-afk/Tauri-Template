@@ -61,7 +61,7 @@ article {
 	}
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) { /* DesignTokens.breakpoint[2] */
 	article,
 	article.reverse {
 		flex-direction: column;
