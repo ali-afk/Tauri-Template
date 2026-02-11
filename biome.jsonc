@@ -13,14 +13,12 @@
 		"formatter": { "enabled": true },
 		"linter": { "enabled": true },
 		"experimentalFullSupportEnabled": true,
-		"assist": { "enabled": true },
-		"parser": { "interpolation": true }
+		"assist": { "enabled": true }
 	},
 	"css": {
 		"formatter": { "enabled": true },
 		"linter": { "enabled": true },
-		"assist": { "enabled": true },
-		"parser": { "cssModules": true }
+		"assist": { "enabled": true }
 	},
 	"overrides": [
 		{
