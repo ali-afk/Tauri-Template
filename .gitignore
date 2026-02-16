@@ -4,9 +4,10 @@ build/
 *.bak
 .env
 .env.*
-.vite
+.vite/
 src-tauri/target/
 
 # AI Tools
-.claude
-.serena
+.claude/
+.serena/
+opencode.json
