@@ -126,7 +126,7 @@ through `--transition-duration-{long,medium,short}`
 ### Grid (auto-fit)
 
 ```css
---min-col-size: min(300px, 100%)
+--min-col-size: min(300px, 100%);
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(var(--min-col-size), 1fr));
 gap: var(--space-5);
@@ -142,7 +142,9 @@ Fluid values handle most responsiveness. When needed:
 ```css
 .grid {
   grid-template-columns: 1fr;
-  @media (min-width: 768px) { grid-template-columns: 1fr 1fr; }
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 ```
 
@@ -156,10 +158,10 @@ At smaller breakpoints, size tokens are reassigned to smaller values:
 ```css
 @media (max-width: 768px) {
   /* Font sizes: shift down 2 levels */
-  --fs-5: clamp(1.6rem, ...);  /* What --fs-3 would be on desktop */
+  --fs-5: clamp(1.6rem, ...); /* What --fs-3 would be on desktop */
 
   /* Spaces: shift down 1 level */
-  --space-5: clamp(1.6rem, ...);  /* What --space-4 would be on desktop */
+  --space-5: clamp(1.6rem, ...); /* What --space-4 would be on desktop */
 }
 ```
 
@@ -183,9 +185,15 @@ responsiveness is handled once, globally.
   flex-direction: column;
 }
 
-.stack { gap: var(--space-4); }
-.stack--tight { gap: var(--space-3); }
-.stack--loose { gap: var(--space-5); }
+.stack {
+  gap: var(--space-4);
+}
+.stack--tight {
+  gap: var(--space-3);
+}
+.stack--loose {
+  gap: var(--space-5);
+}
 ```
 
 `[class*="stack"]` matches any class containing "stack", so all variants
@@ -197,8 +205,12 @@ Reserved substrings: `row`, `stack`, `title`, `card-grid`, `center`.
 ### Lift Modifiers
 
 ```css
-.lift:hover { transform: translateY(-2px); }
-.lift--strong:hover { transform: translateY(-4px); }
+.lift:hover {
+  transform: translateY(-2px);
+}
+.lift--strong:hover {
+  transform: translateY(-4px);
+}
 ```
 
 - `.lift` — subtle, for nav links and minor elements
@@ -211,7 +223,8 @@ Independent classes, not BEM modifiers. Use one or the other.
 `.card` and `.btn` include GPU layer promotion hints:
 
 ```css
-.card, .btn {
+.card,
+.btn {
   backface-visibility: hidden;
   perspective: 1000px;
   transform: translateZ(0);
@@ -259,8 +272,9 @@ article {
 **From `interactive.css`:**
 
 ```css
-.card, .btn {
-  --_contrast: sign(0.6 - l);  /* -1 light bg, +1 dark bg */
+.card,
+.btn {
+  --_contrast: sign(0.6 - l); /* -1 light bg, +1 dark bg */
   --text-main: oklch(from var(--_background) clamp(0, var(--_contrast), 1) 0 0);
   --text-mute: oklch(from var(--_background) 0.5 c h);
   background-color: var(--_background);
@@ -310,11 +324,11 @@ Components can have multiple interactive elements with different backgrounds:
 ```css
 /* ItemCard.svelte */
 div {
-  --_background: var(--bg-card);  /* Light card background */
+  --_background: var(--bg-card); /* Light card background */
 }
 
 a {
-  --_background: var(--color-status-info);  /* Blue button inside */
+  --_background: var(--color-status-info); /* Blue button inside */
 }
 ```
 
@@ -335,13 +349,13 @@ system) and global tokens (no underscore).
 
 ```css
 /* Text */
-color: var(--text-main);      /* Primary */
-color: var(--text-mute);           /* Muted */
+color: var(--text-main); /* Primary */
+color: var(--text-mute); /* Muted */
 
 /* Backgrounds */
-background: var(--bg-main);        /* Page */
-background: var(--bg-card);        /* Card */
+background: var(--bg-main); /* Page */
+background: var(--bg-card); /* Card */
 
 /* Interactive */
-background: var(--btn-primary);    /* Button */
+background: var(--btn-primary); /* Button */
 ```

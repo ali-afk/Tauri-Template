@@ -18,14 +18,14 @@ Add new pages under `(main)/`. Add new endpoints as `route-name/+server.ts`.
 
 Defined in `svelte.config.js`:
 
-| Alias | Path |
-| ----- | ---- |
+| Alias         | Path                 |
+| ------------- | -------------------- |
 | `$components` | `src/lib/components` |
-| `$data` | `src/lib/data` |
-| `$assets` | `src/lib/assets` |
-| `$scripts` | `src/lib/scripts` |
-| `$types` | `src/lib/types` |
-| `$styles` | `src/lib/styles` |
+| `$data`       | `src/lib/data`       |
+| `$assets`     | `src/lib/assets`     |
+| `$scripts`    | `src/lib/scripts`    |
+| `$types`      | `src/lib/types`      |
+| `$styles`     | `src/lib/styles`     |
 
 ## Barrel Exports
 

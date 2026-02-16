@@ -18,7 +18,7 @@ opening one closes the rest. Native HTML, no JS required.
 ```svelte
 <!-- The animated content is in {#if}, not inside <details> -->
 {#if isOpen}
-	<div transition:standard={slide}>Content</div>
+ <div transition:standard={slide}>Content</div>
 {/if}
 ```
 
@@ -49,8 +49,8 @@ desktop links to flash on mobile before JS runs.
 
 ```typescript
 $effect(() => {
-	page.url.pathname;
-	isMenuOpen = false;
+  page.url.pathname;
+  isMenuOpen = false;
 });
 ```
 
@@ -74,8 +74,8 @@ transition fn, returns a configured version.
 ```svelte
 <!-- QuoteCard.svelte -->
 <article
-	class:reverse={direction === 'right'}
-	class="wrapper card row lift--strong"
+ class:reverse={direction === 'right'}
+ class="wrapper card row lift--strong"
 >
 ```
 
@@ -88,7 +88,7 @@ merges them.
 ```typescript
 // utils.ts
 export function cycleColorScale(index: number): ColorDegrees {
-	return ColorScale[index % 5] ?? 500;
+  return ColorScale[index % 5] ?? 500;
 }
 ```
 
@@ -108,8 +108,8 @@ automatically picks the next color in the sequence — no manual assignment.
 let idCounter = 0;
 
 export function generateId(prefix: string = "id"): string {
-	idCounter++;
-	return `${prefix}-${idCounter}-${Math.random().toString(36).substring(2, 5)}`;
+  idCounter++;
+  return `${prefix}-${idCounter}-${Math.random().toString(36).substring(2, 5)}`;
 }
 ```
 
@@ -122,14 +122,14 @@ both together is essentially impossible. Produces IDs like `content-1-x7f`.
 
 ```typescript
 onMount(() => {
-	registerDesignTokens();
-	document.documentElement.classList.add("document-loaded");
+  registerDesignTokens();
+  document.documentElement.classList.add("document-loaded");
 });
 ```
 
 ```css
 html:not(.document-loaded) body::before {
-	/* shimmer animation */
+  /* shimmer animation */
 }
 ```
 

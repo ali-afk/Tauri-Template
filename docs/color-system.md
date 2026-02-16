@@ -19,7 +19,8 @@ The auto-contrast system eliminates this by
 ### The Core Calculation
 
 ```css
-.card, .btn {
+.card,
+.btn {
   /* 1. Determine contrast direction from background lightness */
   --_contrast: sign(0.6 - l);
 
@@ -42,13 +43,13 @@ The auto-contrast system eliminates this by
 
 When you set `--_background`, these are calculated automatically:
 
-| Variable | Purpose | Calculation |
-| ---------- | --------- | ------------- |
-| `--text-main` | Primary text | Black or white based on contrast |
-| `--text-mute` | Secondary text | 50% lightness, keeps hue |
-| `--border-color` | Default border | Darkened/lightened from background |
-| `--hover-color` | Hover background | Slightly shifted from background |
-| `--hover-border-color` | Hover border | Calculated on hover |
+| Variable               | Purpose          | Calculation                        |
+| ---------------------- | ---------------- | ---------------------------------- |
+| `--text-main`          | Primary text     | Black or white based on contrast   |
+| `--text-mute`          | Secondary text   | 50% lightness, keeps hue           |
+| `--border-color`       | Default border   | Darkened/lightened from background |
+| `--hover-color`        | Hover background | Slightly shifted from background   |
+| `--hover-border-color` | Hover border     | Calculated on hover                |
 
 ## Critical Requirement: `--_background`
 
@@ -152,14 +153,11 @@ This makes the lightness-based contrast calculation reliable across all hues.
 ### Border Darkness Calculation
 
 ```css
---border-brightness: calc(
-   l + var(--_contrast) * var(--border-darkness)
- );
+--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
 
 --border-color: oklch(
-   from var(--_background) clamp(
-   0, var(--border-brightness), 1
- ) c h);
+  from var(--_background) clamp(0, var(--border-brightness), 1) c h
+);
 ```
 
 - Light backgrounds → darken border (`--_contrast` = -1)
