@@ -7,7 +7,7 @@ import { Meta } from "$components/shared";
 
 <section class="center--page">
 	<h1 class="title--page">{page.status}</h1>
-	<p>{page.error?.message || "Unknown Error Occured"}</p>
+	<p>{page.error?.message || "Unknown Error Occurred"}</p>
 	<a href="/" class="btn">Return Home</a>
 </section>
 

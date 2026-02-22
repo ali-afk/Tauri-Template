@@ -10,7 +10,7 @@
    - Inline style: style="--_background: {color}"
    - Component <style> block
    
-   Auto-contrast system calculates text/border colors
+   Auto-contrast system calculates text, border, and shadow colors
    from --_background using OKLCH relative color syntax.
    ================================ */
 
@@ -23,10 +23,10 @@
 	--text-main: oklch(from var(--_background) clamp(0, var(--_contrast), 1) 0 0);
 	--text-mute: oklch(from var(--_background) 0.5 c h);
 
-	--border-darkness: 2.5%;
-	--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
+	--_border-darkness: 2.5%;
+	--_border-brightness: calc(l + var(--_contrast) * var(--_border-darkness));
 	--border-color: oklch(
-		from var(--_background) clamp(0, var(--border-brightness), 1) c h
+		from var(--_background) clamp(0, var(--_border-brightness), 1) c h
 	);
 
 	background-color: var(--_background);
@@ -37,10 +37,10 @@
 	transition-property: transform, background-color, box-shadow, border-color;
 
 	&:hover {
-		--border-darkness: 10%;
-		--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
+		--_border-darkness: 10%;
+		--_border-brightness: calc(l + var(--_contrast) * var(--_border-darkness));
 		--border-color: oklch(
-			from var(--_background) clamp(0, var(--border-brightness), 1) c h
+			from var(--_background) clamp(0, var(--_border-brightness), 1) c h
 		);
 
 		--hover-darkness: 3%;
@@ -54,7 +54,7 @@
 		box-shadow: var(--shadow-strong);
 
 		hr {
-			border-color: var(--hover-border-color);
+			border-color: var(--border-color);
 		}
 	}
 

@@ -1,28 +1,22 @@
 /**
  * TRANSITION & EASING SYSTEM
  *
- * Provides unified transition/easing handling across CSS and JavaScript animations.
- * Integrates with design tokens and respects user accessibility preferences.
+ * Wraps Svelte transitions with consistent easing/duration from design tokens.
+ * Automatically disables animations when prefers-reduced-motion is active.
  *
- * KEY FEATURES:
- * 1. Consistent easing across CSS and Svelte transitions
- * 2. Respects prefers-reduced-motion (disables animations for users with vestibular disorders)
- * 3. Supports multiple easing formats: Svelte keywords, CSS keywords, cubic-bezier()
- *
- * USAGE IN COMPONENTS:
+ * Usage — always use `standard()` instead of transitions directly:
  * ```svelte
- * <script>
- *   import { slide } from 'svelte/transition';
- *   import { standard } from '$scripts/transition';
- * </script>
- *
- * {#if visible}
- *   <div transition:standard={slide}>
- *     Content slides in/out with consistent easing
- *   </div>
- * {/if}
+ * <div transition:standard={slide}>content</div>
  * ```
- * @see src/lib/data/default-properties.ts for easing/duration configuration
+ *
+ * @see src/lib/data/shared/design-tokens.ts for easing/duration values
+ *
+ * TODO: refactor — currently too loose:
+ * - `TransitionFn` uses `params?: any` and non-null assertions throughout
+ * - `params?: SlideParams` on `standard()` is too narrow — only typed for `slide`,
+ *   breaks type safety when used with `fly`, `fade`, etc.
+ * - `standard()` should either accept a generic params type or provide
+ *   per-transition overloads
  */
 
 import BezierEasing from "bezier-easing";
@@ -30,8 +24,8 @@ import * as svelteEasings from "svelte/easing";
 import { prefersReducedMotion } from "svelte/motion";
 import type { SlideParams, TransitionConfig } from "svelte/transition";
 import { DesignTokens } from "$data/shared";
-import { getMediaCurrent, queryCssProperty } from "./media";
-import { parseCssTime } from "./utils";
+import { getCurrentMedia, queryCssProperty } from "./media";
+import { parseTime } from "./utils";
 
 /**
  * Type for a Svelte transition function
@@ -155,11 +149,11 @@ export function standard(
 	const mergedParams: SlideParams = {
 		...params,
 		duration:
-			params?.duration ?? parseCssTime(DesignTokens.transition.duration.medium),
+			params?.duration ?? parseTime(DesignTokens.transition.duration.medium),
 		easing: getEasing(node),
 	};
 
-	if (getMediaCurrent(prefersReducedMotion, true, false)) {
+	if (getCurrentMedia(prefersReducedMotion, true, false)) {
 		mergedParams.duration = 0;
 	}
 

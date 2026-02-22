@@ -1,33 +1,17 @@
 /**
  * BUILD-TIME CSS CUSTOM PROPERTY GENERATOR
  *
- * Reads design tokens from design-tokens.ts and generates gen.css containing:
+ * Reads DesignTokens from design-tokens.ts and writes gen.css:
+ * - `@property` blocks with a safe `initial-value` per syntax type, so the
+ *   browser accepts the registration. The `:root` block that follows immediately
+ *   overrides each property with its real value (which may be a computed
+ *   expression like `color-mix()` or `var()`).
+ * - A single `:root {}` block with all token values.
  *
- * 1. @property declarations — registers each token as a typed CSS custom property.
- *    No `initial-value` is declared, which allows computed values (color-mix(),
- *    clamp(), var()) to be assigned in :root without triggering a spec violation.
+ * Runs automatically via vite-plugin-run on design-tokens.ts changes,
+ * and as part of `bun fix-all`.
  *
- * 2. :root block — assigns all token values to their CSS custom properties.
- *
- * Benefits of @property registration:
- * - TYPE SAFETY: browser validates values against the declared syntax
- * - SMOOTH ANIMATIONS: registered properties can be transitioned/animated
- * - RELATIVE COLOR SYNTAX: enables oklch(from var(--color) l c h) patterns
- *   which powers the .card/.btn auto-contrast system in interactive.css
- * - EDITOR AUTOCOMPLETE: IDEs surface registered properties with type hints
- *
- * HOW IT WORKS:
- * 1. Reads DesignTokens from design-tokens.ts
- * 2. Flattens nested structure: { color: { primary: { 500: "#934599" } } }
- *    → CSS name "--color-primary-500", value "#934599"
- * 3. Looks up the nearest config (sub-group takes precedence over group)
- *    to find syntax and inherits for the @property declaration
- * 4. Writes all @property blocks then a single :root {} block to gen.css
- *
- * Run automatically by vite-plugin-run when design-tokens.ts changes.
- * Also runs as part of `bun fix-all` to keep gen.css fresh for svelte-check.
- *
- * @see src/lib/data/shared/design-tokens.ts for token definitions
+ * @see src/lib/data/shared/design-tokens.ts for token definitions and structure
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/@property
  */
 
@@ -39,8 +23,8 @@ import type {
 } from "$types/design-tokens";
 
 /**
- * Flattens nested object: { color: { primary: { 500: "#934599" } } }
- * Becomes: { "color-primary-500": "#934599" }
+ * Flattens nested object { color: { primary: { 500: "#934599" } } }
+ * into: { "--color-primary-500": "#934599" }
  */
 function toCssProperties(
 	propertyNode: PropertyNode,
@@ -102,7 +86,9 @@ function getDefaultCssValues(syntax: string) {
 
 /**
  * Generates gen.css from DesignTokens at build time.
- * Writes @property declarations (no initial-value) + :root {} block.
+ * Writes @property declarations with safe initial-value defaults + :root {} block.
+ *
+ * @see src/lib/data/shared/design-tokens.ts for token definitions
  */
 async function genDesignTokens() {
 	const properties = toCssProperties(DesignTokens);
@@ -139,8 +125,8 @@ async function genDesignTokens() {
 
 		const initialValue = getDefaultCssValues(syntax);
 
-		// @property block — no initial-value, allows computed values in :root
-		propertyBlocks += `@property ${name} {\n\tsyntax: "${syntax}";\n\tinherits: ${inherits};\n\tinitial-value: ${initialValue}}\n\n`;
+		// @property block — initial-value satisfies the spec; :root overrides with real value
+		propertyBlocks += `@property ${name} {\n\tsyntax: "${syntax}";\n\tinherits: ${inherits};\n\tinitial-value: ${initialValue};\n}\n\n`;
 
 		// :root value
 		rootValues += `\t${name}: ${trueValue};\n`;
