@@ -1,16 +1,22 @@
 .loading-item {
-	background: light-dark(#f0f0f0, #0f0f0f);
-
 	&::before {
 		content: "";
 		position: fixed;
 		width: 100vw;
 		height: 100dvh;
-		background: linear-gradient(
-			90deg,
-			rgba(255, 255, 255, 0) 0%,
-			rgba(255, 255, 255, 0.6) 50%,
-			rgba(255, 255, 255, 0) 100%
+		background: light-dark(
+			linear-gradient(
+				90deg,
+				var(--color-base-700) 0%,
+				transparent 50%,
+				var(--color-base-700) 100%
+			),
+			linear-gradient(
+				90deg,
+				transparent 0%,
+				var(--color-base-300) 50%,
+				transparent 100%
+			)
 		);
 		background-size: 200% 100%;
 		animation: shimmer 1.5s infinite;
