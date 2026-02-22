@@ -3,7 +3,6 @@
 @import "open-props/easings";
 @import "open-props/borders";
 @import "open-props/sizes";
-@import "open-props/durations";
 
 @import "./resets.css" layer(base);
 @import "./gen.css" layer(base);

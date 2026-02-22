@@ -81,7 +81,7 @@ const colorTokens = {
 		config: { syntax: "<color>", inherits: true },
 		value: "light-dark(var(--color-base-100), var(--color-base-700))",
 	},
-};
+} as const satisfies Record<string, PropertyNode>;
 
 const fontTokens = {
 	fw: {
@@ -110,7 +110,7 @@ const fontTokens = {
 		main: "light-dark(var(--color-base-900), var(--color-base-100))",
 		mute: "light-dark(var(--color-base-700), var(--color-base-300))",
 	},
-};
+} as const satisfies Record<string, PropertyNode>;
 
 const spaceTokens = {
 	space: {
@@ -133,7 +133,7 @@ const spaceTokens = {
 		lg: "var(--size-lg)",
 		xl: "var(--size-xl)",
 	},
-};
+} as const satisfies Record<string, PropertyNode>;
 
 const otherTokens = {
 	border: {
@@ -147,16 +147,16 @@ const otherTokens = {
 		},
 		duration: {
 			config: { syntax: "<time>", inherits: true },
-			short: "var(--duration-quick-2)",
-			medium: "var(--duration-moderate-1)",
-			long: "var(--duration-gentle-1)",
+			short: "120ms",
+			medium: "180ms",
+			long: "320ms",
 		},
 	},
 	shadow: {
 		config: { syntax: "<color>", inherits: true },
 		color: "color-mix(in srgb, var(--color-base-900), transparent 80%)",
 	},
-};
+} as const satisfies Record<string, PropertyNode>;
 
 /**
  * Design tokens organized by category
