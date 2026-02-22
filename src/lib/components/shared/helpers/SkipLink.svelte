@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <a href="#main-content">Skip to main content</a>
 
 <style>

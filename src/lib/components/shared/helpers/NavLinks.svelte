@@ -55,6 +55,7 @@ $effect(() => {
 
 {#if isMobile}
 	<button
+		type="button"
 		aria-label="Navigation menu"
 		aria-controls="links"
 		aria-expanded={isMenuOpen}
@@ -62,6 +63,7 @@ $effect(() => {
 		class="btn avatar"
 	>
 		<svg
+			aria-hidden="true"
 			width="16px"
 			height="16px"
 			class:active={isMenuOpen}

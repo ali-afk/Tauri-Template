@@ -8,13 +8,13 @@ interface Props {
 	centeredTitle?: boolean;
 }
 
-let { image, title, alt, centeredTitle = false }: Props = $props();
+let { image, title, alt: altText, centeredTitle = false }: Props = $props();
 </script>
 
 {#snippet hero()}
 	<img
 		src={image.url}
-		{alt}
+		alt={altText}
 		fetchpriority="high"
 		width={image.dimensions.width}
 		height={image.dimensions.height}
