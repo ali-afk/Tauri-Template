@@ -3,6 +3,11 @@
 
 	/* ========================================
 	   OPEN PROPS ALIASES
+	   Font weights, line heights, font sizes,
+	   spacing, and border/easing tokens are set
+	   in gen.css from design-tokens.ts, then
+	   overridden here with Open Props var() refs
+	   so variables.css wins the cascade.
 	   ======================================== */
 
 	/* Font Weights */
@@ -66,46 +71,13 @@
 	--font-body: ui-serif, serif;
 
 	/* ========================================
-	   NEUTRAL COLOR MIX LOGIC
-	   ======================================== */
-
-	--mix-strength: 5%;
-
-	--color-base-900: color-mix(
-		in srgb,
-		#000,
-		var(--color-primary-500) var(--mix-strength)
-	);
-	--color-base-700: color-mix(
-		in srgb,
-		#444,
-		var(--color-primary-500) var(--mix-strength)
-	);
-	--color-base-500: color-mix(
-		in srgb,
-		#888,
-		var(--color-primary-500) var(--mix-strength)
-	);
-	--color-base-300: color-mix(
-		in srgb,
-		#ccc,
-		var(--color-primary-500) var(--mix-strength)
-	);
-	--color-base-100: color-mix(
-		in srgb,
-		#fff,
-		var(--color-primary-500) var(--mix-strength)
-	);
-
-	/* ========================================
 	   COMPONENT COLORS
+	   Semantic aliases that are not registered
+	   as @property tokens (no animation needed).
 	   ======================================== */
 
 	--accent: var(--color-primary-500);
 	--link: var(--color-status-info);
-
-	--text-main: light-dark(var(--color-base-900), var(--color-base-100));
-	--text-mute: light-dark(var(--color-base-700), var(--color-base-300));
 
 	--bg-main: light-dark(var(--color-base-100), var(--color-base-700));
 	--bg-card: color-mix(in srgb, var(--bg-main), var(--accent) 5%);
@@ -121,7 +93,6 @@
 	   EFFECTS & ANIMATION
 	   ======================================== */
 
-	--shadow-color: color-mix(in srgb, var(--color-base-900), transparent 80%);
 	--shadow-weak: 0 2px 4px var(--shadow-color);
 	--shadow-strong: 0 10px 40px var(--shadow-color);
 

@@ -11,8 +11,12 @@
  *   - @property declarations for each token (enables type safety + smooth animations)
  *   - A :root {} block assigning each token's initial value
  *
- * Fluid spacing and font sizes are defined in variables.css as Open Props aliases.
- * This file only holds static values that benefit from @property registration.
+ * Token values may be static strings, Open Props var() references, color-mix(),
+ * light-dark(), or any other CSS computed value — gen.ts omits initial-value from
+ * @property blocks, which allows computed values to be used freely in :root.
+ *
+ * variables.css overrides fluid tokens (--fs-*, --space-*, etc.) with Open Props
+ * aliases and responsive shift-down media queries on top of the values set here.
  *
  * To reference a token value in TypeScript (e.g. in a script), use:
  *   DesignTokens.color.primary[500]         ← for leaf values
@@ -30,7 +34,7 @@
  * padding: var(--space-3);       ← aliased in variables.css to Open Props fluid value
  *
  * MODIFYING VALUES:
- * Safe to change: Any leaf value (colors, sizes, numbers)
+ * Safe to change: Any leaf value (colors, computed expressions, Open Props refs)
  * Be careful with: syntax in config (must match CSS spec)
  * Don't rename: Object keys or structure (breaks CSS var() references)
  *
@@ -57,12 +61,14 @@ const colors = {
 			300: "#d66da4",
 			100: "#f4d7e6",
 		},
+		// Base grays are tinted with the primary color via color-mix().
+		// Changing --color-primary-500 automatically updates all base grays.
 		base: {
-			900: "#000000",
-			700: "#444444",
-			500: "#888888",
-			300: "#cccccc",
-			100: "#ffffff",
+			900: "color-mix(in srgb, #000, var(--color-primary-500) 5%)",
+			700: "color-mix(in srgb, #444, var(--color-primary-500) 5%)",
+			500: "color-mix(in srgb, #888, var(--color-primary-500) 5%)",
+			300: "color-mix(in srgb, #ccc, var(--color-primary-500) 5%)",
+			100: "color-mix(in srgb, #fff, var(--color-primary-500) 5%)",
 		},
 		status: {
 			danger: "#dc2626",
@@ -77,80 +83,80 @@ const colorTokens = {
 	...colors,
 	_background: {
 		config: { syntax: "<color>", inherits: true },
-		value: colors.color.base[100],
+		value: "light-dark(var(--color-base-100), var(--color-base-700))",
 	},
 };
 
 const fontTokens = {
 	fw: {
 		config: { syntax: "<number>", inherits: true },
-		light: 300,
-		regular: 400,
-		semibold: 600,
-		bold: 700,
+		light: "var(--font-weight-3)",
+		regular: "var(--font-weight-4)",
+		semibold: "var(--font-weight-6)",
+		bold: "var(--font-weight-7)",
 	},
 	fs: {
 		config: { syntax: "<length>", inherits: true },
-		0: "10px",
-		1: "12px",
-		2: "14px",
-		3: "16px",
-		4: "20px",
-		5: "25px",
-		6: "35px",
-		7: "50px",
+		0: "var(--font-size-fluid-0)",
+		1: "var(--font-size-fluid-0)",
+		2: "var(--font-size-fluid-1)",
+		3: "var(--font-size-fluid-1)",
+		4: "var(--font-size-fluid-1)",
+		5: "var(--font-size-fluid-2)",
+		6: "var(--font-size-fluid-2)",
+		7: "var(--font-size-fluid-3)",
 	},
 	lh: {
 		config: { syntax: "<number>", inherits: true },
-		1: "1.1", // --font-lineheight-0
-		2: "1.25", // --font-lineheight-1
-		3: "1.5", // --font-lineheight-3
-		4: "1.75", // --font-lineheight-4
+		1: "var(--font-lineheight-0)",
+		2: "var(--font-lineheight-1)",
+		3: "var(--font-lineheight-3)",
+		4: "var(--font-lineheight-4)",
 	},
 	text: {
 		config: { syntax: "<color>", inherits: true },
-		main: colorTokens.color.base[900],
-		mute: colorTokens.color.base[700],
+		main: "light-dark(var(--color-base-900), var(--color-base-100))",
+		mute: "light-dark(var(--color-base-700), var(--color-base-300))",
 	},
 };
 
 const spaceTokens = {
 	space: {
 		config: { syntax: "<length>", inherits: true },
-		0: "3px",
-		1: "5px",
-		2: "10px",
-		3: "14px",
-		4: "20px",
-		5: "30px",
-		6: "45px",
-		7: "70px",
-		8: "95px",
+		0: "var(--size-fluid-1)",
+		1: "var(--size-fluid-1)",
+		2: "var(--size-fluid-2)",
+		3: "var(--size-fluid-3)",
+		4: "var(--size-fluid-4)",
+		5: "var(--size-fluid-4)",
+		6: "var(--size-fluid-6)",
+		7: "var(--size-fluid-7)",
+		8: "var(--size-fluid-8)",
 	},
 	container: {
 		config: { syntax: "<length>", inherits: true },
-		min: "480px",
-		max: "1280px",
+		min: "var(--size-sm)",
+		max: "var(--size-xl)",
 	},
 	breakpoint: {
 		config: { syntax: "<length>", inherits: true },
-		1: "480px",
-		2: "768px",
-		3: "1024px",
-		4: "1440px",
+		1: "var(--size-sm)",
+		2: "var(--size-md)",
+		3: "var(--size-lg)",
+		4: "var(--size-xl)",
 	},
 };
 
 const borderTokens = {
 	border: {
-		radius: { config: { syntax: "<length>", inherits: true }, value: "1rem" }, // --radius-3
+		radius: { config: { syntax: "<length>", inherits: true }, value: "var(--radius-3)" },
 		darkness: {
 			config: { syntax: "<number>", inherits: true },
 			value: "0.025",
 		},
 		color: {
 			config: { syntax: "<color>", inherits: true },
-			value: colorTokens.color.base[300],
+			value: "var(--color-base-300)",
 		},
 	},
 };
@@ -159,7 +165,7 @@ const transitionTokens = {
 	transition: {
 		easing: {
 			config: { syntax: "*", inherits: true },
-			value: "cubic-bezier(0, 0, .3, 1)", // --ease-out-3
+			value: "var(--ease-out-3)",
 		},
 		duration: {
 			config: { syntax: "<time>", inherits: true },
@@ -184,14 +190,14 @@ const transitionTokens = {
 			},
 			color: {
 				config: { syntax: "<color>", inherits: true },
-				value: colorTokens.color.base[500],
+				value: "var(--color-base-500)",
 			},
 		},
 	},
 	shadow: {
 		color: {
 			config: { syntax: "<color>", inherits: true },
-			value: "rgba(0, 0, 0, 0.25)",
+			value: "color-mix(in srgb, var(--color-base-900), transparent 80%)",
 		},
 	},
 };
