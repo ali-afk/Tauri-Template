@@ -1,9 +1,0 @@
-node_modules/
-bun-lock.yaml
-.env
-.env.*
-*.bak
-.svelte-kit/
-build/
-src/lib/assets/
-src-tauri/

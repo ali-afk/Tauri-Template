@@ -1,4 +1,19 @@
 {
+	"files": {
+		"includes": [
+			"**",
+			"!!node_modules",
+			"!!.svelte-kit",
+			"!!build",
+			"!!src-tauri",
+			"!!src/lib/assets",
+			"!src/lib/styles/gen.css",
+			"!bun-lock.yaml",
+			"!.env",
+			"!.env.*",
+			"!*.bak"
+		]
+	},
 	"linter": {
 		"rules": {
 			"recommended": true,
@@ -19,22 +34,5 @@
 		"formatter": { "enabled": true },
 		"linter": { "enabled": true },
 		"assist": { "enabled": true }
-	},
-	"overrides": [
-		{
-			"includes": ["**/*.svelte"],
-			"linter": {
-				"rules": {
-					"style": {
-						"useConst": "off",
-						"useImportType": "off"
-					},
-					"correctness": {
-						"noUnusedVariables": "off",
-						"noUnusedImports": "off"
-					}
-				}
-			}
-		}
-	]
+	}
 }
