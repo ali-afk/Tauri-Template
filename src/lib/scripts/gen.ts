@@ -72,14 +72,27 @@ function getDefaultCssValues(syntax: string) {
 		case "<color>": {
 			return "#fff";
 		}
-		case "<number>": {
+		case "<number>":
+		case "<integer>":
+		case "<length>":
+		case "<length-percentage>":
+		case "<angle>":
+		case "<percentage>":
+		case "<resolution>": {
 			return "0";
-		}
-		case "<length>": {
-			return "0px";
 		}
 		case "<time>": {
 			return "0s";
+		}
+		case "<url>": {
+			return "about:invalid";
+		}
+		case "<transform-list>":
+		case "<image>": {
+			return "none";
+		}
+		case "<custom-ident>": {
+			return "auto";
 		}
 		default: {
 			return "0";
