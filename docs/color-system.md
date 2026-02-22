@@ -43,13 +43,12 @@ The auto-contrast system eliminates this by
 
 When you set `--_background`, these are calculated automatically:
 
-| Variable               | Purpose          | Calculation                        |
-| ---------------------- | ---------------- | ---------------------------------- |
-| `--text-main`          | Primary text     | Black or white based on contrast   |
-| `--text-mute`          | Secondary text   | 50% lightness, keeps hue           |
-| `--border-color`       | Default border   | Darkened/lightened from background |
-| `--hover-color`        | Hover background | Slightly shifted from background   |
-| `--hover-border-color` | Hover border     | Calculated on hover                |
+| Variable            | Purpose          | Calculation                        |
+| ------------------- | ---------------- | ---------------------------------- |
+| `--text-main`       | Primary text     | Black or white based on contrast   |
+| `--text-mute`       | Secondary text   | 50% lightness, keeps hue           |
+| `--border-color`    | Default border   | Darkened/lightened from background |
+| `--hover-background`| Hover background | Slightly shifted from background   |
 
 ## Critical Requirement: `--_background`
 
@@ -73,58 +72,17 @@ article {
 }
 ```
 
-**Via scoped overrides:**
-
-```css
-.special-card {
-  --_background: var(--color-primary-700);
-}
-```
-
 ## Critical Limitation: Only Works on `.card` and `.btn`
 
-> **The auto variables (`--text-main`, `--border-color`, etc.) are ONLY
-> calculated inside _interactive_ elements (`.card` or `.btn`).**
+The auto variables (`--text-main`, `--border-color`, etc.) are **only**
+recalculated inside elements with `.card` or `.btn` — the calculations are
+defined in that selector block in `interactive.css`.
 
-This is because the calculations are defined in the `.card, .btn` selector
-block in `interactive.css`.
+Child elements without those classes don't recalculate; they inherit the
+parent's already-computed values.
 
-### What Works
-
-```svelte
-<!-- Card class triggers auto-contrast -->
-<article class="card" style="--_background: {color}">
-  <p>Text color auto-adjusts</p>
-</article>
-
-<!-- Button class triggers auto-contrast -->
-<button class="btn" style="--_background: {color}">
-  Click me
-</button>
-```
-
-### What Does NOT Work
-
-```svelte
-<!-- NO .card or .btn class = NO auto-contrast -->
-<div style="--_background: {color}">
-  <p>Text color will NOT adjust - uses global --text-main instead</p>
-</div>
-
-<!-- Child inherits --_background but NOT the calculations -->
-<article class="card" style="--_background: {color}">
-  <div class="nested-element">
-    <!-- If you set a different --_background here, it won't recalculate -->
-  </div>
-</article>
-```
-
-### If You Need Auto-Contrast on a Non-Interactive Element
-
-Either:
-
-1. Add `.card` class (even without hover effects, it enables the system)
-2. Manually set the colors using the same calculation pattern
+If you need auto-contrast on a non-interactive element, add `.card` — hover
+effects can be suppressed separately if unwanted.
 
 ## The Math Explained
 
@@ -134,35 +92,31 @@ Either:
 --_contrast: sign(0.6 - l);
 ```
 
-Human perception doesn't treat 50% lightness as the midpoint. Light colors
-appear lighter than they "should" due to how our eyes work. The 0.6 threshold
-accounts for this — it switches to dark text slightly earlier than pure
-middle gray.
+Human perception doesn't treat 50% lightness as the midpoint — light colors
+appear lighter than they "should". The 0.6 threshold switches to dark text
+slightly earlier than pure middle gray to compensate.
 
 ### Why OKLCH?
 
-OKLCH (Oklab Lightness, Chroma, Hue) is a **perceptually uniform** color
-space:
+OKLCH is perceptually uniform: equal steps in `l` appear as equal brightness
+changes, and colors with the same `l` value appear equally bright regardless of
+hue. HSL doesn't have this property. This makes the lightness-based contrast
+calculation reliable across all hues.
 
-- Equal steps in `l` appear as equal brightness changes
-- Colors with same `l` value appear equally bright
-- Unlike HSL where "50% lightness" varies wildly by hue
-
-This makes the lightness-based contrast calculation reliable across all hues.
-
-### Border Darkness Calculation
+### Border Calculation
 
 ```css
---border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
+--_border-darkness: 2.5%;
+--_border-brightness: calc(l + var(--_contrast) * var(--_border-darkness));
 
 --border-color: oklch(
-  from var(--_background) clamp(0, var(--border-brightness), 1) c h
+  from var(--_background) clamp(0, var(--_border-brightness), 1) c h
 );
 ```
 
-- Light backgrounds → darken border (`--_contrast` = -1)
-- Dark backgrounds → lighten border (`--_contrast` = +1)
-- `--border-darkness` controls intensity (defined in `design-tokens.ts`)
+`--_contrast` is `-1` for light backgrounds and `+1` for dark ones, so borders
+always shift toward the opposite end of the lightness scale. `--_border-darkness`
+increases to `10%` on hover for a more pronounced outline.
 
 ## Usage Examples
 
@@ -201,28 +155,13 @@ article {
 **Text not readable?**
 
 1. Background might be near the 0.6 threshold — test with slightly
-   lighter/darker
-2. Check that `--text-main` is being applied (not overridden)
-
-## Critical Rule: Only Set `--_background`
-
-> **When styling `.card` or `.btn`, NEVER manually set `color`,
-> `background-color`, or `border-color`. These are auto-calculated from
-> `--_background`.**
-
-The only acceptable color override is `color: var(--text-mute)` for
-secondary text, since interactive elements default to `--text-main`.
-
-See [CSS Patterns](./css.md#critical-rule-do-not-manually-set-colors-on-interactive-elements)
-for detailed examples.
+   lighter/darker values
+2. Check that `--text-main` is not being overridden
 
 ## Related Files
 
 - `src/lib/styles/interactive.css` — core calculations
-- `src/lib/data/design-tokens.ts` — tuning values (`--border-darkness`,
-  `--hover-degree`, etc.)
-- `src/lib/scripts/register-design-tokens.ts` — registers CSS properties for
-  animations
+- `src/lib/data/shared/design-tokens.ts` — transition/color token values
 - [CSS Patterns](./css.md) — usage patterns and utility classes
 - [Architecture Decisions](./architecture-decisions.md) — why things are
   implemented this way

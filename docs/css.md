@@ -6,85 +6,58 @@ CSS architecture and design tokens used in this codebase.
 
 All values come from CSS custom properties. Never hardcode values.
 
-**Note:** CSS custom properties are registered at build time by `gen.ts`, which
-reads `design-tokens.ts` and generates `gen.css`. `variables.css` then aliases
-fluid spacing and font sizes to Open Props values.
+CSS custom properties are registered at build time by `gen.ts`, which reads
+`design-tokens.ts` and generates `gen.css`. `variables.css` then aliases fluid
+font sizes and spacing to Open Props values and adds responsive overrides.
 
 ### Why Both `variables.css` AND `design-tokens.ts`?
 
-#### design-tokens.ts
+`design-tokens.ts` holds static values that need to be registered as animatable
+`@property` declarations — things like colors, font weights, and transition
+durations.
 
-- Purpose: Static TS values or initial values; registered as animatable CSS props.
-- Examples: `--fw-bold: 700`, `--border-darkness: 0.025`
+`variables.css` exists for two reasons:
 
-#### variables.css
-
-- Purpose: CSS functions (clamp, etc); media query overrides.
-- Examples: `clamp()`, `color-mix()`, breakpoints.
-
-**`variables.css` exists because:**
-
-1. **CSS functions can't be expressed in TypeScript**
+1. **CSS functions can't live in TypeScript** — `clamp()`, `color-mix()`, and
+   `light-dark()` must be written in CSS:
 
    ```css
-   --fs-4: var(--font-size-fluid-1);
-   --color-base-900: color-mix(in srgb, #000, var(--color-primary-500) 5%);
+   --fs-1: var(--font-size-fluid-0);
+   --bg-card: color-mix(in srgb, var(--bg-main), var(--accent) 5%);
    ```
 
-2. **Initial values are overridden via media queries**
+2. **Media query overrides** — the responsive shift-down pattern reassigns token
+   values at breakpoints, which requires CSS:
 
    ```css
-   --fs-7: var(--font-size-fluid-3);
-
    @media (max-width: 768px) {
-     --fs-7: var(--fs-4); /* shift down 2 levels */
+     --fs-4: var(--fs-3); /* shift down 1 level */
    }
    ```
 
-3. **Some values don't need to be animatable**
-   Breakpoints (`--breakpoint-1`, `--breakpoint-2`) alias Open Props size tokens —
-   no need to register them with `@property`.
-
-### Spacing (fluid)
+### Token Quick Reference
 
 ```css
---space-0 through --space-8  /* 0.2rem → 12.8rem, scales with viewport */
-```
-
-### Font Sizes (fluid)
-
-```css
---fs-1  /* 1.2rem - 1.4rem (smallest) */
---fs-3  /* 1.6rem - 1.8rem (body) */
---fs-6  /* 2.8rem - 4rem (heading) */
---fs-7  /* 3.5rem - 6.5rem (hero) */
-```
-
-### Colors
-
-```css
---color-primary-500  /* Main purple */
---color-primary-700  /* Darker purple */
---color-base-900     /* Near black (tinted) */
---color-base-100     /* Near white (tinted) */
-```
-
-### Typography
-
-```css
---font-head: Girassol, ui-serif;  /* Headings */
---font-body: Average, ui-serif;   /* Body text */
---lh-1  /* 1.1 (Tight) */
---lh-3  /* 1.6 (Body) */
+/* Font sizes:   --fs-1 … --fs-4  (fluid, via Open Props) */
+/* Font weights: --fw-light / --fw-regular / --fw-semibold / --fw-bold */
+/* Line heights: --lh-1 … --lh-4 */
+/* Spacing:      --space-1 … --space-7  (fluid, via Open Props) */
+/*               --space-gutter / --space-min / --space-max */
+/* Breakpoints:  --breakpoint-sm / --breakpoint-md / --breakpoint-lg / --breakpoint-xl */
+/* Colors:       --color-primary-{100,300,500,700,900} */
+/*               --color-secondary-{100,300,500,700,900} */
+/*               --color-status-{danger,warn,info,success} */
+/* Semantic:     --text-main, --text-mute, --bg-main, --bg-card */
+/*               --btn-primary, --accent, --link */
+/* Borders:      --border-color, --border-radius */
+/* Shadows:      --shadow-weak, --shadow-strong */
+/* Transitions:  --transition-duration-{short,medium,long}, --transition-easing */
 ```
 
 ## Fluid Typography
 
-```css
---fs-4: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem);
-```
-
-Scales automatically between mobile and desktop — no media queries needed.
+Font sizes and spacing are fluid — they scale with the viewport via `clamp()`
+(provided by Open Props). No per-component media queries needed for size scaling.
 
 ## Color Mixing
 
@@ -92,27 +65,25 @@ Scales automatically between mobile and desktop — no media queries needed.
 --color-base-900: color-mix(in srgb, #000, var(--color-primary-500) 5%);
 ```
 
-All grays are tinted with the primary color. Change the primary, everything
-updates.
+All grays are tinted with the primary color. Change `--color-primary-500` and
+all base grays update automatically.
 
 ## Transitions
 
-**From `Accordion.svelte`:**
+Only set `transition-property` in component styles. Duration and easing are
+applied globally by `layout.css` via the `*` selector. Override only via
+`--transition-duration-{short,medium,long}`.
 
 ```css
+/* Component style — only declare the property */
 summary img {
   transition-property: transform;
 }
-
-details[open] summary img {
-  transform: rotate(45deg);
-}
 ```
 
-Define `transition-property` on the base element, not the state.
-Other properties such as `transition-duration` and `transition-timing-function`
-are handled by layout.css. Don't define duration unless explicitly overridden
-through `--transition-duration-{long,medium,short}`
+In JS/Svelte, always use `standard()` from `$scripts/transition` instead of
+transitions directly — it injects design-token easing/duration and respects
+`prefers-reduced-motion`. See `architecture-decisions.md`.
 
 ## Shadows
 
@@ -126,236 +97,81 @@ through `--transition-duration-{long,medium,short}`
 ### Grid (auto-fit)
 
 ```css
---min-col-size: min(300px, 100%);
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(var(--min-col-size), 1fr));
+grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
 gap: var(--space-5);
 ```
 
-`--min-col-size` ensures that if the screen width is smaller than e.g 300px,
-the card takes up 100% of available width.
+`min(300px, 100%)` ensures the column never exceeds the viewport on very small
+screens.
 
 ## Responsive Design
 
-Fluid values handle most responsiveness. When needed:
+Fluid values handle most responsiveness automatically. Use explicit media queries
+only for structural layout changes (column count, direction, etc.).
 
-```css
-.grid {
-  grid-template-columns: 1fr;
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-```
+**Breakpoints** (from Open Props via `design-tokens.ts`):
+`--breakpoint-sm`, `--breakpoint-md`, `--breakpoint-lg`, `--breakpoint-xl`
 
-**Breakpoints:**
-`--bp-1: 480px`, `--bp-2: 768px`, `--bp-3: 1024px`, `--bp-4: 1280px`
+Note: media queries can't use CSS custom properties — use the raw pixel values
+from `DesignTokens.breakpoint.*` in component comments for traceability.
 
 ### Responsive "Shift Down" Pattern
 
-At smaller breakpoints, size tokens are reassigned to smaller values:
+At smaller breakpoints, token values are reassigned so the same variable name
+maps to a smaller value. Components use tokens normally with no media queries.
 
-```css
-@media (max-width: 768px) {
-  /* Font sizes: shift down 2 levels */
-  --fs-5: clamp(1.6rem, ...); /* What --fs-3 would be on desktop */
+**Shift levels (defined once in `variables.css`):**
 
-  /* Spaces: shift down 1 level */
-  --space-5: clamp(1.6rem, ...); /* What --space-4 would be on desktop */
-}
-```
-
-The variable name stays the same, the value shifts down. Components use
-semantic tokens (`--fs-5` for "medium heading") with no media queries —
-responsiveness is handled once, globally.
-
-**Shift levels by breakpoint:**
-
-- `1024px` — fonts shift down 1 level
-- `768px` — fonts shift down 2 levels, spaces shift down 1 level
-- `480px` — fonts shift down 3 levels, spaces shift down 2 levels
+| Breakpoint | Fonts      | Spaces     |
+| ---------- | ---------- | ---------- |
+| `≤ 768px`  | −1 level   | −1 level   |
+| `≤ 480px`  | −2 levels  | −2 levels  |
 
 ## Utility Classes
 
-### Attribute Selector Pattern
+Full list in `utility.css`. Base styles shared via attribute selectors:
 
 ```css
-[class*="stack"] {
-  display: flex;
-  flex-direction: column;
-}
-
-.stack {
-  gap: var(--space-4);
-}
-.stack--tight {
-  gap: var(--space-3);
-}
-.stack--loose {
-  gap: var(--space-5);
-}
+[class*="stack"] { display: flex; flex-direction: column; }
+.stack           { gap: var(--space-4); }
+.stack--tight    { gap: var(--space-3); }
 ```
 
-`[class*="stack"]` matches any class containing "stack", so all variants
-inherit the base flex styles. DRY, no preprocessor needed.
-
-**Caution:** Could catch unintended class names (e.g. `.haystack`).
-Reserved substrings: `row`, `stack`, `title`, `card-grid`, `center`.
+**Reserved substrings** — avoid these in unrelated class names:
+`row`, `stack`, `title`, `card-grid`, `center`
 
 ### Lift Modifiers
 
 ```css
-.lift:hover {
-  transform: translateY(-2px);
-}
-.lift--strong:hover {
-  transform: translateY(-4px);
-}
+.lift:hover        { transform: translateY(-2px); }  /* subtle */
+.lift--strong:hover { transform: translateY(-4px); }  /* featured cards */
 ```
-
-- `.lift` — subtle, for nav links and minor elements
-- `.lift--strong` — prominent, for quote cards and featured cards
-
-Independent classes, not BEM modifiers. Use one or the other.
 
 ## GPU Optimization
 
-`.card` and `.btn` include GPU layer promotion hints:
-
-```css
-.card,
-.btn {
-  backface-visibility: hidden;
-  perspective: 1000px;
-  transform: translateZ(0);
-}
-```
-
-Results in smoother `transform` and `background-color` transitions. Trade-off:
-slightly more memory for better animation performance. Disable if you notice
-any issues (e.g blurry text).
+`.card` and `.btn` include `backface-visibility: hidden`, `perspective: 1000px`,
+and `transform: translateZ(0)` for smoother transitions. Disable if you notice
+blurry text.
 
 ## Auto-Contrast System (`--_background`)
 
-The `--_background` variable powers automatic color contrast for `.card` and
-`.btn` classes.
+Set `--_background` on any `.card` or `.btn`. The system derives `--text-main`,
+`--text-mute`, `--border-color`, and hover colors automatically using OKLCH
+relative color syntax.
 
-1. Set `--_background` to any color
-2. System auto-calculates `--text-main`, `--text-mute`, `--border-color`,
-   `--hover-color`
-3. Uses OKLCH relative color syntax for perceptually uniform contrast
+**Never** set `color`, `background-color`, or `border-color` directly on `.card`
+or `.btn` — only set `--_background`.
 
-**Usage via inline style:**
-
-```svelte
-<article style="--_background: {color}" class="card">
-  <!-- Text color auto-adjusts for contrast -->
-</article>
-```
-
-**Usage via component styles:**
-
-```css
-article {
-  --_background: var(--bg-card);
-}
-```
-
-**Examples in codebase:**
-
-- `Accordion.svelte` — sets `--_background: var(--bg-card)` in component
-  styles
-- `QuoteCard.svelte` — sets via inline style for dynamic colors
-- `ItemCard.svelte` — nested elements with different backgrounds (card vs
-  link button)
-
-**From `interactive.css`:**
-
-```css
-.card,
-.btn {
-  --_contrast: sign(0.6 - l); /* -1 light bg, +1 dark bg */
-  --text-main: oklch(from var(--_background) clamp(0, var(--_contrast), 1) 0 0);
-  --text-mute: oklch(from var(--_background) 0.5 c h);
-  background-color: var(--_background);
-  color: var(--text-main);
-}
-```
-
-### Critical Rule: Do NOT Manually Set Colors on Interactive Elements
-
-> **When styling `.card` or `.btn` elements, NEVER manually set:**
->
-> - `color`
-> - `background-color`
-> - `border-color`
->
-> **These are calculated automatically from `--_background`.**
-
-The only way to change an interactive element's appearance is by setting
-`--_background`. The system then derives all other colors.
-
-**Exception — `--text-mute`:** Use `color: var(--text-mute)` for secondary
-text inside cards/buttons. That's the only acceptable color override.
-
-```css
-/* WRONG - breaks auto-contrast */
-.my-card {
-  background-color: purple;
-  color: white;
-  border-color: darkpurple;
-}
-
-/* CORRECT - let the system calculate */
-.my-card {
-  --_background: var(--color-primary-500);
-}
-
-/* CORRECT - using text-mute for secondary text */
-.my-card p.subtitle {
-  color: var(--text-mute);
-}
-```
-
-### Nested `--_background` Overrides
-
-Components can have multiple interactive elements with different backgrounds:
-
-```css
-/* ItemCard.svelte */
-div {
-  --_background: var(--bg-card); /* Light card background */
-}
-
-a {
-  --_background: var(--color-status-info); /* Blue button inside */
-}
-```
-
-Each element with `.card` or `.btn` recalculates its own contrast colors.
-Works at any nesting level.
-
-### The Underscore Prefix Convention
-
-`--_` signals a "private" or "scoped" variable:
-
-- `--_background` — input variable set by the component
-- `--_contrast` — internal calculation, not for external use
-
-Distinguishes "inputs" (set by component) from "outputs" (calculated by the
-system) and global tokens (no underscore).
+See [`docs/color-system.md`](./color-system.md) for the full explanation,
+math, and debugging guide.
 
 ## Semantic Colors
 
 ```css
-/* Text */
-color: var(--text-main); /* Primary */
-color: var(--text-mute); /* Muted */
-
-/* Backgrounds */
-background: var(--bg-main); /* Page */
-background: var(--bg-card); /* Card */
-
-/* Interactive */
-background: var(--btn-primary); /* Button */
+color: var(--text-main);       /* Primary text */
+color: var(--text-mute);       /* Secondary text */
+background: var(--bg-main);    /* Page background */
+background: var(--bg-card);    /* Card background */
+background: var(--btn-primary); /* Primary button */
 ```

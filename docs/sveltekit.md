@@ -4,7 +4,7 @@
 
 ```text
 src/routes/
-├── +layout.svelte       # Root: CSS, design tokens, onMount
+├── +layout.svelte       # Root: CSS imports, onMount (removes loading shimmer)
 ├── +layout.ts           # SSR disabled (Tauri)
 ├── +error.svelte
 └── (main)/
@@ -34,23 +34,25 @@ file:
 
 ```typescript
 import { Accordion, QuoteCard } from "$components/shared";
-import { DesignTokens, SiteProperties } from "$data/shared";
+import { DesignTokens, AppProperties } from "$data/shared";
 ```
 
-## Server-Side Data Loading
+## Data Loading
 
-Data goes in `+page.server.ts`, passed to the page via `PageProps`:
+Since SSR is disabled (Tauri), use `+page.ts` for client-side data loading:
 
 ```typescript
-// +page.server.ts
-export const load: PageServerLoad = () => {
+// src/routes/(main)/+page.ts
+import type { PageLoad } from "./$types";
+
+export const load: PageLoad = async () => {
   return { items };
 };
 ```
 
-```typescript
-<!-- +page.svelte -->
-let { data }: PageProps = $props();
+```svelte
+<!-- src/routes/(main)/+page.svelte -->
+let { data }: { data: { items: Item[] } } = $props();
 ```
 
 Access as `data.items` directly in the template — don't extract to local

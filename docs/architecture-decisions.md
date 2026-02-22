@@ -1,17 +1,8 @@
 # Architecture Decisions
 
-Non-obvious implementation choices — stuff that might look weird but is intentional.
+Non-obvious implementation choices — stuff that might look weird but are intentional.
 
 ## Svelte Component Patterns
-
-### Exclusive Accordion via `name` Attribute
-
-```svelte
-<details bind:open={isOpen} {name}>
-```
-
-`<details>` elements sharing the same `name` behave like radio buttons —
-opening one closes the rest. Native HTML, no JS required.
 
 ### Accordion Content Lives Outside `<details>`
 
@@ -30,20 +21,6 @@ so `transition:standard` can run.
 **Future cleanup:** Once `transition-behavior: allow-discrete` has broad
 support, move content back inside `<details>` and use `@starting-style` for
 the animation instead.
-
-### Three-State Boolean for Mobile Detection
-
-```typescript
-let isMobile = $state<boolean | null>(null);
-
-// In template:
-{#if isMobile !== null && (isMenuOpen || !isMobile)}
-```
-
-`isMobile` starts as `null`, not `false`. During SSR and before hydration
-we don't know the viewport size — using `false` as the default would cause
-desktop links to flash on mobile before JS runs.
-`null` = unknown, `false` = desktop, `true` = mobile.
 
 ### Route Change Closes Mobile Menu
 
@@ -68,20 +45,6 @@ Everything goes through `standard()` instead of using transitions directly.
 It injects consistent easing/duration from design tokens and auto-disables
 animations for `prefers-reduced-motion`. Higher-order function: takes a
 transition fn, returns a configured version.
-
-### Conditional Class Binding
-
-```svelte
-<!-- QuoteCard.svelte -->
-<article
- class:reverse={direction === 'right'}
- class="wrapper card row lift--strong"
->
-```
-
-`class:name` is the idiomatic Svelte way to toggle a class — cleaner than
-a ternary in `class`. Static and dynamic classes can be mixed freely; Svelte
-merges them.
 
 ### Color Cycling with `cycleColorScale()`
 
@@ -122,21 +85,33 @@ both together is essentially impossible. Produces IDs like `content-1-x7f`.
 
 ```typescript
 onMount(() => {
-  document.documentElement.classList.add("document-loaded");
+  document.documentElement.classList.add("loading-item");
 });
 ```
 
 ```css
-html:not(.document-loaded) body::before {
+.loading-item {
   /* shimmer animation */
 }
 ```
 
-`@property` declarations are generated at build time by `gen.ts` and shipped
-in `gen.css`, so tokens are available immediately. The shimmer now exists only
-to mask the brief flash before fonts and images load. The hardcoded color in
-the shimmer is intentional — it can't reference tokens since it runs before
-the cascade is applied.
+The shimmer masks the brief flash before fonts and images load.
+
+## Known Refactor Targets
+
+### `transition.ts` — Type Safety
+
+`transition.ts` works but has loose types that should be tightened before the
+transition system is extended:
+
+- `TransitionFn` uses `params?: any` — no type safety on transition parameters
+- Non-null assertions (`!`) scattered through `parseBezierCoords`
+- `standard()` types `params` as `SlideParams`, which is too narrow — passing
+  `fly` or `fade` params doesn't type-check correctly
+- `standard()` should either accept a generic params type or provide
+  per-transition overloads
+
+Don't add new transition variants until this is addressed.
 
 ## Build & Tooling
 
@@ -147,6 +122,6 @@ NO_STRIP=true bun tauri build
 ```
 
 The build fails without this. The stripping step (which removes debug
-symbols to reduce binary size) errors out — likely a toolchain mismatch.
+symbols to reduce binary size) errors out; known issue on github.
 `NO_STRIP=true` skips it. The resulting binary is larger but otherwise
-identical.
+identical. Make sure to remove it when fixed.

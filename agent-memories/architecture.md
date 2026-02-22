@@ -9,6 +9,12 @@ Read that file for: accordion content outside `<details>`, exclusive accordions 
 document loading shimmer, `generateId()` counter+random, color cycling with
 `cycleColorScale()`, conditional class binding.
 
+## Agent Guidelines for Architecture Decisions
+
+- `architecture-decisions.md` is the most important doc in this project.
+- Before documenting any non-obvious pattern, **always ask the user for the rationale** behind it — don't infer or guess. Their explanation goes into the doc verbatim or paraphrased.
+- The bar for inclusion: "would I understand *why* this exists if I came back after a few months?" If yes without the doc, skip it.
+
 ## Critical rules (quick reference)
 
 - **Transitions:** Never use Svelte transitions directly — always wrap with `standard()` from `$scripts/transition`.
