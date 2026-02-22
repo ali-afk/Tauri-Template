@@ -10,58 +10,21 @@
 	   so variables.css wins the cascade.
 	   ======================================== */
 
-	/* Font Weights */
-	--fw-light: var(--font-weight-3);
-	--fw-regular: var(--font-weight-4);
-	--fw-semibold: var(--font-weight-6);
-	--fw-bold: var(--font-weight-7);
-
-	/* Line Heights */
-	--lh-1: var(--font-lineheight-0);
-	--lh-2: var(--font-lineheight-1);
-	--lh-3: var(--font-lineheight-3);
-	--lh-4: var(--font-lineheight-4);
-
-	/* Font Sizes — 8 semantic levels mapped to 4 Open Props fluid sizes */
-	--fs-0: var(--font-size-fluid-0); /* clamp(.75rem, 2vw, 1rem) */
+	/* Font Sizes — 4 semantic levels mapped to Open Props fluid sizes */
 	--fs-1: var(--font-size-fluid-0); /* clamp(.75rem, 2vw, 1rem) */
 	--fs-2: var(--font-size-fluid-1); /* clamp(1rem, 4vw, 1.5rem) */
-	--fs-3: var(--font-size-fluid-1); /* clamp(1rem, 4vw, 1.5rem) */
-	--fs-4: var(--font-size-fluid-1); /* clamp(1rem, 4vw, 1.5rem) */
-	--fs-5: var(--font-size-fluid-2); /* clamp(1.5rem, 6vw, 2.5rem) */
-	--fs-6: var(--font-size-fluid-2); /* clamp(1.5rem, 6vw, 2.5rem) */
-	--fs-7: var(--font-size-fluid-3); /* clamp(2rem, 9vw, 3.5rem) */
+	--fs-3: var(--font-size-fluid-2); /* clamp(1.5rem, 6vw, 2.5rem) */
+	--fs-4: var(--font-size-fluid-3); /* clamp(2rem, 9vw, 3.5rem) */
 
 	/* Spacing — 9 semantic levels mapped to Open Props fluid sizes */
-	--space-0: var(--size-fluid-1); /* clamp(.5rem, 1vw, 1rem) */
 	--space-1: var(--size-fluid-1); /* clamp(.5rem, 1vw, 1rem) */
 	--space-2: var(--size-fluid-2); /* clamp(1rem, 2vw, 1.5rem) */
 	--space-3: var(--size-fluid-3); /* clamp(1.5rem, 3vw, 2rem) */
 	--space-4: var(--size-fluid-4); /* clamp(2rem, 4vw, 3rem) */
-	--space-5: var(--size-fluid-4); /* clamp(2rem, 4vw, 3rem) */
-	--space-6: var(--size-fluid-6); /* clamp(5rem, 7vw, 7.5rem) */
-	--space-7: var(--size-fluid-7); /* clamp(7.5rem, 10vw, 10rem) */
-	--space-8: var(--size-fluid-8); /* clamp(10rem, 20vw, 15rem) */
+	--space-5: var(--size-fluid-5); /* clamp(5rem, 7vw, 7.5rem) */
 
 	/* Border Radius */
 	--border-radius: var(--radius-3);
-
-	/* Easing */
-	--transition-easing: var(--ease-out-3);
-
-	/* Breakpoints */
-	--breakpoint-1: var(--size-sm);
-	--breakpoint-2: var(--size-md);
-	--breakpoint-3: var(--size-lg);
-	--breakpoint-4: var(--size-xl);
-
-	/* ========================================
-	   LAYOUT
-	   ======================================== */
-
-	--container-min: var(--breakpoint-1);
-	--container-max: var(--breakpoint-4);
-	--gutter: calc((100% - var(--container-max)) / 2);
 
 	/* ========================================
 	   TYPOGRAPHY
@@ -75,7 +38,7 @@
 	   Semantic aliases that are not registered
 	   as @property tokens (no animation needed).
 	   ======================================== */
-
+	--color-mix-strength: 5%;
 	--accent: var(--color-primary-500);
 	--link: var(--color-status-info);
 
@@ -110,57 +73,37 @@
 	   ======================================== */
 
 	@media (max-width: 1024px) {
-		--fs-1: var(--fs-0); /* was fs-0 */
-		--fs-2: var(--fs-0); /* was fs-1 */
-		--fs-3: var(--fs-1); /* was fs-2 */
-		--fs-4: var(--fs-2); /* was fs-3 */
-		--fs-5: var(--fs-3); /* was fs-4 */
-		--fs-6: var(--fs-4); /* was fs-5 */
-		--fs-7: var(--fs-5); /* was fs-6 */
-
-		--container-max: var(--breakpoint-3);
-		--gutter: calc((100% - var(--container-max)) / 2);
+		--space-max: var(--breakpoint-lg);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
 	}
 
 	@media (max-width: 768px) {
-		--fs-2: var(--fs-0); /* was fs-0 */
-		--fs-3: var(--fs-0); /* was fs-1 */
-		--fs-4: var(--fs-1); /* was fs-2 */
-		--fs-5: var(--fs-2); /* was fs-3 */
-		--fs-6: var(--fs-3); /* was fs-4 */
-		--fs-7: var(--fs-4); /* was fs-5 */
+		--fs-2: var(--fs-1);
+		--fs-3: var(--fs-2);
+		--fs-4: var(--fs-3);
 
-		/* Spaces: shift down 1 level */
-		--space-1: var(--space-0); /* was space-0 */
-		--space-2: var(--space-0); /* was space-1 */
-		--space-3: var(--space-1); /* was space-2 */
-		--space-4: var(--space-2); /* was space-3 */
-		--space-5: var(--space-3); /* was space-4 */
-		--space-6: var(--space-4); /* was space-5 */
-		--space-7: var(--space-5); /* was space-6 */
-		--space-8: var(--space-6); /* was space-7 */
+		--space-2: var(--space-1);
+		--space-3: var(--space-2);
+		--space-4: var(--space-3);
+		--space-5: var(--space-4);
+		--space-6: var(--space-5);
+		--space-7: var(--space-6);
 
-		--container-max: var(--breakpoint-2);
-		--gutter: calc((100% - var(--container-max)) / 2);
+		--space-max: var(--breakpoint-md);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
 	}
 
 	@media (max-width: 480px) {
-		--fs-3: var(--fs-0); /* was fs-0 */
-		--fs-4: var(--fs-0); /* was fs-1 */
-		--fs-5: var(--fs-1); /* was fs-2 */
-		--fs-6: var(--fs-2); /* was fs-3 */
-		--fs-7: var(--fs-3); /* was fs-4 */
+		--fs-3: var(--fs-1);
+		--fs-4: var(--fs-2);
 
-		/* Spaces: shift down 2 levels */
-		--space-2: var(--space-0); /* was space-0 */
-		--space-3: var(--space-0); /* was space-1 */
-		--space-4: var(--space-1); /* was space-2 */
-		--space-5: var(--space-2); /* was space-3 */
-		--space-6: var(--space-3); /* was space-4 */
-		--space-7: var(--space-4); /* was space-5 */
-		--space-8: var(--space-5); /* was space-6 */
+		--space-3: var(--space-1);
+		--space-4: var(--space-2);
+		--space-5: var(--space-3);
+		--space-6: var(--space-4);
+		--space-7: var(--space-5);
 
-		--container-max: var(--breakpoint-1);
-		--gutter: calc((100% - var(--container-max)) / 2);
+		--space-max: var(--breakpoint-sm);
+		--space-gutter: calc((100% - var(--space-max)) / 2);
 	}
 }

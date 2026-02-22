@@ -101,9 +101,9 @@
 	object-fit: contain;
 }
 
-/* Generic container */
+/* Generic space */
 .wrapper {
-	width: min(100% - var(--space-4), var(--container-max));
+	width: min(100% - var(--space-4), var(--space-max));
 	margin-inline: auto;
 }
 
@@ -119,12 +119,12 @@
 
 .title--section {
 	margin-top: var(--space-4);
-	font-size: var(--fs-6);
+	font-size: var(--fs-3);
 }
 
 /* Main section/page title */
 .title--page {
-	font-size: var(--fs-7);
+	font-size: var(--fs-4);
 	margin-bottom: var(--space-5);
 	text-align: center;
 }

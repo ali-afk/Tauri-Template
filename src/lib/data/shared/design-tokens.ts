@@ -44,7 +44,7 @@
 
 import type { PropertyNode } from "$types/design-tokens";
 
-const colors = {
+const colorTokens = {
 	color: {
 		config: { syntax: "<color>", inherits: true },
 		primary: {
@@ -64,11 +64,11 @@ const colors = {
 		// Base grays are tinted with the primary color via color-mix().
 		// Changing --color-primary-500 automatically updates all base grays.
 		base: {
-			900: "color-mix(in srgb, #000, var(--color-primary-500) 5%)",
-			700: "color-mix(in srgb, #444, var(--color-primary-500) 5%)",
-			500: "color-mix(in srgb, #888, var(--color-primary-500) 5%)",
-			300: "color-mix(in srgb, #ccc, var(--color-primary-500) 5%)",
-			100: "color-mix(in srgb, #fff, var(--color-primary-500) 5%)",
+			900: "color-mix(in srgb, #000, var(--color-primary-500) var(--color-mix-strength))",
+			700: "color-mix(in srgb, #444, var(--color-primary-500) var(--color-mix-strength))",
+			500: "color-mix(in srgb, #888, var(--color-primary-500) var(--color-mix-strength))",
+			300: "color-mix(in srgb, #ccc, var(--color-primary-500) var(--color-mix-strength))",
+			100: "color-mix(in srgb, #fff, var(--color-primary-500) var(--color-mix-strength))",
 		},
 		status: {
 			danger: "#dc2626",
@@ -77,10 +77,6 @@ const colors = {
 			success: "#16a34a",
 		},
 	},
-};
-
-const colorTokens = {
-	...colors,
 	_background: {
 		config: { syntax: "<color>", inherits: true },
 		value: "light-dark(var(--color-base-100), var(--color-base-700))",
@@ -97,14 +93,10 @@ const fontTokens = {
 	},
 	fs: {
 		config: { syntax: "<length>", inherits: true },
-		0: "var(--font-size-fluid-0)",
 		1: "var(--font-size-fluid-0)",
 		2: "var(--font-size-fluid-1)",
-		3: "var(--font-size-fluid-1)",
-		4: "var(--font-size-fluid-1)",
-		5: "var(--font-size-fluid-2)",
-		6: "var(--font-size-fluid-2)",
-		7: "var(--font-size-fluid-3)",
+		3: "var(--font-size-fluid-2)",
+		4: "var(--font-size-fluid-3)",
 	},
 	lh: {
 		config: { syntax: "<number>", inherits: true },
@@ -123,82 +115,46 @@ const fontTokens = {
 const spaceTokens = {
 	space: {
 		config: { syntax: "<length>", inherits: true },
-		0: "var(--size-fluid-1)",
 		1: "var(--size-fluid-1)",
 		2: "var(--size-fluid-2)",
 		3: "var(--size-fluid-3)",
 		4: "var(--size-fluid-4)",
-		5: "var(--size-fluid-4)",
-		6: "var(--size-fluid-6)",
-		7: "var(--size-fluid-7)",
-		8: "var(--size-fluid-8)",
-	},
-	container: {
-		config: { syntax: "<length>", inherits: true },
+		5: "var(--size-fluid-6)",
+		6: "var(--size-fluid-7)",
+		7: "var(--size-fluid-8)",
+		gutter: "calc((100% - var(--space-max)) / 2)",
 		min: "var(--size-sm)",
 		max: "var(--size-xl)",
 	},
 	breakpoint: {
 		config: { syntax: "<length>", inherits: true },
-		1: "var(--size-sm)",
-		2: "var(--size-md)",
-		3: "var(--size-lg)",
-		4: "var(--size-xl)",
+		sm: "var(--size-sm)",
+		md: "var(--size-md)",
+		lg: "var(--size-lg)",
+		xl: "var(--size-xl)",
 	},
 };
 
-const borderTokens = {
+const otherTokens = {
 	border: {
-		radius: { config: { syntax: "<length>", inherits: true }, value: "var(--radius-3)" },
-		darkness: {
-			config: { syntax: "<number>", inherits: true },
-			value: "0.025",
-		},
-		color: {
-			config: { syntax: "<color>", inherits: true },
-			value: "var(--color-base-300)",
-		},
+		config: { syntax: "<color>", inherits: true },
+		color: "var(--color-base-300)",
 	},
-};
-
-const transitionTokens = {
 	transition: {
 		easing: {
-			config: { syntax: "*", inherits: true },
-			value: "var(--ease-out-3)",
+			config: { syntax: "<easing-function>", inherits: true },
+			value: "var(--ease-in-out-3)",
 		},
 		duration: {
 			config: { syntax: "<time>", inherits: true },
-			long: "300ms",
-			medium: "200ms",
-			short: "150ms",
-		},
-	},
-	hover: {
-		color: {
-			config: { syntax: "<color> | none", inherits: true },
-			value: "none",
-		},
-		degree: {
-			config: { syntax: "<number>", inherits: true },
-			value: "0.03",
-		},
-		border: {
-			darkness: {
-				config: { syntax: "<number>", inherits: true },
-				value: "0.1",
-			},
-			color: {
-				config: { syntax: "<color>", inherits: true },
-				value: "var(--color-base-500)",
-			},
+			short: "var(--duration-quick-2)",
+			medium: "var(--duration-moderate-1)",
+			long: "var(--duration-gentle-1)",
 		},
 	},
 	shadow: {
-		color: {
-			config: { syntax: "<color>", inherits: true },
-			value: "color-mix(in srgb, var(--color-base-900), transparent 80%)",
-		},
+		config: { syntax: "<color>", inherits: true },
+		color: "color-mix(in srgb, var(--color-base-900), transparent 80%)",
 	},
 };
 
@@ -211,9 +167,8 @@ const transitionTokens = {
  * - Leaf values are the actual design tokens
  */
 export const DesignTokens = {
-	...borderTokens,
 	...colorTokens,
 	...fontTokens,
 	...spaceTokens,
-	...transitionTokens,
+	...otherTokens,
 } as const satisfies Record<string, PropertyNode>;

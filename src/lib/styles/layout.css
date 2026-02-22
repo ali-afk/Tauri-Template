@@ -30,12 +30,12 @@ h4 {
 }
 
 main > section {
-	/* if 100% < container-max then use --space-5 */
-	padding-inline: max(var(--space-5), var(--gutter));
+	/* if 100% < space-max then use --space-5 */
+	padding-inline: max(var(--space-5), var(--space-gutter));
 	padding-block: var(--space-5);
 
 	> h1 {
-		font: var(--fw-bold) var(--fs-6) / var(--lh-1) var(--font-head);
+		font: var(--fw-bold) var(--fs-4) / var(--lh-1) var(--font-head);
 	}
 }
 

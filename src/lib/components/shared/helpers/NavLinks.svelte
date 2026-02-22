@@ -12,7 +12,7 @@ let isMobile = $state<boolean | null>(null);
 
 $effect(() => {
 	const mediaQuery = window.matchMedia(
-		`(max-width: ${DesignTokens.breakpoint[2]})`,
+		`(max-width: ${DesignTokens.breakpoint.md})`,
 	);
 	isMobile = mediaQuery.matches;
 
@@ -83,7 +83,7 @@ $effect(() => {
 	gap: var(--space-6);
 
 	a {
-		font-size: var(--fs-5);
+		font-size: var(--fs-4);
 
 		&:hover,
 		&:focus-visible {

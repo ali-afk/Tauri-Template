@@ -3,14 +3,15 @@
 @import "open-props/easings";
 @import "open-props/borders";
 @import "open-props/sizes";
+@import "open-props/durations";
 
 @import "./resets.css" layer(base);
 @import "./gen.css" layer(base);
 @import "./variables.css" layer(base);
-@import "./document-loading.css" layer(loading-state);
 @import "./layout.css" layer(layout);
+@import "./loading.css" layer(layout);
 @import "./utility.css" layer(utility);
 @import "./interactive.css" layer(utility);
-@import "./accessibility.css" layer(accessibility);
+@import "./accessibility.css" layer(accessibility); /* Always keep last */
 
-@layer base, loading-state, layout, utility, accessibility;
+@layer base, layout, utility, accessibility;

@@ -20,18 +20,13 @@
 	/* Contrast direction: -1 for light bg (darken), +1 for dark bg (lighten) */
 	--_contrast: sign(0.6 - l);
 
-	/* Auto-calculated colors from --_background */
 	--text-main: oklch(from var(--_background) clamp(0, var(--_contrast), 1) 0 0);
 	--text-mute: oklch(from var(--_background) 0.5 c h);
 
+	--border-darkness: 2.5%;
 	--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
 	--border-color: oklch(
 		from var(--_background) clamp(0, var(--border-brightness), 1) c h
-	);
-
-	--hover-brightness: calc(l + var(--_contrast) * var(--hover-degree));
-	--hover-color: oklch(
-		from var(--_background) clamp(0, var(--hover-brightness), 1) c h
 	);
 
 	background-color: var(--_background);
@@ -42,18 +37,19 @@
 	transition-property: transform, background-color, box-shadow, border-color;
 
 	&:hover {
-		--hover-border-brightness: calc(
-			l +
-			var(--_contrast) *
-			var(--hover-border-darkness)
+		--border-darkness: 10%;
+		--border-brightness: calc(l + var(--_contrast) * var(--border-darkness));
+		--border-color: oklch(
+			from var(--_background) clamp(0, var(--border-brightness), 1) c h
 		);
 
-		--hover-border-color: oklch(
-			from var(--_background) clamp(0, var(--hover-border-brightness), 1) c h
+		--hover-darkness: 3%;
+		--hover-brightness: calc(l + var(--_contrast) * var(--hover-darkness));
+		--hover-background: oklch(
+			from var(--_background) clamp(0, var(--hover-brightness), 1) c h
 		);
 
-		border-color: var(--hover-border-color);
-		background-color: var(--hover-color);
+		background-color: var(--hover-background);
 		transform: var(--scale-hover);
 		box-shadow: var(--shadow-strong);
 
