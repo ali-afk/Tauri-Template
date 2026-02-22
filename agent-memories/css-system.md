@@ -6,7 +6,8 @@ Full reference: [`docs/css.md`](../docs/css.md) · [`docs/color-system.md`](../d
 
 | Source                                 | Contains                                                                        |
 | -------------------------------------- | ------------------------------------------------------------------------------- |
-| `src/lib/data/shared/design-tokens.ts` | Static values → `CSS.registerProperty()` — type-safe, animatable                |
+| `src/lib/data/shared/design-tokens.ts` | Static values — source for `gen.ts`; type-safe, animatable                      |
+| `src/lib/styles/gen.css`               | Auto-generated `@property` declarations + `:root` values — DO NOT EDIT MANUALLY |
 | `src/lib/styles/variables.css`         | `clamp()`, `color-mix()`, breakpoint overrides — CSS functions can't live in TS |
 
 ## Token Quick Reference

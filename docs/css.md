@@ -6,9 +6,9 @@ CSS architecture and design tokens used in this codebase.
 
 All values come from CSS custom properties. Never hardcode values.
 
-**Note:** Some variables (`--fw-light`, `--fw-regular`, `--text-mute`) are
-registered at runtime from `DesignTokens` via `register-design-tokens.ts`,
-not defined in `variables.css`.
+**Note:** CSS custom properties are registered at build time by `gen.ts`, which
+reads `design-tokens.ts` and generates `gen.css`. `variables.css` then aliases
+fluid spacing and font sizes to Open Props values.
 
 ### Why Both `variables.css` AND `design-tokens.ts`?
 
@@ -27,23 +27,23 @@ not defined in `variables.css`.
 1. **CSS functions can't be expressed in TypeScript**
 
    ```css
-   --fs-4: clamp(1.8rem, 1.7rem + 0.5vw, 2.2rem);
+   --fs-4: var(--font-size-fluid-1);
    --color-base-900: color-mix(in srgb, #000, var(--color-primary-500) 5%);
    ```
 
 2. **Initial values are overridden via media queries**
 
    ```css
-   --fs-7: clamp(3.5rem, 2.8rem + 3.5vw, 6.5rem);
+   --fs-7: var(--font-size-fluid-3);
 
    @media (max-width: 768px) {
-     --fs-7: clamp(2.2rem, 2.05rem + 0.75vw, 2.8rem);
+     --fs-7: var(--fs-4); /* shift down 2 levels */
    }
    ```
 
 3. **Some values don't need to be animatable**
-   Breakpoints (`--bp-1`, `--bp-2`) are pure reference values — no need to
-   register them with `CSS.registerProperty()`.
+   Breakpoints (`--breakpoint-1`, `--breakpoint-2`) alias Open Props size tokens —
+   no need to register them with `@property`.
 
 ### Spacing (fluid)
 

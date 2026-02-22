@@ -122,7 +122,6 @@ both together is essentially impossible. Produces IDs like `content-1-x7f`.
 
 ```typescript
 onMount(() => {
-  registerDesignTokens();
   document.documentElement.classList.add("document-loaded");
 });
 ```
@@ -133,13 +132,11 @@ html:not(.document-loaded) body::before {
 }
 ```
 
-Design tokens are registered via JS. Before that runs, token-based colors
-won't resolve — so a shimmer plays until the class is added. The hardcoded
-color in the shimmer is intentional; tokens aren't available at that point
-yet.
-
-**Potential improvement:** generate `@property` declarations at build time
-to remove the JS dependency entirely.
+`@property` declarations are generated at build time by `gen.ts` and shipped
+in `gen.css`, so tokens are available immediately. The shimmer now exists only
+to mask the brief flash before fonts and images load. The hardcoded color in
+the shimmer is intentional — it can't reference tokens since it runs before
+the cascade is applied.
 
 ## Build & Tooling
 
