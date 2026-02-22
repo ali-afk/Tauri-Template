@@ -142,7 +142,7 @@ const otherTokens = {
 	},
 	transition: {
 		easing: {
-			config: { syntax: "<easing-function>", inherits: true },
+			config: { syntax: "*", inherits: true },
 			value: "var(--ease-in-out-3)",
 		},
 		duration: {

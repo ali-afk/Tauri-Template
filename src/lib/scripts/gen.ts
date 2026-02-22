@@ -67,6 +67,26 @@ function toCssProperties(
 	return flattenedProperties;
 }
 
+function getDefaultCssValues(syntax: string) {
+	switch (syntax) {
+		case "<color>": {
+			return "#fff";
+		}
+		case "<number>": {
+			return "0";
+		}
+		case "<length>": {
+			return "0px";
+		}
+		case "<time>": {
+			return "0s";
+		}
+		default: {
+			return "0";
+		}
+	}
+}
+
 /**
  * Generates gen.css from DesignTokens at build time.
  * Writes @property declarations (no initial-value) + :root {} block.
@@ -102,13 +122,15 @@ async function genDesignTokens() {
 		const name = `--${key.replace("-value", "")}`;
 		const syntax = groupConfig?.syntax ?? "*";
 		const inherits = groupConfig?.inherits ?? true;
-		const initialValue = typeof value === "object" ? "" : String(value);
+		const trueValue = typeof value === "object" ? "" : String(value);
+
+		const initialValue = getDefaultCssValues(syntax);
 
 		// @property block — no initial-value, allows computed values in :root
-		propertyBlocks += `@property ${name} {\n\tsyntax: "${syntax}";\n\tinherits: ${inherits};\n}\n\n`;
+		propertyBlocks += `@property ${name} {\n\tsyntax: "${syntax}";\n\tinherits: ${inherits};\n\tinitial-value: ${initialValue}}\n\n`;
 
 		// :root value
-		rootValues += `\t${name}: ${initialValue};\n`;
+		rootValues += `\t${name}: ${trueValue};\n`;
 	}
 
 	const output =
