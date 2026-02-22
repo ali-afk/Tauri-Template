@@ -1,8 +1,14 @@
+import type { Time } from "lightningcss";
+import { type ColorDegrees, ColorScale } from "$types/colors";
+import type { LoadPriority } from "$types/component-props";
+
 let idCounter = 0; // This is just to make sure the generateId function doesn't return the same value twice (even if that's unlikely)
 
 /**
  * Generates a unique, semantically prefixed ID for ARIA linking.
+
  * @param prefix - Defaults to 'id'. (e.g., 'faq', 'content')
+ * @returns Unique prefixed id
  */
 export function generateId(prefix: string = "id"): string {
 	idCounter++;
@@ -10,35 +16,32 @@ export function generateId(prefix: string = "id"): string {
 }
 
 /**
- * Used to prevent running client scripts.
+ * Converts a CSS time string to a raw number in milliseconds.
+
+ * @example "0.5s" -> 500, "200ms" -> 200
+ * @param duration - Milliseconds (ms) or seconds (s)
+ * @returns Unitless millisecond value
  */
-export function isSSR(): boolean {
-	return typeof window === "undefined";
-}
+export function parseTime(
+	duration: Time | `${number}s` | `${number}ms`,
+): number {
+	const castIntoTime = (unit: string, number: number) => {
+		if (unit === "seconds" || unit === "s") return number * 1000;
+		else return number;
+	};
 
-/**
- * Converts a CSS time string (ms or s) to a raw number in milliseconds.
- * Example: "0.5s" -> 500, "200ms" -> 200
- */
-export function parseCssTime(time: string): number {
-	const trimmed = time.trim().toLowerCase();
-	if (!trimmed || trimmed === "initial" || trimmed === "unset") return 0;
-
-	// Matches digits/decimals and captures the unit (s or ms)
-	const match = trimmed.match(/^([\d.]+)(s|ms)$/);
-
-	if (!match) {
-		const fallback = parseFloat(trimmed);
-		return Number.isNaN(fallback) ? 0 : fallback;
+	if (typeof duration !== "string") {
+		return castIntoTime(duration.type, duration.value);
 	}
 
-	const [_, value = "0", unit = "ms"] = match;
-	const numValue = parseFloat(value);
+	const number = duration.match(/\d+(\.\d+)?/);
+	const unit = duration.match(/(ms|s)/);
 
-	return unit === "s" ? numValue * 1000 : numValue;
+	if (!(number && unit)) {
+		throw Error("Could not parse time!");
+	}
+	return castIntoTime(unit[0], parseFloat(number[0]));
 }
-
-import type { LoadPriority } from "$types/component-props";
 
 /**
  * Simple load priority calculation.
@@ -55,14 +58,14 @@ export function getLoadPriority(
 	return index < threshold ? "high" : "low";
 }
 
-import { type ColorDegrees, ColorScale } from "$types/colors";
-
 /**
  * Simple colorset cycler.
  *
- * @param index - The color's index on the color scale.
- * @returns a valuid color degree used to index a colorset type
+ * @param index - The color's index (or i % 5) on the color scale
+ * @returns Valid color degree used to index a colorset type
  */
 export function cycleColorScale(index: number): ColorDegrees {
+	if (index < 0) throw Error("Color scale index cannot be negative");
+	// 500 is the default color scale value;
 	return ColorScale[index % 5] ?? 500;
 }

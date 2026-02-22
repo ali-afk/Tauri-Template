@@ -110,7 +110,6 @@ button {
 	}
 }
 
-/* DesignTokens.breakpoint[2] — media queries can't use CSS custom properties */
 @media (max-width: 768px) {
 	#links {
 		gap: var(--space-5);

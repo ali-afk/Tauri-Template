@@ -8,6 +8,8 @@ interface Props {
 	centeredTitle?: boolean;
 }
 
+// Use altText instead of alt because biome currently flags
+// an error on the property shorthand {alt}
 let { image, title, alt: altText, centeredTitle = false }: Props = $props();
 </script>
 

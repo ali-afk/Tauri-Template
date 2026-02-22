@@ -1,4 +1,4 @@
-type appProperty = string | Record<string, string>;
+export type AppProperty = string | Record<string, string>;
 
 /**
  * Centralized app-wide properties
@@ -14,11 +14,9 @@ export const AppProperties = {
 	/** Name of your app (shown in window titles) */
 	appName: "SvelteKit Template",
 
-	/** Brief description of the application */
 	appDescription:
 		"A modern, accessible desktop application built with Tauri and SvelteKit",
 
-	/** Project website or repository URL */
 	appUrl: "https://example.com",
 
 	/** App author/creator */
@@ -28,6 +26,5 @@ export const AppProperties = {
 	contact: {
 		email: "ali.hussain.ali.oun@gmail.com",
 		github: "https://github.com/ali-afk",
-		// Add your links here (optional)
 	},
-} as const satisfies Record<string, appProperty>;
+} as const satisfies Record<string, AppProperty>;
