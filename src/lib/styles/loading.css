@@ -1,5 +1,4 @@
-/* Loading animation before css properties load */
-html:not(.document-loaded) body {
+.loading-item {
 	background: light-dark(#f0f0f0, #0f0f0f);
 
 	&::before {

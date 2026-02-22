@@ -7,6 +7,9 @@ build/
 .vite/
 src-tauri/target/
 
+# Generated files
+src/lib/styles/gen.css
+
 # AI Tools
 .claude/
 .serena/

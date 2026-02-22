@@ -2,6 +2,7 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import { defineConfig } from "vite";
+import { run } from "vite-plugin-run";
 
 const browserVersions = { chrome: 120, safari: 16 };
 const targets = browserslistToTargets(
@@ -28,7 +29,17 @@ function getBuildTarget() {
 	}
 }
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [
+		sveltekit(),
+		run({
+			name: "Gen Task",
+			run: ["bun", "gen"],
+			// This makes it run when specific files change
+			pattern: ["./src/lib/data/shared/design-tokens.ts"],
+			startup: true,
+			build: true,
+		}),
+	],
 	css: {
 		transformer: "lightningcss",
 		lightningcss: { targets },

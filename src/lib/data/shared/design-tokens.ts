@@ -6,49 +6,41 @@
  * The primary/secondary structure works for any color scheme.
  * Use https://oklch.com/ to pick OKLCH colors for optimal contrast and accessibility.
  *
- * This file defines all design tokens (colors, spacing, typography, etc.) for the entire app.
- * These values are automatically converted to CSS custom properties (CSS variables) and registered
- * with the browser for type-safe, animatable properties.
+ * This file defines all design tokens (colors, typography, etc.) for the entire app.
+ * At build time, gen.ts reads this file and generates gen.css, which contains:
+ *   - @property declarations for each token (enables type safety + smooth animations)
+ *   - A :root {} block assigning each token's initial value
  *
- * This allows you to use these properties if you can't use CSS somewhere in the code (like in certain scripts).
- * Therefore, instead of querying for "--color-primary-500", reference "DesignTokens.color.primary[500]"
- * if a leaf value is not an array, then use "DesignTokens.[something1].[something2].value"
+ * Fluid spacing and font sizes are defined in variables.css as Open Props aliases.
+ * This file only holds static values that benefit from @property registration.
  *
- * HOW IT WORKS:
- * 1. Nested objects are flattened: color.primary.500 → --color-primary-500
- * 2. Each property is registered with CSS.registerProperty() for type safety
- * 3. Browser validates values (e.g., can't assign "car" to a <color> property)
- * 4. Registered properties can be smoothly animated/transitioned
+ * To reference a token value in TypeScript (e.g. in a script), use:
+ *   DesignTokens.color.primary[500]         ← for leaf values
+ *   DesignTokens.border.radius.value        ← for named single values
  *
  * STRUCTURE:
  * Each group can have a `config` object defining:
- * - syntax: CSS type (<color>, <length>, <number>, etc.) - see https://developer.mozilla.org/en-US/docs/Web/CSS/@property/syntax
+ * - syntax: CSS type (<color>, <length>, <number>, etc.)
+ *   see https://developer.mozilla.org/en-US/docs/Web/CSS/@property/syntax
  * - inherits: Whether child elements inherit this value (usually true)
  *
  * USAGE IN CSS:
  * background-color: var(--color-primary-500);
- * padding: var(--space-3);
- * font-size: var(--fs-4);
+ * font-size: var(--fs-4);        ← aliased in variables.css to Open Props fluid value
+ * padding: var(--space-3);       ← aliased in variables.css to Open Props fluid value
  *
  * MODIFYING VALUES:
- * Safe to change: Any value (numbers, colors, sizes)
- * Be careful with: Syntax types in config (must match CSS spec)
- * Don't change: Object structure or property names (will break CSS references)
+ * Safe to change: Any leaf value (colors, sizes, numbers)
+ * Be careful with: syntax in config (must match CSS spec)
+ * Don't rename: Object keys or structure (breaks CSS var() references)
  *
- * @see src/lib/scripts/register-design-tokens.ts for registration logic
+ * @see src/lib/scripts/gen.ts for CSS generation logic
+ * @see src/lib/styles/variables.css for Open Props aliases and computed values
  */
 
 import type { PropertyNode } from "$types/design-tokens";
 
-/**
- * Design tokens organized by category
- *
- * Structure:
- * - Group level (e.g., "color") can have a config that applies to all children
- * - Sub-group level (e.g., "primary") can override with its own config
- * - Leaf values are the actual design tokens
- */
-export const DesignTokens = {
+const colors = {
 	color: {
 		config: { syntax: "<color>", inherits: true },
 		primary: {
@@ -79,10 +71,17 @@ export const DesignTokens = {
 			success: "#16a34a",
 		},
 	},
+};
+
+const colorTokens = {
+	...colors,
 	_background: {
 		config: { syntax: "<color>", inherits: true },
-		value: "#ffffff",
+		value: colors.color.base[100],
 	},
+};
+
+const fontTokens = {
 	fw: {
 		config: { syntax: "<number>", inherits: true },
 		light: 300,
@@ -103,11 +102,19 @@ export const DesignTokens = {
 	},
 	lh: {
 		config: { syntax: "<number>", inherits: true },
-		1: "1.1",
-		2: "1.3",
-		3: "1.6",
-		4: "1.8",
+		1: "1.1", // --font-lineheight-0
+		2: "1.25", // --font-lineheight-1
+		3: "1.5", // --font-lineheight-3
+		4: "1.75", // --font-lineheight-4
 	},
+	text: {
+		config: { syntax: "<color>", inherits: true },
+		main: colorTokens.color.base[900],
+		mute: colorTokens.color.base[700],
+	},
+};
+
+const spaceTokens = {
 	space: {
 		config: { syntax: "<length>", inherits: true },
 		0: "3px",
@@ -120,33 +127,45 @@ export const DesignTokens = {
 		7: "70px",
 		8: "95px",
 	},
-	transition: {
-		easing: {
-			config: { syntax: "*", inherits: true },
-			value: "ease-out",
-		},
-		duration: {
-			config: { syntax: "<time>", inherits: true },
-			long: "300ms",
-			medium: "200ms",
-			short: "150ms",
-		},
+	container: {
+		config: { syntax: "<length>", inherits: true },
+		min: "480px",
+		max: "1280px",
 	},
+	breakpoint: {
+		config: { syntax: "<length>", inherits: true },
+		1: "480px",
+		2: "768px",
+		3: "1024px",
+		4: "1440px",
+	},
+};
+
+const borderTokens = {
 	border: {
-		radius: { config: { syntax: "<length>", inherits: true }, value: "16px" },
+		radius: { config: { syntax: "<length>", inherits: true }, value: "1rem" }, // --radius-3
 		darkness: {
 			config: { syntax: "<number>", inherits: true },
 			value: "0.025",
 		},
 		color: {
 			config: { syntax: "<color>", inherits: true },
-			value: "#ccc",
+			value: colorTokens.color.base[300],
 		},
 	},
-	shadow: {
-		color: {
-			config: { syntax: "<color>", inherits: true },
-			value: "rgba(0, 0, 0, 0.25)",
+};
+
+const transitionTokens = {
+	transition: {
+		easing: {
+			config: { syntax: "*", inherits: true },
+			value: "cubic-bezier(0, 0, .3, 1)", // --ease-out-3
+		},
+		duration: {
+			config: { syntax: "<time>", inherits: true },
+			long: "300ms",
+			medium: "200ms",
+			short: "150ms",
 		},
 	},
 	hover: {
@@ -165,25 +184,30 @@ export const DesignTokens = {
 			},
 			color: {
 				config: { syntax: "<color>", inherits: true },
-				value: "#888",
+				value: colorTokens.color.base[500],
 			},
 		},
 	},
-	container: {
-		config: { syntax: "<length>", inherits: true },
-		min: "480px",
-		max: "1280px",
+	shadow: {
+		color: {
+			config: { syntax: "<color>", inherits: true },
+			value: "rgba(0, 0, 0, 0.25)",
+		},
 	},
-	text: {
-		config: { syntax: "<color>", inherits: true },
-		main: "#000",
-		mute: "#444",
-	},
-	breakpoint: {
-		config: { syntax: "<length>", inherits: true },
-		1: "480px",
-		2: "768px",
-		3: "1024px",
-		4: "1280px",
-	},
+};
+
+/**
+ * Design tokens organized by category
+ *
+ * Structure:
+ * - Group level (e.g., "color") can have a config that applies to all children
+ * - Sub-group level (e.g., "primary") can override with its own config
+ * - Leaf values are the actual design tokens
+ */
+export const DesignTokens = {
+	...borderTokens,
+	...colorTokens,
+	...fontTokens,
+	...spaceTokens,
+	...transitionTokens,
 } as const satisfies Record<string, PropertyNode>;

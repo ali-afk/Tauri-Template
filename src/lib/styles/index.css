@@ -1,4 +1,11 @@
+/* Open Props — selective imports */
+@import "open-props/fonts";
+@import "open-props/easings";
+@import "open-props/borders";
+@import "open-props/sizes";
+
 @import "./resets.css" layer(base);
+@import "./gen.css" layer(base);
 @import "./variables.css" layer(base);
 @import "./document-loading.css" layer(loading-state);
 @import "./layout.css" layer(layout);
