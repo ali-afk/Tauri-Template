@@ -12,8 +12,9 @@
 		"prepare": "husky && svelte-kit sync",
 		"gen": "bun run ./src/lib/scripts/gen.ts",
 		"fix": "biome check --fix --staged --no-errors-on-unmatched && markdownlint-cli2 --fix",
-		"fix-all": "bun run src/lib/scripts/gen.ts && biome check --fix --no-errors-on-unmatched ./src && markdownlint-cli2 --fix && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"fix-svelte": "svelte-check --tsconfig ./tsconfig.json",
+		"fix-all": "bun gen && bun fix && svelte-kit sync && bun fix-svelte",
+		"watch": "bun fix-svelte --watch",
 		"tauri:dev": "tauri dev",
 		"tauri:build": "NO_STRIP=true tauri build"
 	},
