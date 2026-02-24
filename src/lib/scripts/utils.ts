@@ -2,24 +2,20 @@ import type { Time } from "lightningcss";
 import { type ColorDegrees, ColorScale } from "$types/colors";
 import type { LoadPriority } from "$types/component-props";
 
-let idCounter = 0; // This is just to make sure the generateId function doesn't return the same value twice (even if that's unlikely)
-
 /**
  * Generates a unique, semantically prefixed ID for ARIA linking.
-
  * @param prefix - Defaults to 'id'. (e.g., 'faq', 'content')
  * @returns Unique prefixed id
  */
 export function generateId(prefix: string = "id"): string {
-	idCounter++;
-	return `${prefix}-${idCounter}-${Math.random().toString(36).substring(2, 5)}`;
+	return `${prefix}-${Math.random().toString(36).substring(2, 8)}`;
 }
 
 /**
  * Converts a CSS time string to a raw number in milliseconds.
-
+ * Also accepts a lightningcss `Time` object directly.
  * @example "0.5s" -> 500, "200ms" -> 200
- * @param duration - Milliseconds (ms) or seconds (s)
+ * @param duration - A `${number}s` or `${number}ms` string, or a lightningcss `Time`
  * @returns Unitless millisecond value
  */
 export function parseTime(
@@ -34,13 +30,10 @@ export function parseTime(
 		return castIntoTime(duration.type, duration.value);
 	}
 
-	const number = duration.match(/\d+(\.\d+)?/);
-	const unit = duration.match(/(ms|s)/);
+	const match = duration.match(/^(\d+(?:\.\d+)?)(ms|s)$/);
 
-	if (!(number && unit)) {
-		throw Error("Could not parse time!");
-	}
-	return castIntoTime(unit[0], parseFloat(number[0]));
+	if (!match?.[1] || !match?.[2]) throw Error("Could not parse time!");
+	return castIntoTime(match[2], parseFloat(match[1]));
 }
 
 /**

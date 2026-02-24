@@ -17,40 +17,54 @@
 
 import { DesignTokens } from "$data/shared";
 import type {
-	PropertyConfig,
-	PropertyNode,
-	PropertyValue,
+	DesignTokenConfig,
+	DesignTokenData,
+	DesignTokenNode,
 } from "$types/design-tokens";
 
 /**
- * Flattens nested object { color: { primary: { 500: "#934599" } } }
- * into: { "--color-primary-500": "#934599" }
+ * Flattens a nested DesignTokenNode into a single-level key → value map.
+ * Config objects are stored whole as `<path>-config` rather than flattened.
+ *
+ * @example { color: { primary: { 500: "#934599" } } } → { "color-primary-500": "#934599" }
+ * @param designTokenProperty - Node to flatten; top-level call passes `DesignTokens`
+ * @param parentKey - Accumulated prefix from parent calls; omit on first call
+ * @param accumulatedProperties - Shared accumulator; omit on first call
+ * @returns Flat map of dash-joined token keys to values or config objects
  */
-function toCssProperties(
-	propertyNode: PropertyNode,
-	prefix: string = "",
-): Record<string, PropertyValue> {
-	let flattenedProperties: Record<string, PropertyValue> = {};
-	const delimiter: string = "-";
+function flattenDesignToken(
+	designTokenProperty: DesignTokenNode,
+	parentKey: string = "",
+	accumulatedProperties: Record<string, DesignTokenData> = {},
+): Record<string, DesignTokenData> {
+	for (const [key, value] of Object.entries(designTokenProperty)) {
+		const prefixedKey = parentKey ? `${parentKey}-${key}` : key;
 
-	for (const [key, value] of Object.entries(propertyNode)) {
-		const newKey = prefix ? `${prefix}${delimiter}${key}` : key;
-
-		if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-			// Nested object → recurse deeper
-			flattenedProperties = {
-				...flattenedProperties,
-				...toCssProperties(value as PropertyNode, newKey),
-			};
-		} else {
-			// Leaf value → add to result
-			flattenedProperties[newKey] = value as PropertyValue;
+		// Don't flatten config for later parsing.
+		if (key === "config") {
+			accumulatedProperties[prefixedKey] = value as DesignTokenConfig;
+			continue;
 		}
-	}
 
-	return flattenedProperties;
+		// Value is a node.
+		if (typeof value === "object") {
+			flattenDesignToken(
+				value as DesignTokenNode,
+				prefixedKey,
+				accumulatedProperties,
+			);
+		} else accumulatedProperties[prefixedKey] = value; // Value is well... a value.
+	}
+	return accumulatedProperties;
 }
 
+/**
+ * Returns a spec-valid `initial-value` for a given `@property` syntax type.
+ *
+ * @param syntax - A CSS `@property` syntax string (e.g. `"<color>"`, `"<time>"`)
+ * @returns A safe concrete fallback — `var()`/`color-mix()` are not valid here
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/@property/initial-value
+ */
 function getDefaultCssValues(syntax: string) {
 	switch (syntax) {
 		case "<color>": {
@@ -85,51 +99,73 @@ function getDefaultCssValues(syntax: string) {
 }
 
 /**
+ * Walks up the key hierarchy to find the nearest config — sub-group takes precedence.
+ * e.g. `"transition-duration-medium"` checks `"transition-duration-config"` before `"transition-config"`.
+ *
+ * @param key - A flattened token key (e.g. `"color-primary-500"`)
+ * @param flattenedTokens - The flat map produced by `flattenDesignToken`
+ * @returns The nearest `DesignTokenConfig` in the hierarchy
+ * @throws If no config exists anywhere in the key's ancestry
+ */
+function getNearestConfig(
+	key: string,
+	flattenedTokens: Record<string, DesignTokenData>,
+) {
+	const splitKey = key.split("-");
+	splitKey.pop();
+
+	const parentKeys: string[] = [];
+	const possibleConfigKeys: string[] = [];
+	const depth = splitKey.length;
+
+	for (let i = 0; i < depth; i++) {
+		parentKeys.push(splitKey.join("-"));
+		splitKey.pop(); // Removes the leaf, walking up the hierarchy.
+		possibleConfigKeys.push(`${parentKeys[i]}-config`);
+	}
+
+	let nearestConfigKey: string = "";
+
+	for (const configKey of possibleConfigKeys) {
+		if (flattenedTokens[configKey]) {
+			nearestConfigKey = configKey;
+			break;
+		}
+	}
+
+	if (!nearestConfigKey)
+		throw Error(`No available design token config for key: "${key}"`);
+
+	return flattenedTokens[nearestConfigKey] as DesignTokenConfig;
+}
+
+/**
  * Generates gen.css from DesignTokens at build time.
  * Writes @property declarations with safe initial-value defaults + :root {} block.
  *
  * @see src/lib/data/shared/design-tokens.ts for token definitions
  */
 async function genDesignTokens() {
-	const properties = toCssProperties(DesignTokens);
+	const properties = flattenDesignToken(DesignTokens);
 	const keys = Object.keys(properties);
 
 	let propertyBlocks = "";
-	let rootValues = "";
+	let trueValues = "";
 
 	for (const key of keys) {
 		// Skip config objects (they're metadata, not actual properties)
-		if (key.includes("-config-")) continue;
-
-		const value = properties[key];
-
-		// Example: "color-primary-500" → ["color", "primary", "500"]
-		const pathParts = key.split("-");
-		const rootKey = pathParts[0] as keyof typeof DesignTokens | undefined;
-		const subKey = pathParts[1] as string | undefined;
-
-		// Sub-group config takes precedence over group config
-		const root = rootKey ? DesignTokens[rootKey] : undefined;
-		const sub =
-			root && subKey
-				? (root as Record<string, PropertyNode>)[subKey]
-				: undefined;
-		const groupConfig: PropertyConfig | undefined =
-			sub?.config ?? (root as PropertyNode | undefined)?.config;
+		if (key.includes("-config")) continue;
+		const config = getNearestConfig(key, properties);
 
 		// Convert to CSS variable name: "transition-easing-value" → "--transition-easing"
 		const name = `--${key.replace("-value", "")}`;
-		const syntax = groupConfig?.syntax ?? "*";
-		const inherits = groupConfig?.inherits ?? true;
-		const trueValue = typeof value === "object" ? "" : String(value);
-
-		const initialValue = getDefaultCssValues(syntax);
+		const initialValue = getDefaultCssValues(config.syntax);
+		const trueValue = String(properties[key]);
 
 		// @property block — initial-value satisfies the spec; :root overrides with real value
-		propertyBlocks += `@property ${name} {\n\tsyntax: "${syntax}";\n\tinherits: ${inherits};\n\tinitial-value: ${initialValue};\n}\n\n`;
-
+		propertyBlocks += `@property ${name} {\n\tsyntax: "${config.syntax}";\n\tinherits: ${config.inherits};\n\tinitial-value: ${initialValue};\n}\n\n`;
 		// :root value
-		rootValues += `\t${name}: ${trueValue};\n`;
+		trueValues += `\t${name}: ${trueValue};\n`;
 	}
 
 	const output =
@@ -137,7 +173,7 @@ async function genDesignTokens() {
 		`/* Source: src/lib/data/shared/design-tokens.ts */\n\n` +
 		propertyBlocks +
 		`:root {\n` +
-		rootValues +
+		trueValues +
 		`}\n`;
 
 	await Bun.write("src/lib/styles/gen.css", output);
