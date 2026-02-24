@@ -35,7 +35,7 @@ $effect(() => {
 </script>
 
 {#snippet links()}
-	<ul id="links" class="center" transition:standard={fly} role="list">
+	<ul id="links" class="center" transition:standard={[fly]} role="list">
 		<!-- Add your navigation links here -->
 		<!-- Example:
 		<li class="lift">

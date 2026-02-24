@@ -3,20 +3,18 @@ import type { Image } from "$types/component-props";
 
 interface Props {
 	image: Image;
-	title?: string;
+	title: string;
 	alt: string;
-	centeredTitle?: boolean;
+	renderTitle?: boolean;
 }
 
-// Use altText instead of alt because biome currently flags
-// an error on the property shorthand {alt}
-let { image, title, alt: altText, centeredTitle = false }: Props = $props();
+let { image, title, renderTitle = false }: Props = $props();
 </script>
 
 {#snippet hero()}
 	<img
 		src={image.url}
-		alt={altText}
+		alt={title}
 		fetchpriority="high"
 		width={image.dimensions.width}
 		height={image.dimensions.height}
@@ -24,8 +22,8 @@ let { image, title, alt: altText, centeredTitle = false }: Props = $props();
 {/snippet}
 
 <section>
-	{#if title}
-		<h1 class="title--page" class:centered-title={centeredTitle}>{title}</h1>
+	{#if renderTitle}
+		<h1 class="title--page" class:rendered-title={renderTitle}>{title}</h1>
 		{@render hero()}
 	{:else}
 		<h1>{@render hero()}</h1>
@@ -41,7 +39,7 @@ section {
 	overflow: hidden;
 }
 
-.centered-title {
+.rendered-title {
 	z-index: 999;
 	position: absolute;
 	inset: 0;

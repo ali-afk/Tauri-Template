@@ -5,7 +5,7 @@ let { item, loadPriority }: { item: Item; loadPriority: LoadPriority } =
 	$props();
 </script>
 
-<div class="card center--column">
+<article class="card center--column">
 	<img
 		src={item.image.url}
 		alt={item.name}
@@ -21,10 +21,10 @@ let { item, loadPriority }: { item: Item; loadPriority: LoadPriority } =
 			>Details</a
 		>
 	{/if}
-</div>
+</article>
 
 <style>
-div {
+article {
 	--_background: var(--bg-card);
 	flex: 0 1 300px;
 	padding: var(--space-4);
@@ -54,7 +54,7 @@ a {
 
 @media screen and (max-width: 768px) {
 	/* DesignTokens.breakpoint[2] */
-	div {
+	article {
 		flex: 0 1 150px;
 		min-height: 120px;
 	}

@@ -20,7 +20,7 @@ let {
 
 <section class="wrapper {className}">
 	<svelte:element this={`h${headingLevel}`} class="title--section">
-		{title}:
+		{title}
 	</svelte:element>
 	<div class={gridClass}>{@render children()}</div>
 </section>

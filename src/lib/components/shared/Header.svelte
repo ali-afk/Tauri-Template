@@ -5,7 +5,7 @@ import { Logo } from "$data/shared";
 
 let headerHeight = $state(0);
 let y = $state(0);
-let lastY = $state(0);
+let lastY = 0;
 let isHidden = $state(false);
 
 // Runs whenever 'y' changes

@@ -34,7 +34,7 @@ let { title, name, children }: Props = $props();
 		</summary>
 	</details>
 	{#if isOpen}
-		<div id={contentId} transition:standard={slide}>
+		<div id={contentId} transition:standard={[slide]}>
 			<hr aria-hidden="true">
 			<p>{@render children()}</p>
 		</div>
