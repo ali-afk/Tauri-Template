@@ -7,15 +7,15 @@
 		background: light-dark(
 			linear-gradient(
 				90deg,
-				var(--color-base-700) 0%,
-				transparent 50%,
-				var(--color-base-700) 100%
+				var(--color-base-100) 0%,
+				var(--color-base-300) 50%,
+				var(--color-base-100) 100%
 			),
 			linear-gradient(
 				90deg,
-				transparent 0%,
-				var(--color-base-300) 50%,
-				transparent 100%
+				var(--color-base-900) 0%,
+				var(--color-base-700) 50%,
+				var(--color-base-900) 100%
 			)
 		);
 		background-size: 200% 100%;

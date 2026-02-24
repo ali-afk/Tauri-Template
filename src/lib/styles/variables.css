@@ -10,19 +10,6 @@
 	   so variables.css wins the cascade.
 	   ======================================== */
 
-	/* Font Sizes — 4 semantic levels mapped to Open Props fluid sizes */
-	--fs-1: var(--font-size-fluid-0); /* clamp(.75rem, 2vw, 1rem) */
-	--fs-2: var(--font-size-fluid-1); /* clamp(1rem, 4vw, 1.5rem) */
-	--fs-3: var(--font-size-fluid-2); /* clamp(1.5rem, 6vw, 2.5rem) */
-	--fs-4: var(--font-size-fluid-3); /* clamp(2rem, 9vw, 3.5rem) */
-
-	/* Spacing — 9 semantic levels mapped to Open Props fluid sizes */
-	--space-1: var(--size-fluid-1); /* clamp(.5rem, 1vw, 1rem) */
-	--space-2: var(--size-fluid-2); /* clamp(1rem, 2vw, 1.5rem) */
-	--space-3: var(--size-fluid-3); /* clamp(1.5rem, 3vw, 2rem) */
-	--space-4: var(--size-fluid-4); /* clamp(2rem, 4vw, 3rem) */
-	--space-5: var(--size-fluid-5); /* clamp(5rem, 7vw, 7.5rem) */
-
 	/* Border Radius */
 	--border-radius: var(--radius-3);
 

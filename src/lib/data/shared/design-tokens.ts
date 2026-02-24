@@ -42,7 +42,9 @@
  * @see src/lib/styles/variables.css for Open Props aliases and computed values
  */
 
-import type { PropertyNode } from "$types/design-tokens";
+import sizes from "open-props/src/sizes";
+
+import type { DesignTokenNode } from "$types/design-tokens";
 
 const colorTokens = {
 	color: {
@@ -81,7 +83,7 @@ const colorTokens = {
 		config: { syntax: "<color>", inherits: true },
 		value: "light-dark(var(--color-base-100), var(--color-base-700))",
 	},
-} as const satisfies Record<string, PropertyNode>;
+} as const satisfies Record<string, DesignTokenNode>;
 
 const fontTokens = {
 	fw: {
@@ -110,7 +112,7 @@ const fontTokens = {
 		main: "light-dark(var(--color-base-900), var(--color-base-100))",
 		mute: "light-dark(var(--color-base-700), var(--color-base-300))",
 	},
-} as const satisfies Record<string, PropertyNode>;
+} as const satisfies Record<string, DesignTokenNode>;
 
 const spaceTokens = {
 	space: {
@@ -123,17 +125,17 @@ const spaceTokens = {
 		6: "var(--size-fluid-7)",
 		7: "var(--size-fluid-8)",
 		gutter: "calc((100% - var(--space-max)) / 2)",
-		min: "var(--size-sm)",
-		max: "var(--size-xl)",
+		min: sizes["--size-sm"],
+		max: sizes["--size-xl"],
 	},
 	breakpoint: {
 		config: { syntax: "<length>", inherits: true },
-		sm: "var(--size-sm)",
-		md: "var(--size-md)",
-		lg: "var(--size-lg)",
-		xl: "var(--size-xl)",
+		sm: sizes["--size-sm"],
+		md: sizes["--size-md"],
+		lg: sizes["--size-lg"],
+		xl: sizes["--size-xl"],
 	},
-} as const satisfies Record<string, PropertyNode>;
+} as const satisfies Record<string, DesignTokenNode>;
 
 const otherTokens = {
 	border: {
@@ -156,7 +158,7 @@ const otherTokens = {
 		config: { syntax: "<color>", inherits: true },
 		color: "color-mix(in srgb, var(--color-base-900), transparent 80%)",
 	},
-} as const satisfies Record<string, PropertyNode>;
+} as const satisfies Record<string, DesignTokenNode>;
 
 /**
  * Design tokens organized by category
@@ -171,4 +173,4 @@ export const DesignTokens = {
 	...fontTokens,
 	...spaceTokens,
 	...otherTokens,
-} as const satisfies Record<string, PropertyNode>;
+} as const satisfies Record<string, DesignTokenNode>;
