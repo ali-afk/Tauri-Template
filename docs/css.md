@@ -54,19 +54,7 @@ durations.
 /* Transitions:  --transition-duration-{short,medium,long}, --transition-easing */
 ```
 
-## Fluid Typography
-
-Font sizes and spacing are fluid — they scale with the viewport via `clamp()`
-(provided by Open Props). No per-component media queries needed for size scaling.
-
-## Color Mixing
-
-```css
---color-base-900: color-mix(in srgb, #000, var(--color-primary-500) 5%);
-```
-
-All grays are tinted with the primary color. Change `--color-primary-500` and
-all base grays update automatically.
+Font sizes and spacing are fluid via `clamp()` — no per-component media queries needed.
 
 ## Transitions
 
@@ -85,12 +73,9 @@ In JS/Svelte, always use `standard()` from `$scripts/transition` instead of
 transitions directly — it injects design-token easing/duration and respects
 `prefers-reduced-motion`. See `architecture-decisions.md`.
 
-## Shadows
+## Path Aliases in CSS `url()`
 
-```css
---shadow-weak: 0 2px 4px var(--shadow-color);
---shadow-strong: 0 10px 40px var(--shadow-color);
-```
+Vite resolves path aliases (e.g. `$assets`) in CSS `url()` — don't replace with relative paths.
 
 ## Layout Patterns
 
@@ -139,20 +124,12 @@ Full list in `utility.css`. Base styles shared via attribute selectors:
 ```
 
 **Reserved substrings** — avoid these in unrelated class names:
-`row`, `stack`, `title`, `card-grid`, `center`
-
-### Lift Modifiers
-
-```css
-.lift:hover        { transform: translateY(-2px); }  /* subtle */
-.lift--strong:hover { transform: translateY(-4px); }  /* featured cards */
-```
+`row`, `stack`, `title`, `card-grid`, `center`, `lift`
 
 ## GPU Optimization
 
-`.card` and `.btn` include `backface-visibility: hidden`, `perspective: 1000px`,
-and `transform: translateZ(0)` for smoother transitions. Disable if you notice
-blurry text.
+`.card` and `.btn` include `backface-visibility: hidden` and `transform: translateZ(0)`
+for smoother transitions. Disable if you notice blurry text.
 
 ## Auto-Contrast System (`--_background`)
 
@@ -165,13 +142,3 @@ or `.btn` — only set `--_background`.
 
 See [`docs/color-system.md`](./color-system.md) for the full explanation,
 math, and debugging guide.
-
-## Semantic Colors
-
-```css
-color: var(--text-main);       /* Primary text */
-color: var(--text-mute);       /* Secondary text */
-background: var(--bg-main);    /* Page background */
-background: var(--bg-card);    /* Card background */
-background: var(--btn-primary); /* Primary button */
-```

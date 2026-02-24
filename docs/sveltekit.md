@@ -68,16 +68,3 @@ formatted as `"Page | SiteName"`. Use it on every page:
 ```
 
 Pass a `children` snippet for any extra head tags you need.
-
-## onMount
-
-Root layout (`+layout.svelte`) runs one thing on mount:
-
-```typescript
-onMount(() => {
-  document.documentElement.classList.add("document-loaded"); // remove shimmer
-});
-```
-
-Design tokens are registered at build time by `gen.ts` — no runtime call needed.
-Don't add data fetching here — use load functions for that.

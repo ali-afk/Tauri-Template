@@ -4,15 +4,8 @@ Automatic text and border color calculation based on background lightness.
 
 ## Why This Exists
 
-Without this system, every new background color would require:
-
-1. Manually testing if text is readable
-2. Adding CSS edge cases for light vs. dark backgrounds
-3. Duplicating hover/border color logic per component
-4. Risking accessibility failures when colors change
-
-The auto-contrast system eliminates this by
-**deriving all related colors from a single input**.
+Every new background color would otherwise require manual testing, edge cases, and duplicated logic.
+This system derives all related colors from a single `--_background` input.
 
 ## How It Works
 
@@ -118,30 +111,10 @@ calculation reliable across all hues.
 always shift toward the opposite end of the lightness scale. `--_border-darkness`
 increases to `10%` on hover for a more pronounced outline.
 
-## Usage Examples
-
-### QuoteCard (Dynamic Colors)
+## Usage Example
 
 ```svelte
-<!-- Color passed from parent, changes per card -->
-<article
-  style="--_background: {colorSet[color]}"
-  class="card"
->
-```
-
-### Accordion (Static Color)
-
-```svelte
-<article class="card">
-  <!-- --_background set in component <style> -->
-</article>
-
-<style>
-article {
-  --_background: var(--bg-card);
-}
-</style>
+<article style="--_background: {colorValue}" class="card">
 ```
 
 ## Debugging

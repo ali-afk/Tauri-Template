@@ -22,6 +22,29 @@ so `transition:standard` can run.
 support, move content back inside `<details>` and use `@starting-style` for
 the animation instead.
 
+### `aria-expanded` and `aria-controls` on `<summary>`
+
+```svelte
+<summary aria-expanded={isOpen} aria-controls={contentId}>
+  ...
+</summary>
+...
+{#if isOpen}
+  <div id={contentId}>Content</div>
+{/if}
+```
+
+Because the animated content lives *outside* `<details>` (see above), the
+native disclosure widget's open/closed state is not communicated to assistive
+technology for the visible content. `aria-expanded` on `<summary>` fills that
+gap explicitly.
+
+`aria-controls` pointing to a conditionally-rendered element is intentional —
+the target exists in the DOM while open (valid reference) and is absent while
+closed (stale reference, but harmless: assistive technology ignores missing
+`aria-controls` targets rather than erroring). Don't move the `id` inside
+`<details>` to "fix" this.
+
 ### Route Change Closes Mobile Menu
 
 ```typescript
@@ -38,13 +61,12 @@ navigation. Don't remove it.
 ### Curried Transition Function
 
 ```svelte
-<div transition:standard={slide}>
+<div transition:standard={[slide]}>
 ```
 
 Everything goes through `standard()` instead of using transitions directly.
 It injects consistent easing/duration from design tokens and auto-disables
-animations for `prefers-reduced-motion`. Higher-order function: takes a
-transition fn, returns a configured version.
+animations for `prefers-reduced-motion`.
 
 ### Color Cycling with `cycleColorScale()`
 
@@ -62,56 +84,6 @@ style="--_background: {colorSet[cycleColorScale(i)]}"
 
 Cycles through `[100, 300, 500, 700, 900]` by index. Add a new item and it
 automatically picks the next color in the sequence — no manual assignment.
-
-## JavaScript Patterns
-
-### `generateId()` Uses Counter + Random
-
-```typescript
-let idCounter = 0;
-
-export function generateId(prefix: string = "id"): string {
-  idCounter++;
-  return `${prefix}-${idCounter}-${Math.random().toString(36).substring(2, 5)}`;
-}
-```
-
-Counter alone is predictable, random alone could theoretically collide —
-both together is essentially impossible. Produces IDs like `content-1-x7f`.
-
-## CSS/Styling Patterns
-
-### Document Loading Shimmer
-
-```typescript
-onMount(() => {
-  document.documentElement.classList.add("loading-item");
-});
-```
-
-```css
-.loading-item {
-  /* shimmer animation */
-}
-```
-
-The shimmer masks the brief flash before fonts and images load.
-
-## Known Refactor Targets
-
-### `transition.ts` — Type Safety
-
-`transition.ts` works but has loose types that should be tightened before the
-transition system is extended:
-
-- `TransitionFn` uses `params?: any` — no type safety on transition parameters
-- Non-null assertions (`!`) scattered through `parseBezierCoords`
-- `standard()` types `params` as `SlideParams`, which is too narrow — passing
-  `fly` or `fade` params doesn't type-check correctly
-- `standard()` should either accept a generic params type or provide
-  per-transition overloads
-
-Don't add new transition variants until this is addressed.
 
 ## Build & Tooling
 
