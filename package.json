@@ -12,8 +12,8 @@
 		"prepare": "husky && svelte-kit sync",
 		"gen": "bun run ./src/lib/scripts/gen.ts",
 		"fix": "biome check --fix --staged --no-errors-on-unmatched && markdownlint-cli2 --fix",
-		"fix-svelte": "svelte-check --tsconfig ./tsconfig.json",
-		"fix-all": "bun gen && bun fix && svelte-kit sync && bun fix-svelte",
+		"fix-svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"fix-all": "bun fix && bun fix-svelte",
 		"watch": "bun fix-svelte --watch",
 		"tauri:dev": "tauri dev",
 		"tauri:build": "NO_STRIP=true tauri build"
@@ -21,7 +21,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.4",
 		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.53.0",
+		"@sveltejs/kit": "^2.53.1",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tauri-apps/cli": "^2.10.0",
 		"@types/bun": "^1.3.9",
@@ -30,7 +30,7 @@
 		"husky": "^9.1.7",
 		"lightningcss": "^1.31.1",
 		"markdownlint-cli2": "^0.21.0",
-		"svelte": "^5.53.2",
+		"svelte": "^5.53.3",
 		"svelte-check": "^4.4.3",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1",
