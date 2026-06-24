@@ -4,11 +4,14 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 
 /** Commands */
 export const commands = {
-	appSettings: () => typedError<AppSettings, string>(__TAURI_INVOKE("app_settings")),
-	appMetadata: () => typedError<AppMetaData, string>(__TAURI_INVOKE("app_metadata")),
+	appSettings: () => typedError<AppSettings, AppError>(__TAURI_INVOKE("app_settings")),
+	appMetadata: () => typedError<AppMetaData, AppError>(__TAURI_INVOKE("app_metadata")),
+	saveSettings: (newSettings: AppSettings) => typedError<null, AppError>(__TAURI_INVOKE("save_settings", { newSettings })),
 };
 
 /* Types */
+export type AppError = ({ Io: string }) & { Config?: never; Json?: never; Validation?: never } | ({ Json: string }) & { Config?: never; Io?: never; Validation?: never } | ({ Config: string }) & { Io?: never; Json?: never; Validation?: never } | ({ Validation: string }) & { Config?: never; Io?: never; Json?: never };
+
 /**
  *  Application metadata read from tauri.conf.json at startup.
  *  Displayed in window title, about dialogs, and contact sections.
@@ -20,9 +23,10 @@ export const commands = {
  *  configuration is implemented.
  */
 export type AppMetaData = {
-	app_version: string,
-	app_name: string,
-	app_url: string,
+	version: string,
+	name: string,
+	description: string,
+	url: string,
 	contacts: ContactInfo,
 };
 
@@ -37,24 +41,20 @@ export type AppSettings = {
 	 *  Window resolution as (width, height). Mirrors tauri.conf.json defaults.
 	 *  Future: will use WindowResolution type for validated string storage.
 	 */
-	resolution: [number, number],
+	resolution: WindowResolution,
 	fullscreen: boolean,
 };
 
-/**  Contact information for the application author/maintainer. */
 export type ContactInfo = {
 	email: Email,
 	github: string,
 };
 
-/**
- *  Validated email address. Must match `^[^\s@]+@[^\s@]+\.[^\s@]+$`.
- *  Uses OnceLock to compile regex once.
- */
 export type Email = string;
 
-/**  Theme preference matching the Tauri window's light/dark detection. */
 export type Theme = "Light" | "Dark" | "System";
+
+export type WindowResolution = [number, number];
 
 /* Tauri Specta runtime */
 async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {

@@ -20,13 +20,9 @@ async function initialiseAppConfig() {
 		AppSettings.set(settingsRes.data);
 		AppMetaData.set(metaRes.data);
 	} else if (settingsRes.status === "error") {
-		throw new Error(
-			`App Config could not be retrieved from backend: ${settingsRes.error}`,
-		);
+		throw new Error(`${settingsRes.error}`);
 	} else if (metaRes.status === "error") {
-		throw new Error(
-			`App Config could not be retrieved from backend: ${metaRes.error}`,
-		);
+		throw new Error(`${metaRes.error}`);
 	}
 	isInitialized = true;
 }
