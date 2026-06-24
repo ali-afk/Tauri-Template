@@ -3,13 +3,14 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::sync::OnceLock;
 
-/// Validated email address. Must match `^[^\s@]+@[^\s@]+\.[^\s@]+$`.
-/// Uses OnceLock to compile regex once.
+use crate::error::AppError;
+
 #[derive(Deserialize, Serialize, Clone, Type)]
-pub struct Email(pub String);
+pub struct Email(String);
 
 impl Email {
-    pub fn parse(email: String) -> Result<Self, String> {
+    pub fn new(email: impl Into<String>) -> Result<Self, AppError> {
+        let email = email.into();
         static PATTERN_LOCK: OnceLock<Regex> = OnceLock::new();
         let pattern =
             PATTERN_LOCK.get_or_init(|| Regex::new(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").unwrap());
@@ -17,7 +18,7 @@ impl Email {
         if pattern.is_match(&email) {
             Ok(Email(email))
         } else {
-            Err(format!("Invalid email: {email}"))
+            Err(AppError::Validation(format!("Invalid email: {email}")))
         }
     }
 }
@@ -28,40 +29,34 @@ impl AsRef<str> for Email {
     }
 }
 
-/// Validated window resolution string (`WIDTHxHEIGHT`).
-/// Currently defined but NOT used — AppSettings.resolution uses `(u32, u32)`.
-/// Planned for future editable user config where validated string storage is needed.
-#[derive(Deserialize, Serialize, Clone, Type)]
-pub struct WindowResolution(String);
+#[derive(Deserialize, Serialize, Clone, Type, Copy)]
+pub struct Resolution(u32, u32);
 
-impl WindowResolution {
-    pub fn parse(resolution: String) -> Result<Self, String> {
+impl Resolution {
+    pub fn new(resolution: impl Into<String>) -> Result<Self, AppError> {
+        let resolution = resolution.into();
         static PATTERN_LOCK: OnceLock<Regex> = OnceLock::new();
-        let pattern = PATTERN_LOCK.get_or_init(|| Regex::new(r"^(\d)+x(\d)+$").unwrap());
+        let pattern = PATTERN_LOCK.get_or_init(|| Regex::new(r"^(\d+)x(\d+)$").unwrap());
 
-        if pattern.is_match(&resolution) {
-            Ok(WindowResolution(resolution))
+        if let Some(captured) = pattern.captures(&resolution) {
+            let width: u32 = captured[1].parse().expect("Should have parsed u32, regex might be invalid");
+            let height: u32 = captured[2].parse().expect("Should have parsed u32, regex might be invalid");
+            Ok(Resolution(width, height))
         } else {
-            Err(format!("Invalid resolution: {resolution}"))
+            Err(AppError::Validation(format!(
+                "Invalid resolution: {resolution}"
+            )))
         }
     }
 }
 
-impl AsRef<str> for WindowResolution {
-    fn as_ref(&self) -> &str {
-        &self.0
-    }
-}
-
-/// Contact information for the application author/maintainer.
 #[derive(Deserialize, Serialize, Clone, Type)]
 pub struct ContactInfo {
     pub email: Email,
     pub github: String,
 }
 
-/// Theme preference matching the Tauri window's light/dark detection.
-#[derive(Deserialize, Serialize, Clone, Type)]
+#[derive(Deserialize, Serialize, Clone, Type, Copy)]
 pub enum Theme {
     Light,
     Dark,
