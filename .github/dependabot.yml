@@ -1,0 +1,67 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    assignees:
+      - "ali-afk"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    groups:
+      production:
+        dependency-type: "production"
+      development:
+        dependency-type: "development"
+        update-types:
+          - minor
+          - patch
+      misc:
+        dependency-type: "development"
+        update-types:
+          - major
+        exclude-patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"
+          - "@vite*"
+          - "@tauri-apps/*"
+          - "@test*"
+      app:
+        update-types:
+          - major
+        patterns:
+          - "svelte*"
+          - "@sveltejs/*"
+          - "vite*"
+          - "@vite*"
+          - "@tauri-apps/*"
+        exclude-patterns:
+          - vitest
+      testing:
+        update-types:
+          - major
+        patterns:
+          - "@test*"
+          - vitest
+  - package-ecosystem: "cargo"
+    directory: "/src-tauri"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    assignees:
+      - "ali-afk"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    groups:
+      tauri-family:
+        patterns:
+          - "tauri*"
+          - "specta*"
+      misc:
+        exclude-patterns:
+          - "tauri"
+          - "specta*"
