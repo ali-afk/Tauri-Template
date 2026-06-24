@@ -154,18 +154,7 @@ then sync the others. The `AppMetaData.app_version` field reads from
 
 ### CI & Build
 
-1. **Cargo caching in tauri.yml** — `actions/cache` for `~/.cargo` +
-   `src-tauri/target`. Shaves 5-10 min off Rust compilation.
-2. **Windows Tauri build** — matrix only has ubuntu + macOS. Add
-   `windows-latest` runner.
-3. **Cargo dependabot** — currently npm-only. Add `package-ecosystem: "cargo"`
-   for Rust dependency update PRs.
-4. **Artifact uploads** — save built binaries, test/coverage reports to GH
-   Actions artifacts for download.
-5. **workflow\_dispatch** — enable manual trigger for all workflows.
-6. **Coverage threshold** — fail CI if coverage drops below a configured
-   percentage. Add to coverage job in ci.yml.
-7. **Tauri capabilities** — define permission sets in `src-tauri/capabilities/`.
+1. **Tauri capabilities** — define permission sets in `src-tauri/capabilities/`.
    App currently runs with default permissions. Required before production.
 
 ### Rust Backend
