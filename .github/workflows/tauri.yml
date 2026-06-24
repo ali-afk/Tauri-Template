@@ -7,16 +7,16 @@ on:
     branches: [main]
 
 env:
-  BUN_VERSION: "1"
+  BUN_VERSION: "latest"
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install system deps (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -36,7 +36,26 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: ${{ env.BUN_VERSION }}
-
       - run: bun install --frozen-lockfile
 
+      - name: Cargo registry cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ matrix.os }}-cargo-registry-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Cargo target cache
+        uses: actions/cache@v6
+        with:
+          path: src-tauri/target
+          key: ${{ matrix.os }}-cargo-target-${{ hashFiles('src-tauri/Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-cargo-target-
+
       - run: bun tauri:build
+      - uses: actions/upload-artifact@v6
+        with:
+          name: tauri-bundle-${{ matrix.os }}
+          path: src-tauri/target/release/bundle/
