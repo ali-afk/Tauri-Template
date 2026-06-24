@@ -3188,7 +3188,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-template"
-version = "1.0.1"
+version = "1.1.0"
 dependencies = [
  "regex",
  "serde",
@@ -3198,6 +3198,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-specta",
+ "thiserror 2.0.18",
 ]
 
 [[package]]

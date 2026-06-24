@@ -100,23 +100,47 @@ incorrect layout on initial paint.
 
 ## Rust Backend Decisions
 
-### `WindowResolution` Type Defined but Not Used
+### `Resolution` Now in Use
 
-`WindowResolution` in `config/types.rs` has a regex parser (`^\d+x\d+$`) but
-`AppSettings.resolution` uses `(u32, u32)` instead. The type is planned for
-future editable user config. Keep it — don't remove.
+`Resolution(u32, u32)` with regex parser `^(\d+)x(\d+)$` is the actual type of
+`AppSettings.resolution`. The regex captures width/height into a typed tuple at
+construction time. Serde serializes as `[width, height]`.
 
-### Commented-Out `short_description` / `long_description`
+### `short_description` / `long_description` Replaced
 
-```rust
-// pub short_description: String,
-// pub long_description: String,
-```
+Removed from `AppMetaData`. Tauri v2's `ToTokens` impl hardcodes these to `None`
+(see `tauri-utils-2.9.3/src/config.rs:4034`), so `expect()` panics at runtime
+despite valid values in `tauri.conf.json`. Replaced with a single hardcoded
+`description: String` field.
 
-Temporarily commented out because `tauri::Config` v2 doesn't expose these fields
-in a directly accessible way from the config struct. They broke the backend
-export when included. Will be restored when the Tauri v2 Config API supports
-them or when custom configuration is implemented.
+### `AppError` via `thiserror`
+
+All internal Rust errors use `AppError` enum:
+
+- `Io(String)` — wraps `std::io::Error`
+- `Json(String)` — wraps `serde_json::Error`
+- `Config(String)` — general config errors
+- `Validation(String)` — type validation errors
+
+`From` impls for `io::Error` and `serde_json::Error` enable `?` throughout.
+Commands return `Result<T, AppError>` for typed errors at the IPC boundary.
+
+### Settings Mutation with `Mutex`
+
+`app_settings` command stores `Mutex<AppSettings>` via `app.manage()`.
+`save_settings` command writes to disk and updates the Mutex in one atomic
+operation. This avoids stale in-memory state after writes.
+
+### Read/Write Pattern (replaced `init.rs`)
+
+`config/init.rs` was replaced by `config/serialize.rs` with two public
+functions:
+
+- `read_settings()` — if file missing, creates with defaults and returns them
+- `write_settings()` — serializes to file
+
+Both share a private `config_path()` helper. No more `open_settings_file` or
+per-field read functions.
 
 ## Build & Tooling
 
@@ -156,18 +180,21 @@ then sync the others. The `AppMetaData.app_version` field reads from
 
 1. **Tauri capabilities** — define permission sets in `src-tauri/capabilities/`.
    App currently runs with default permissions. Required before production.
+2. ~~CI cache key — fixed: includes `${{ github.repository }}` to prevent stale
+   caches on repo rename.~~
 
 ### Rust Backend
 
-1. **Error types** — add `thiserror` for typed errors, `anyhow` for command
-   results. Currently all commands return `Result<_, String>`.
-2. **Settings mutation** — add IPC command to write `AppSettings` back to
-   `config.json`. Currently read-only.
-3. **Test suite** — unit tests for config init/types, integration tests for
-   commands. Zero Rust tests exist.
+1. ~~**Error types** — done: `thiserror` + `AppError` enum.~~
+2. ~~**Settings mutation** — done: `save_settings` IPC command +
+   `config/serialize.rs`.~~
+3. **Test suite** — unit tests for config/types, integration tests for commands.
+   Zero Rust tests exist.
 4. **Async patterns** — add Tokio for background tasks.
 5. **Property-based testing** — `proptest` or `quickcheck` for fuzz-style
    assertions.
+6. **Runtime resolution validation** — check monitor support before applying
+   settings.
 
 ### Frontend Fixes
 

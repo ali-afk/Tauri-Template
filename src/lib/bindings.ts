@@ -6,23 +6,19 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 export const commands = {
 	appSettings: () => typedError<AppSettings, string>(__TAURI_INVOKE("app_settings")),
 	appMetadata: () => typedError<AppMetaData, string>(__TAURI_INVOKE("app_metadata")),
+	saveSettings: (newSettings: AppSettings) => typedError<null, string>(__TAURI_INVOKE("save_settings", { newSettings })),
 };
 
 /* Types */
 /**
  *  Application metadata read from tauri.conf.json at startup.
  *  Displayed in window title, about dialogs, and contact sections.
- * 
- *  NOTE: short_description and long_description are temporarily
- *  commented out because tauri::Config v2 doesn't expose these
- *  fields from the config struct in a directly accessible way.
- *  Will be restored when the API supports them or when custom
- *  configuration is implemented.
  */
 export type AppMetaData = {
-	app_version: string,
-	app_name: string,
-	app_url: string,
+	version: string,
+	name: string,
+	description: string,
+	url: string,
 	contacts: ContactInfo,
 };
 
@@ -37,23 +33,19 @@ export type AppSettings = {
 	 *  Window resolution as (width, height). Mirrors tauri.conf.json defaults.
 	 *  Future: will use WindowResolution type for validated string storage.
 	 */
-	resolution: [number, number],
+	resolution: Resolution,
 	fullscreen: boolean,
 };
 
-/**  Contact information for the application author/maintainer. */
 export type ContactInfo = {
 	email: Email,
 	github: string,
 };
 
-/**
- *  Validated email address. Must match `^[^\s@]+@[^\s@]+\.[^\s@]+$`.
- *  Uses OnceLock to compile regex once.
- */
 export type Email = string;
 
-/**  Theme preference matching the Tauri window's light/dark detection. */
+export type Resolution = [number, number];
+
 export type Theme = "Light" | "Dark" | "System";
 
 /* Tauri Specta runtime */

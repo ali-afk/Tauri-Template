@@ -1,6 +1,6 @@
 [package]
 name = "tauri-template"
-version = "1.0.1"
+version = "1.1.0"
 description = "Modern, flexible Tauri+Sveltekit template"
 authors = ["Ali Hussain"]
 license = "MIT"
@@ -27,3 +27,4 @@ specta = { version = "2.0.0-rc", features = ["derive"] }
 tauri-specta = { version = "2.0.0-rc", features = ["derive", "typescript"] }
 specta-typescript = "0.0"
 regex = "1.12.3"
+thiserror = "2"
