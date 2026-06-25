@@ -131,7 +131,7 @@ Commands return `Result<T, AppError>` for typed errors at the IPC boundary.
 `save_settings` command writes to disk and updates the Mutex in one atomic
 operation. This avoids stale in-memory state after writes.
 
-### Read/Write Pattern (replaced `init.rs`)
+### Read/Write Pattern
 
 `config/init.rs` was replaced by `config/serialize.rs` with two public
 functions:
@@ -180,20 +180,15 @@ then sync the others. The `AppMetaData.app_version` field reads from
 
 1. **Tauri capabilities** — define permission sets in `src-tauri/capabilities/`.
    App currently runs with default permissions. Required before production.
-2. ~~CI cache key — fixed: includes `${{ github.repository }}` to prevent stale
-   caches on repo rename.~~
 
 ### Rust Backend
 
-1. ~~**Error types** — done: `thiserror` + `AppError` enum.~~
-2. ~~**Settings mutation** — done: `save_settings` IPC command +
-   `config/serialize.rs`.~~
-3. **Test suite** — unit tests for config/types, integration tests for commands.
+1. **Test suite** — unit tests for config/types, integration tests for commands.
    Zero Rust tests exist.
-4. **Async patterns** — add Tokio for background tasks.
-5. **Property-based testing** — `proptest` or `quickcheck` for fuzz-style
+2. **Async patterns** — add Tokio for background tasks.
+3. **Property-based testing** — `proptest` or `quickcheck` for fuzz-style
    assertions.
-6. **Runtime resolution validation** — check monitor support before applying
+4. **Runtime resolution validation** — check monitor support before applying
    settings.
 
 ### Frontend Fixes
