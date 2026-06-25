@@ -17,3 +17,6 @@ opencode.json
 # Generated Assets
 src/lib/styles/gen.css
 .vitest
+
+*storybook.log
+storybook-static
