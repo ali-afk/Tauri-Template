@@ -10,14 +10,16 @@
 /// 3. Manage any new state via app.manage()
 /// 4. Frontend auto-generates bindings on rebuild
 use crate::config::serialize::read_settings;
+use crate::config::{
+    types::{ContactInfo, Email},
+    AppMetaData,
+};
 use crate::error::AppError;
 use specta_typescript::Typescript;
-use tauri::{App, Manager, Wry};
-use tauri::Config;
-use crate::config::{AppMetaData, types::{ContactInfo, Email}};
 use std::sync::Mutex;
+use tauri::Config;
+use tauri::{App, Manager, Wry};
 use tauri_specta::Builder;
-
 
 fn init_app_metadata(config: &Config) -> AppMetaData {
     let description = "A modern, accessible desktop application built with Tauri + SvelteKit, featuring design tokens, auto-contrast colors, and a component library.".into();
@@ -63,6 +65,8 @@ pub fn build(builder: Builder<Wry>) {
     gen_bindings(&builder);
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_opener::init())
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
             setup(app, &builder)?;

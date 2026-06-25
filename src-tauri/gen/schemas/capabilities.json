@@ -1,1 +1,1 @@
-{}
+{"default":{"identifier":"default","description":"Default capability set for the application","local":true,"windows":["main"],"permissions":["core:default","opener:default","store:default"]}}

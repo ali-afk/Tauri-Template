@@ -1,0 +1,10 @@
+{
+  "identifier": "default",
+  "description": "Default capability set for the application",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "store:default"
+  ]
+}
