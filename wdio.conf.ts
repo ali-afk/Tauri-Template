@@ -1,5 +1,8 @@
+import { defineConfig } from "@wdio/config";
+import { browserVersions } from "./vite.config";
+
 /// <reference types="@wdio/tauri-service" />
-export const config: WebdriverIO.Config = {
+export default defineConfig({
 	runner: "local",
 	tsConfigPath: "./test/tsconfig.json",
 
@@ -11,6 +14,11 @@ export const config: WebdriverIO.Config = {
 	capabilities: [
 		{
 			browserName: "chrome",
+			browserVersion: browserVersions.chrome.toString(),
+		},
+		{
+			browserName: "safari",
+			browserVersion: browserVersions.safari.toString(),
 		},
 	],
 
@@ -40,4 +48,4 @@ export const config: WebdriverIO.Config = {
 		ui: "bdd",
 		timeout: 60000,
 	},
-};
+});

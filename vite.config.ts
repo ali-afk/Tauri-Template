@@ -11,12 +11,11 @@ import { run } from "vite-plugin-run";
 import { defineConfig } from "vitest/config";
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-const versions = {
-	chrome: 120,
-	safari: 16,
-};
+export const browserVersions = { chrome: 120, safari: 16 };
 const targets = browserslistToTargets(
-	browserslist(`chrome ${versions.chrome}, safari ${versions.safari}`),
+	browserslist(
+		`chrome ${browserVersions.chrome}, safari ${browserVersions.safari}`,
+	),
 );
 const host = process.env["TAURI_DEV_HOST"];
 const isDebugBuild = Boolean(process.env["TAURI_ENV_DEBUG"]);
@@ -25,11 +24,11 @@ function getBuildTarget() {
 	switch (buildPlatform) {
 		case "windows":
 		case "android":
-			return `chrome${versions.chrome}`;
+			return `chrome${browserVersions.chrome}`;
 		case "linux":
 		case "macos":
 		case "ios":
-			return `safari${versions.safari}`;
+			return `safari${browserVersions.safari}`;
 		default:
 			return undefined;
 	}
