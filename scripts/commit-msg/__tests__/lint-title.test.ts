@@ -1,3 +1,5 @@
+import { types } from "../lint-title";
+
 const SCRIPT = "scripts/commit-msg/lint-title.ts";
 
 async function run(
@@ -15,19 +17,7 @@ async function run(
 }
 
 describe("lint-title.ts", () => {
-	it.each([
-		"fix",
-		"config",
-		"feat",
-		"feat-rm",
-		"update",
-		"docs",
-		"chore",
-		"style",
-		"content",
-		"misc",
-		"refactor",
-	])("accepts type: %s", async (type) => {
+	it.each([types])("accepts type: %s", async (type) => {
 		const { exitCode } = await run(`${type}: test message`);
 		expect(exitCode).toBe(0);
 	});

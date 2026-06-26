@@ -1,4 +1,4 @@
-const types = [
+export const types = [
 	"fix",
 	"config",
 	"feat",
@@ -10,6 +10,9 @@ const types = [
 	"content",
 	"misc",
 	"refactor",
+	"merge",
+	"experimental",
+	"test",
 ];
 
 const pattern = new RegExp(
