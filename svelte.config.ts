@@ -6,6 +6,12 @@ const config: Config = {
 	preprocess: vitePreprocess(),
 	vitePlugin: {
 		inspector: true,
+		// This template containes legacy svelte that refuses to compile
+		dynamicCompileOptions: ({ filename }) => {
+			if (filename.includes("LegacyTemplate.svelte")) {
+				return { runes: false };
+			}
+		},
 		experimental: {
 			sendWarningsToBrowser: true,
 		},
@@ -26,8 +32,8 @@ const config: Config = {
 		},
 		typescript: {
 			config(config) {
-				config.exclude.push("../src/lib/bindings.ts");
-				config.include.push("../scripts/**/*.ts");
+				config["exclude"].push("../src/lib/bindings.ts");
+				config["include"].push("../scripts/**/*.ts");
 			},
 		},
 	},

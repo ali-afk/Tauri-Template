@@ -1,4 +1,4 @@
-import { expect, browser } from "@wdio/globals";
+import { browser, expect } from "@wdio/globals";
 
 describe("Tauri App", () => {
 	it("should launch and display the main window", async () => {

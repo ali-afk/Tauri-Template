@@ -25,7 +25,7 @@
 		"test:bench": "bun --bun bench",
 		"wdio": "wdio run ./wdio.conf.ts",
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"storybook:build": "storybook build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.1",
@@ -78,5 +78,8 @@
 		"@tauri-apps/plugin-opener": "^2.5.4",
 		"@tauri-apps/plugin-store": "~2.4.3",
 		"bezier-easing": "^3.0.1"
-	}
+	},
+	"trustedDependencies": [
+		"edgedriver"
+	]
 }

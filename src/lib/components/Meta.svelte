@@ -9,7 +9,7 @@ type Props = {
 
 let { title, children }: Props = $props();
 
-let fullTitle = $derived(`${title} | ${$AppMetaData?.app_name}`);
+let fullTitle = $derived(`${title} | ${$AppMetaData?.name}`);
 </script>
 
 <svelte:head>
