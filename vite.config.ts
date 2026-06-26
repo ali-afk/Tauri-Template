@@ -1,12 +1,12 @@
-/// <reference types="vitest/config" />
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelteTesting } from "@testing-library/svelte/vite";
 import { DevTools } from "@vitejs/devtools";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
-import { defineConfig } from "vite";
 import { svelteDevtools } from "vite-devtools-svelte";
 import { run } from "vite-plugin-run";
+/// <reference types="vite" />
+import { defineConfig } from "vitest/config";
 
 const versions = { chrome: 120, safari: 16 };
 const targets = browserslistToTargets(
@@ -30,6 +30,7 @@ function getBuildTarget() {
 			return undefined;
 	}
 }
+
 export default defineConfig({
 	plugins: [
 		...(process.env["VITEST"]
