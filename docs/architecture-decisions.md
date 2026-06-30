@@ -155,20 +155,35 @@ reduce binary size) errors out; known issue on github. `NO_STRIP=true` skips it.
 The resulting binary is larger but otherwise identical. Make sure to remove it
 when fixed.
 
-### Tauri Capabilities Not Yet Configured
+### Tauri Capabilities Configured
 
-`src-tauri/gen/schemas/capabilities.json` is empty `{}` and no capability
-configs exist under `src-tauri/capabilities/`. The app currently runs with
-default permissions. **TODO:** Define capability sets per platform before
-production deployment.
+Capability sets are defined in `src-tauri/capabilities/default.json` with
+permissions for `core:default`, `opener:default`, and `store:default`. The
+`@tauri-apps/plugin-opener` and `@tauri-apps/plugin-store` plugins are
+registered in `setup.rs`.
+
+See `src-tauri/capabilities/default.json` and `src-tauri/src/setup.rs`.
+
+### WebdriverIO + Platform-Aware Browser Selection
+
+E2E tests use WebdriverIO with the Tauri service. Browser capabilities are
+selected via `getBuildTarget()` from `vite.config.ts`, which picks Chrome on
+Windows/Android and Safari on Linux/macOS/iOS.
+
+### Storybook Standalone
+
+Storybook is configured for component development (`bun run storybook`) but
+the vitest integration (`@storybook/addon-vitest`) is removed due to a Bun
+compatibility issue with `@storybook/builder-vite`'s `file:` protocol preset
+resolution.
 
 ### Version Alignment
 
 | File              | Version |
 | ----------------- | ------- |
-| `Cargo.toml`      | `1.0.0` |
-| `tauri.conf.json` | `1.0.0` |
-| `package.json`    | `1.0.0` |
+| `Cargo.toml`      | `1.2.0` |
+| `tauri.conf.json` | `1.2.0` |
+| `package.json`    | `1.2.0` |
 
 All three sources match. `Cargo.toml` is the canonical source — update it first,
 then sync the others. The `AppMetaData.app_version` field reads from
@@ -178,14 +193,13 @@ then sync the others. The `AppMetaData.app_version` field reads from
 
 ### CI & Build
 
-1. **Tauri capabilities** — define permission sets in `src-tauri/capabilities/`.
-   App currently runs with default permissions. Required before production.
+1. ~~**Tauri capabilities** — defined in `src-tauri/capabilities/default.json`.~~
 
 ### Rust Backend
 
 1. **Test suite** — unit tests for config/types, integration tests for commands.
    Zero Rust tests exist.
-2. **Async patterns** — add Tokio for background tasks.
+2. ~~**Async patterns** — `tokio` added to `Cargo.toml`.~~
 3. **Property-based testing** — `proptest` or `quickcheck` for fuzz-style
    assertions.
 4. **Runtime resolution validation** — check monitor support before applying

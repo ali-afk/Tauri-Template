@@ -140,8 +140,12 @@ vi.spyOn(Bun, "write").mockImplementation(vi.fn());
 ## Commit Message Lint Tests
 
 `scripts/commit-msg/lint-title.ts` enforces commit format via lefthook
-(`runner: bun`). Tested via vitest at `scripts/__tests__/lint-title.test.ts`
+(`runner: bun`). Tested via vitest at `scripts/commit-msg/__tests__/lint-title.test.ts`
 using only Bun APIs:
+
+The script exports a `types` array and wraps its main logic in `import.meta.main`
+so it can be imported as a module by the test without running the argv-dependent
+code.
 
 **Pattern:** temp dir via `mktemp`, write via `Bun.write`, run via
 `Bun.spawnSync`, assert:
@@ -155,6 +159,12 @@ async function run(msg: string) {
   return { exitCode: result.exitCode, output: result.stdout + result.stderr };
 }
 ```
+
+## E2E Tests
+
+WebdriverIO with Tauri service via `bun run wdio`. Specs in `test/specs/`.
+Browser capabilities selected via `getBuildTarget()` in `vite.config.ts`
+— Chrome on Windows/Android, Safari on Linux/macOS/iOS.
 
 ## Coverage
 
