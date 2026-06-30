@@ -5,7 +5,6 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 const config: Config = {
 	preprocess: vitePreprocess(),
 	vitePlugin: {
-		inspector: true,
 		// This template containes legacy svelte that refuses to compile
 		dynamicCompileOptions: ({ filename }) => {
 			if (filename.includes("LegacyTemplate.svelte")) {

@@ -1,35 +1,28 @@
 import { defineConfig } from "@wdio/config";
-import { browserVersions } from "./vite.config";
+import { buildTargets, getBuildTarget } from "./vite.config";
 
 /// <reference types="@wdio/tauri-service" />
-export default defineConfig({
+export const config = defineConfig({
 	runner: "local",
-	tsConfigPath: "./test/tsconfig.json",
-
 	specs: ["./test/specs/**/*.ts"],
-	exclude: [],
-
 	maxInstances: 10,
-
 	capabilities: [
-		{
-			browserName: "chrome",
-			browserVersion: browserVersions.chrome.toString(),
-		},
-		{
-			browserName: "safari",
-			browserVersion: browserVersions.safari.toString(),
-		},
+		getBuildTarget(
+			{
+				browserName: buildTargets.webview.browser,
+				browserVersion: buildTargets.webview.version,
+			},
+			{
+				browserName: buildTargets.webkit.browser,
+				browserVersion: buildTargets.webkit.version,
+			},
+		),
 	],
-
 	logLevel: "info",
-
 	bail: 0,
-
 	waitforTimeout: 10000,
 	connectionRetryTimeout: 120000,
 	connectionRetryCount: 3,
-
 	services: [
 		[
 			"tauri",
@@ -39,11 +32,8 @@ export default defineConfig({
 		],
 		"tauri-plugin",
 	],
-
 	framework: "mocha",
-
 	reporters: ["spec", "junit"],
-
 	mochaOpts: {
 		ui: "bdd",
 		timeout: 60000,

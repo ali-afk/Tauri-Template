@@ -1,8 +1,7 @@
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import os from "node:os";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelteTesting } from "@testing-library/svelte/vite";
 import { DevTools } from "@vitejs/devtools";
-import { webdriverio } from "@vitest/browser-webdriverio";
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import { svelteDevtools } from "vite-devtools-svelte";
@@ -10,27 +9,45 @@ import { run } from "vite-plugin-run";
 /// <reference types="vite" />
 import { defineConfig } from "vitest/config";
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export const browserVersions = { chrome: 120, safari: 16 };
+export const buildTargets = {
+	webview: { browser: "chrome", version: "120" },
+	webkit: { browser: "safari", version: "16" },
+};
+const browserQueries = {
+	webview: `${buildTargets.webview.browser} ${buildTargets.webview.version}`,
+	webkit: `${buildTargets.webkit.browser} ${buildTargets.webkit.version}`,
+};
+const browserVersions = {
+	webview: `${buildTargets.webview.browser}${buildTargets.webview.version}`,
+	webkit: `${buildTargets.webkit.browser}${buildTargets.webkit.version}`,
+};
 const targets = browserslistToTargets(
-	browserslist(
-		`chrome ${browserVersions.chrome}, safari ${browserVersions.safari}`,
-	),
+	browserslist(`${browserQueries.webview}, ${browserQueries.webkit}`),
 );
+
 const host = process.env["TAURI_DEV_HOST"];
 const isDebugBuild = Boolean(process.env["TAURI_ENV_DEBUG"]);
-const buildPlatform = process.env["TAURI_ENV_PLATFORM"];
-function getBuildTarget() {
+
+type platformTypes = "windows" | "android" | "linux" | "macos" | "ios";
+function detectBuildPlatform(): platformTypes {
+	const env = process.env["TAURI_ENV_PLATFORM"];
+	if (env) return env as platformTypes;
+	const platform = os.platform();
+	if (platform === "win32") return "windows";
+	if (platform === "darwin") return "macos";
+	return "linux";
+}
+const buildPlatform = detectBuildPlatform();
+
+export function getBuildTarget<T>(ifWebview: T, ifWebkit: T): T {
 	switch (buildPlatform) {
 		case "windows":
 		case "android":
-			return `chrome${browserVersions.chrome}`;
+			return ifWebview;
 		case "linux":
 		case "macos":
 		case "ios":
-			return `safari${browserVersions.safari}`;
-		default:
-			return undefined;
+			return ifWebkit;
 	}
 }
 
@@ -58,23 +75,16 @@ export default defineConfig({
 		cssMinify: "lightningcss",
 		minify: isDebugBuild ? false : "oxc",
 		sourcemap: isDebugBuild,
-		target: getBuildTarget(),
+		target: getBuildTarget(browserVersions.webview, browserVersions.webkit),
 		rolldownOptions: {
 			devtools: {},
 		},
 	},
 	clearScreen: false,
 	server: {
-		port: 5173,
 		strictPort: true,
-		host: host || false,
-		hmr: host
-			? {
-					protocol: "ws",
-					host,
-					port: 5174,
-				}
-			: undefined,
+		hmr: host ? true : undefined,
+		...(host && { ws: { host, port: 5174 } }),
 		watch: {
 			ignored: ["src-tauri"],
 		},
@@ -101,34 +111,8 @@ export default defineConfig({
 			reporter: ["text", "lcov"],
 			provider: "istanbul",
 		},
-		projects: [
-			{
-				extends: true,
-				test: {
-					environment: "happy-dom",
-					setupFiles: ["src/lib/scripts/test-setup.ts"],
-					globals: true,
-				},
-			},
-			{
-				extends: true,
-				plugins: [
-					// The plugin will run tests for the stories defined in your Storybook config
-					// See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-					storybookTest({
-						configDir: ".storybook",
-					}),
-				],
-				test: {
-					name: "storybook",
-					browser: {
-						enabled: true,
-						headless: true,
-						provider: webdriverio({}),
-						instances: [{ browser: "chrome" }, { browser: "safari" }],
-					},
-				},
-			},
-		],
+		environment: "happy-dom",
+		setupFiles: ["src/lib/scripts/test-setup.ts"],
+		globals: true,
 	},
 });

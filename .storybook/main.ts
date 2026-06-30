@@ -5,7 +5,6 @@ const config: StorybookConfig = {
 	addons: [
 		"@storybook/addon-svelte-csf",
 		"@chromatic-com/storybook",
-		"@storybook/addon-vitest",
 		"@storybook/addon-a11y",
 		"@storybook/addon-docs",
 	],
