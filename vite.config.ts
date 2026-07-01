@@ -96,7 +96,7 @@ export default defineConfig({
 			[
 				"junit",
 				{
-					outputFile: ".vitest/report.xml",
+					outputFile: "tests/report.xml",
 				},
 			],
 		],
@@ -112,7 +112,7 @@ export default defineConfig({
 			provider: "istanbul",
 		},
 		environment: "happy-dom",
-		setupFiles: ["src/lib/scripts/test-setup.ts"],
+		setupFiles: ["tests/setup.ts"],
 		globals: true,
 	},
 });

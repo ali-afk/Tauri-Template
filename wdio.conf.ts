@@ -4,7 +4,7 @@ import { buildTargets, getBuildTarget } from "./vite.config";
 /// <reference types="@wdio/tauri-service" />
 export const config = defineConfig({
 	runner: "local",
-	specs: ["./test/specs/**/*.ts"],
+	specs: ["./tests/specs/**/*.ts"],
 	maxInstances: 10,
 	capabilities: [
 		getBuildTarget(

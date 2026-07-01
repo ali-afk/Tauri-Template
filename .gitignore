@@ -16,7 +16,7 @@ opencode.json
 
 # Generated Assets
 src/lib/styles/gen.css
-.vitest
+tests/report.xml
 
 *storybook.log
 storybook-static
