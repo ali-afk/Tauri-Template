@@ -45,14 +45,15 @@ $effect(() => {
 {#snippet links()}
 	<ul id="links" class="center" transition:standard={[fly]}>
 		<!-- Add your navigation links here -->
-		<!-- Example:
+		<!-- Example: -->
 		<li class="lift">
 			<a
-				aria-current={page.url.pathname === '/about' ? 'page' : false}
+				aria-current={page.url.pathname === '/about/' ? 'page' : false}
+				class="cta"
 				href="/about"
-			>About</a>
+				>About</a
+			>
 		</li>
-		-->
 	</ul>
 {/snippet}
 
