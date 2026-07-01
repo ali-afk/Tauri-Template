@@ -188,3 +188,87 @@ resolution.
 All three sources match. `Cargo.toml` is the canonical source — update it first,
 then sync the others. The `AppMetaData.app_version` field reads from
 `config.version` in `tauri.conf.json` at runtime, not from `Cargo.toml`.
+
+## Phase 1 Decisions
+
+### Console Logging via `forwardConsole`, Not `attachConsole`
+
+```
+forwardConsole("log", trace);
+// NOT: await attachConsole();
+```
+
+Both `forwardConsole` (manual wrapper) and `attachConsole()` (plugin helper) try
+to forward `console.*` calls to the Tauri logger. Running both creates a cycle —
+each wrapper patches console methods, so the second wraps the already-wrapped
+version, and the Tauri logger's internal console calls get re-forwarded in an
+infinite loop.
+
+Additionally, `forwardConsole` applies `String(message)` coercion (fixes
+`console.error(errorObj)` sending a non-string), while `attachConsole()` passes
+the raw argument. Rather than patching `attachConsole`, the manual wrapper is
+kept for explicit control.
+
+Two log targets configured: `Stdout` + `LogDir { file_name: "log" }`.
+
+### Isolation Pattern + CSP Strategy
+
+The isolation pattern is enabled for defense-in-depth beyond CSP:
+
+```json
+"app": {
+  "security": {
+    "pattern": {
+      "use": "isolation",
+      "options": { "dir": "../.isolation" }
+    },
+    "csp": {
+      "default-src": "'self' asset:",
+      "connect-src": "ipc: http://ipc.localhost"
+    }
+  }
+}
+```
+
+On each build, Tauri generates a random UUID as the isolation protocol scheme
+(e.g. `isolation-<uuid>://localhost/`). In production, Tauri's runtime
+auto-appends this origin to `default-src` in `get_asset()`. The placedholder
+`customprotocol:` from Tauri docs is **not** a real CSP keyword — it's a docs
+convention meaning "replace with your actual scheme". We use `'self' asset:`
+which covers the custom protocol in production via Tauri's runtime patching.
+
+The isolation iframe (`isolation-<uuid>://localhost/`) serves isolation
+JavaScript from `.isolation/index.js` via Tauri's custom protocol handler. The
+iframe performs AES-GCM encryption of IPC messages using runtime-generated keys.
+
+Dev mode uses CSP from config (`csp` field) since `devCsp` is not set. The Tauri
+runtime does not patch CSP for pages loaded via `devUrl`, so isolation iframe
+loading relies on the configured CSP being sufficient.
+
+### Custom TOML Permissions for App Commands
+
+Tauri v2 requires explicit permission grants for app-defined commands. Inline
+arrays in `capabilities/default.json` work for plugin permissions, but app
+commands use TOML files in `src-tauri/permissions/`:
+
+**`allow-commands.toml`** — grants the 3 app commands:
+
+```toml
+[[permission]]
+identifier = "allow-commands"
+commands.allow = ["app_settings", "app_metadata", "save_settings"]
+```
+
+Referenced in capabilities as `"allow-commands"`.
+
+**`scope-applocaldata.toml`** — custom permission set combining deny-rule for
+webview data with `fs:read-files`:
+
+```toml
+[[set]]
+identifier = "safe-read-applocaldata"
+permissions = ["deny-webview-data", "fs:read-files"]
+```
+
+This pattern separates permission definitions from capability assignments,
+making it easy to reuse across multiple capabilities or windows.

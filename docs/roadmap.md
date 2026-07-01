@@ -12,8 +12,9 @@ struct, same specta types, same validation — less code, auto-sync via `watch()
 
 - [ ] **Misc bugs:** `transtionParams` typo, `parseBezierCoords` regex,
       `initalised` typo, `+error.svelte` fallback, `ButtonGrid` color guard
-- [ ] **Logging:** Add `tauri-plugin-log` + `log` crate, register in `setup.rs`
-- [ ] **Security hardening:** Set CSP in `tauri.conf.json`, scope capabilities
+- [x] **Logging:** Add `tauri-plugin-log` + `log` crate, register in `setup.rs`
+- [x] **Security hardening:** Set CSP in `tauri.conf.json`, scope capabilities,
+      isolation pattern, custom permissions
 
 ## Phase 2 — Storage & Backend
 
