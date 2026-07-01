@@ -172,8 +172,8 @@ Windows/Android and Safari on Linux/macOS/iOS.
 
 ### Storybook Standalone
 
-Storybook is configured for component development (`bun run storybook`) but
-the vitest integration (`@storybook/addon-vitest`) is removed due to a Bun
+Storybook is configured for component development (`bun run storybook`) but the
+vitest integration (`@storybook/addon-vitest`) is removed due to a Bun
 compatibility issue with `@storybook/builder-vite`'s `file:` protocol preset
 resolution.
 
@@ -188,51 +188,3 @@ resolution.
 All three sources match. `Cargo.toml` is the canonical source — update it first,
 then sync the others. The `AppMetaData.app_version` field reads from
 `config.version` in `tauri.conf.json` at runtime, not from `Cargo.toml`.
-
-## Improvement Plan
-
-### CI & Build
-
-1. ~~**Tauri capabilities** — defined in `src-tauri/capabilities/default.json`.~~
-
-### Rust Backend
-
-1. **Test suite** — unit tests for config/types, integration tests for commands.
-   Zero Rust tests exist.
-2. ~~**Async patterns** — `tokio` added to `Cargo.toml`.~~
-3. **Property-based testing** — `proptest` or `quickcheck` for fuzz-style
-   assertions.
-4. **Runtime resolution validation** — check monitor support before applying
-   settings.
-
-### Frontend Fixes
-
-1. **`HeroImage` alt prop** — the `<img>` always uses `{title}` as alt text
-   instead of the separately defined `{alt}` prop. Wire `alt` prop correctly.
-2. **`+error.svelte` fallback** — button uses
-   `--_background:
-   var(--color-status-info)` with no fallback. If that
-   variable fails, the auto-contrast system produces invisible text.
-3. **Component integration tests** — `@testing-library/svelte` is installed but
-   unused. Mount components and assert rendered output.
-4. **CSS alias verification** — `accessibility.css` uses
-   `mask: url("$assets/externalLinkIcon.svg")`. Vite resolves aliases in CSS
-   `url()` — verify this works at build time.
-5. **Loading screen** — currently just a shimmer (`loading-item`). Consider
-   branding or progress text during IPC init.
-
-### Known Bugs / Typos
-
-1. `transtionParams` → `transitionParams` in `src/lib/scripts/transition.ts:232`
-2. `initalised` → `initialised` in
-   `src/lib/components/helpers/NavLinks.svelte:18` (comment)
-
-### Edge Cases
-
-1. **`castToMilliseconds` not exported** — defined in `utils.ts` but not
-   exported. Extract for independent testing.
-2. **`ButtonGrid` color could be `undefined`** — `colorSet[cycleColorScale(i)]`
-   may return `undefined` if `ColorDegrees` values don't match the color set
-   keys. Guard against it.
-3. **`parseBezierCoords` regex** — allows double-commas like
-   `cubic-bezier(0.4,,0.2,1)`. Tighten to reject malformed input.
