@@ -29,8 +29,8 @@
 		"windows": [
 			{
 				"title": "Tauri Template",
-				"width": 1200,
-				"height": 800,
+				"width": 1920,
+				"height": 1080,
 				"resizable": true,
 				"fullscreen": false,
 				"minWidth": 800,
@@ -38,7 +38,16 @@
 			}
 		],
 		"security": {
-			"csp": null
+      "pattern": {
+        "options": {
+          "dir": "../.isolation"
+        },
+        "use": "isolation"
+      },
+      "csp": {
+        "default-src": "'self' asset:",
+        "connect-src": "ipc: http://ipc.localhost"
+      }
 		}
 	}
 }
