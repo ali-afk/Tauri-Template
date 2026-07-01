@@ -14,6 +14,7 @@ use crate::config::{
     types::{ContactInfo, Email},
     AppMetaData,
 };
+use tauri_plugin_log::{Target, TargetKind};
 use crate::error::AppError;
 use specta_typescript::Typescript;
 use std::sync::Mutex;
@@ -64,8 +65,15 @@ fn setup(app: &App, builder: &Builder<Wry>) -> Result<(), AppError> {
 pub fn build(builder: Builder<Wry>) {
     gen_bindings(&builder);
 
+    let logfile = Target::new(TargetKind::LogDir {
+      file_name: Some("log".to_string())
+    });
+    let log_targets = [Target::new(TargetKind::Stdout), logfile];
+
     tauri::Builder::default()
+        .plugin(tauri_plugin_log::Builder::new().targets(log_targets).build())
         .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
