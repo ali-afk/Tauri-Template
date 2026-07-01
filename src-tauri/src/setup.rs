@@ -16,7 +16,6 @@ use crate::config::{
 };
 use tauri_plugin_log::{Target, TargetKind};
 use crate::error::AppError;
-use specta_typescript::Typescript;
 use std::sync::Mutex;
 use tauri::Config;
 use tauri::{App, Manager, Wry};
@@ -44,10 +43,10 @@ fn init_app_metadata(config: &Config) -> AppMetaData {
     }
 }
 
+#[cfg(debug_assertions)]
 fn gen_bindings(builder: &Builder<Wry>) {
-    #[cfg(debug_assertions)]
     builder
-        .export(Typescript::default(), "../src/lib/bindings.ts")
+        .export(specta_typescript::Typescript::default(), "../src/lib/bindings.ts")
         .expect("Failed to generate Typescript bindings!");
 }
 
@@ -63,6 +62,7 @@ fn setup(app: &App, builder: &Builder<Wry>) -> Result<(), AppError> {
 }
 
 pub fn build(builder: Builder<Wry>) {
+    #[cfg(debug_assertions)]
     gen_bindings(&builder);
 
     let logfile = Target::new(TargetKind::LogDir {
