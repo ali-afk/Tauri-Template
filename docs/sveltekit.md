@@ -14,9 +14,12 @@ src/routes/
 
 The root `+layout.svelte` does two things on mount:
 
-1. Calls `commands.appSettings()` and `commands.appMetadata()` via specta IPC
-2. Populates `AppSettings` and `AppMetaData` Svelte writable stores
-3. Shows a shimmer loading screen (`loading-item` class) until both resolve
+1. Calls `commands.appMetadata()` via specta IPC
+2. Populates `AppMetadata` Svelte writable store
+3. Shows a shimmer loading screen (`loading-item` class) until it resolves
+
+Settings are no longer loaded at the layout level — pages fetch them on demand
+via `readSettings()` / `readSettingsField()` from `$tauri/config-serialization`.
 
 Add new pages under `(main)/`. Add new endpoints as `route-name/+server.ts`.
 (Tauri desktop uses adapter-static — API calls go through IPC, not HTTP.)
@@ -34,7 +37,7 @@ Defined in `svelte.config.ts` under `kit.alias`, exposed via
 | `$scripts`    | `src/lib/scripts`    |
 | `$types`      | `src/lib/types`      |
 | `$styles`     | `src/lib/styles`     |
-| `$bindings`   | `src/lib/bindings`   |
+| `$tauri`      | `src/lib/tauri`      |
 
 `$scripts` only covers `src/lib/scripts/` — `scripts/gen/` scripts use relative
 imports or resolve `$data`/`$types` through tsconfig paths.
@@ -46,7 +49,7 @@ imports or resolve `$data`/`$types` through tsconfig paths.
 ```ts
 typescript: {
   config(config) {
-    config.exclude.push("../src/lib/bindings.ts");
+    config.exclude.push("../src/lib/tauri/bindings.ts");
     config.include.push("../scripts/**/*.ts");
   },
 }
@@ -99,21 +102,24 @@ variables.
 
 Config flows from Rust → frontend via specta IPC:
 
-1. **Rust:** `config/init.rs` reads `tauri.conf.json` metadata + `config.json`
-   from `BaseDirectory::AppConfig` (persisted user settings)
-2. **TypeScript:** Auto-generated `bindings.ts` exposes typed
-   `commands.appSettings()` and `commands.appMetadata()`
-3. **Svelte stores:** `data/config.ts` holds `AppSettings` and `AppMetaData`
-   writable stores populated in root `+layout.svelte` on mount
-4. **Component access:** Auto-subscribe via `$AppSettings`/`$AppMetaData` syntax
+1. **Rust:** `config/serialize.rs` reads/writes settings via
+   `tauri-plugin-store` (`settings.json`). Metadata sourced from
+   `tauri.conf.json` at startup.
+2. **TypeScript:** Auto-generated `src/lib/tauri/bindings.ts` exposes typed
+   commands (`readSettings`, `writeSettings`, etc.)
+3. **Helpers:** `config-serialization.ts` wraps raw commands with `handleResult`
+   for clean async/error handling
+4. **Component access:** Use `readSettingsField(key)` on individual pages, or
+   the bulk `readSettings()` for the full `AppSettings` object
 
 ### Adding a New Backend Command
 
 1. Add command function in `src-tauri/src/commands.rs` with both
    `#[tauri::command]` and `#[specta::specta]` attributes
 2. Register in `collect_commands![]` in `lib.rs`
-3. Rebuild (`bun tauri:dev`), which regenerates `src/lib/bindings.ts`
-4. Import `commands` from `$bindings` in frontend
+3. Add to `src-tauri/permissions/allow-commands.toml`
+4. Rebuild (`bun tauri:dev`), which regenerates `src/lib/tauri/bindings.ts`
+5. Import `commands` from `$tauri/bindings` in frontend
 
 ## Window Title
 

@@ -2,18 +2,18 @@
 /// initializes app config state, and starts the Tauri runtime.
 ///
 /// gen_bindings(): in debug mode, exports TypeScript types to
-/// src/lib/bindings.ts for the frontend.
+/// src/lib/tauri/bindings.ts for the frontend.
 ///
 /// To add a new IPC command:
 /// 1. Define fn in commands.rs with #[tauri::command] + #[specta::specta]
-/// 2. Add to collect_commands![] below
-/// 3. Manage any new state via app.manage()
+/// 2. Add to collect_commands![] in lib.rs
+/// 3. Register in allow-commands.toml
 /// 4. Frontend auto-generates bindings on rebuild
 use crate::config::{
     types::{ContactInfo, Email},
     AppMetadata,
 };
-use crate::{config::serialize,error::AppError};
+use crate::{config::serialize, error::AppError};
 use tauri::{App, Wry};
 use tauri::{Config, Manager};
 use tauri_plugin_store::StoreExt;
@@ -68,7 +68,6 @@ pub fn build(builder: Builder<Wry>) {
     #[cfg(debug_assertions)]
     gen_bindings(&builder);
 
-
     let tauri_builder = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
@@ -82,11 +81,16 @@ pub fn build(builder: Builder<Wry>) {
     #[cfg(not(debug_assertions))]
     let tauri_builder = {
         use tauri_plugin_log::{Target, TargetKind};
-        let logfile = Target::new(TargetKind::LogDir { file_name: Some("log".to_string()) });
+        let logfile = Target::new(TargetKind::LogDir {
+            file_name: Some("log".to_string()),
+        });
         let log_targets = [Target::new(TargetKind::Stdout), logfile];
-        tauri_builder.plugin(tauri_plugin_log::Builder::new().targets(log_targets).build())
+        tauri_builder.plugin(
+            tauri_plugin_log::Builder::new()
+                .targets(log_targets)
+                .build(),
+        )
     };
-
 
     #[cfg(debug_assertions)]
     let tauri_builder = tauri_builder.plugin(tauri_plugin_devtools::init());

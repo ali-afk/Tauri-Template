@@ -2,7 +2,7 @@
 /// Each command is both #[tauri::command] (Tauri handler) and
 /// #[specta::specta] (TypeScript type generation).
 ///
-/// Commands read from managed state (set up in lib.rs::build).
+/// Commands hit the store directly via tauri-plugin-store (set up in setup.rs).
 /// New commands: add here, register in collect_commands![] in lib.rs.
 use crate::config::serialize;
 use crate::config::{AppMetadata, AppSettings, AppSettingsKey, AppSettingsKeyKind};

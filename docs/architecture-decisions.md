@@ -125,22 +125,23 @@ All internal Rust errors use `AppError` enum:
 `From` impls for `io::Error` and `serde_json::Error` enable `?` throughout.
 Commands return `Result<T, AppError>` for typed errors at the IPC boundary.
 
-### Settings Mutation with `Mutex`
+### Settings Storage with `tauri-plugin-store`
 
-`app_settings` command stores `Mutex<AppSettings>` via `app.manage()`.
-`save_settings` command writes to disk and updates the Mutex in one atomic
-operation. This avoids stale in-memory state after writes.
+Settings are stored via `tauri-plugin-store` in `settings.json` (path managed by
+the plugin). The `serialize.rs` module converts between `AppSettings` (typed
+Rust struct) and store entries (string → JSON value) using two conversion
+helpers:
 
-### Read/Write Pattern
+- `kv_as_tuple()` — `AppSettingsKey` → `(String key, Value json)`
+- `tuple_as_kv()` — `(String key, Value json)` → `AppSettingsKey`
 
-`config/init.rs` was replaced by `config/serialize.rs` with two public
-functions:
+On first launch, `if_empty_write_default()` populates the store with default
+values. All reads go through the store's in-memory cache — no disk I/O per call.
+The store auto-saves on drop; explicit `.save()` is called after every write.
 
-- `read_settings()` — if file missing, creates with defaults and returns them
-- `write_settings()` — serializes to file
-
-Both share a private `config_path()` helper. No more `open_settings_file` or
-per-field read functions.
+No managed `Mutex<AppSettings>` state — every IPC command opens the store fresh
+(returning the same `Arc<Store>`). This avoids stale in-memory state and
+eliminates the need for atomic write-and-update operations.
 
 ## Build & Tooling
 
@@ -177,39 +178,35 @@ vitest integration (`@storybook/addon-vitest`) is removed due to a Bun
 compatibility issue with `@storybook/builder-vite`'s `file:` protocol preset
 resolution.
 
-### Version Alignment
+### Version Tagging
 
-| File              | Version |
-| ----------------- | ------- |
-| `Cargo.toml`      | `1.2.0` |
-| `tauri.conf.json` | `1.2.0` |
-| `package.json`    | `1.2.0` |
+Versions are tagged via `git tag vX.Y.Z`, not committed in individual config
+files. All three sources are synced before tagging:
 
-All three sources match. `Cargo.toml` is the canonical source — update it first,
-then sync the others. The `AppMetaData.app_version` field reads from
-`config.version` in `tauri.conf.json` at runtime, not from `Cargo.toml`.
+| File              | Version (current) |
+| ----------------- | ----------------- |
+| `Cargo.toml`      | `1.3.1`           |
+| `tauri.conf.json` | `1.3.1`           |
+| `package.json`    | `1.3.1`           |
+
+`Cargo.toml` is the canonical source — update it first, then sync the others.
+The `AppMetadata.app_version` field reads from `config.version` in
+`tauri.conf.json` at runtime, not from `Cargo.toml`.
 
 ## Phase 1 Decisions
 
-### Console Logging via `forwardConsole`, Not `attachConsole`
+### Console Logging via `tauri-plugin-log`
 
-```
-forwardConsole("log", trace);
-// NOT: await attachConsole();
-```
+Logging uses `tauri-plugin-log` with two targets:
 
-Both `forwardConsole` (manual wrapper) and `attachConsole()` (plugin helper) try
-to forward `console.*` calls to the Tauri logger. Running both creates a cycle —
-each wrapper patches console methods, so the second wraps the already-wrapped
-version, and the Tauri logger's internal console calls get re-forwarded in an
-infinite loop.
+- **Release builds:** `Stdout` + `LogDir { file_name: "log" }` — registered via
+  `#[cfg(not(debug_assertions))]` to avoid polluting dev stdout
+- **Dev builds:** No plugin logging (Rust log crate calls are no-ops). Frontend
+  console messages stay in the webview devtools, separate from Rust logs.
 
-Additionally, `forwardConsole` applies `String(message)` coercion (fixes
-`console.error(errorObj)` sending a non-string), while `attachConsole()` passes
-the raw argument. Rather than patching `attachConsole`, the manual wrapper is
-kept for explicit control.
-
-Two log targets configured: `Stdout` + `LogDir { file_name: "log" }`.
+The old `forwardConsole` / `attachConsole` patterns were removed — they caused a
+stack overflow by creating a cycle between frontend `console.*` forwarding and
+the Rust logger's internal console output.
 
 ### Isolation Pattern + CSP Strategy
 
@@ -251,12 +248,13 @@ Tauri v2 requires explicit permission grants for app-defined commands. Inline
 arrays in `capabilities/default.json` work for plugin permissions, but app
 commands use TOML files in `src-tauri/permissions/`:
 
-**`allow-commands.toml`** — grants the 3 app commands:
+**`allow-commands.toml`** — grants the 5 app commands:
 
 ```toml
 [[permission]]
 identifier = "allow-commands"
-commands.allow = ["app_settings", "app_metadata", "save_settings"]
+commands.allow = ["app_metadata", "write_settings",
+  "write_settings_field", "read_settings", "read_settings_field"]
 ```
 
 Referenced in capabilities as `"allow-commands"`.

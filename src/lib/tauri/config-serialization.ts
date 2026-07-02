@@ -1,3 +1,7 @@
+/** Typed wrappers around raw tauri-specta IPC commands for settings.
+ *  Each function unwraps the specta result via handleResult.
+ *  Preferred over calling commands.* directly — provides type-safe
+ *  async functions that throw on Rust errors. */
 import {
 	type AppSettings,
 	type AppSettingsKey,

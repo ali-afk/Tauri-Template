@@ -32,7 +32,7 @@ const config: Config = {
 		},
 		typescript: {
 			config(config) {
-				config["exclude"].push("../src/lib/bindings.ts");
+				config["exclude"].push("../src/lib/tauri/bindings.ts");
 				config["include"].push("../scripts/**/*.ts");
 			},
 		},

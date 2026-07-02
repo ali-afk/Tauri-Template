@@ -7,6 +7,9 @@ use serde_json::Value;
 use tauri::{AppHandle, Wry};
 use tauri_plugin_store::{Store, StoreExt};
 
+/// Writes default settings to the store if it's empty (first launch).
+/// Called as a side-effect guard by read functions — ensures the
+/// store always has valid data before reading.
 pub fn if_empty_write_default(app: &AppHandle, settings: &Arc<Store<Wry>>) -> Result<(), AppError> {
     if settings.is_empty() {
         write_settings(app, &AppSettings::default())?
@@ -33,7 +36,11 @@ pub fn read_settings(app: &AppHandle) -> Result<AppSettings, AppError> {
         }
     }
 
-    Ok(AppSettings { theme, resolution, fullscreen })
+    Ok(AppSettings {
+        theme,
+        resolution,
+        fullscreen,
+    })
 }
 
 pub fn read_settings_field(
@@ -51,6 +58,9 @@ pub fn read_settings_field(
     tuple_as_kv(key.as_ref().to_string(), json_value)
 }
 
+/// Converts an `AppSettingsKey` (Rust enum) into a store key-value pair.
+/// Direction: Rust → store. Keys are lowercase ("theme", "resolution", "fullscreen").
+/// `Theme` and `Resolution` are stored as strings; `Fullscreen` as a JSON bool.
 fn kv_as_tuple(key: AppSettingsKey) -> (String, Value) {
     match key {
         AppSettingsKey::Theme(theme) => (
@@ -71,21 +81,29 @@ fn kv_as_tuple(key: AppSettingsKey) -> (String, Value) {
     }
 }
 
+/// Converts a store key-value pair back into an `AppSettingsKey`.
+/// Direction: store → Rust. Handles `fullscreen` as a JSON bool,
+/// `theme` and `resolution` as JSON strings. Inverse of `kv_as_tuple`.
 pub fn tuple_as_kv(key: String, val: Value) -> Result<AppSettingsKey, AppError> {
     match key.as_str() {
         "fullscreen" => match val.as_bool() {
             Some(fullscreen) => Ok(AppSettingsKey::Fullscreen(fullscreen)),
-            None => Err(AppError::Config("Setting 'fullscreen' is not a valid boolean".into())),
+            None => Err(AppError::Config(
+                "Setting 'fullscreen' is not a valid boolean".into(),
+            )),
         },
         "theme" | "resolution" => {
-            let value = val.as_str()
-                .ok_or_else(|| AppError::Config(format!("Setting '{key}' is not a valid string")))?;
+            let value = val.as_str().ok_or_else(|| {
+                AppError::Config(format!("Setting '{key}' is not a valid string"))
+            })?;
             match key.as_str() {
                 "theme" => match value {
                     "System" => Ok(AppSettingsKey::Theme(Theme::System)),
                     "Light" => Ok(AppSettingsKey::Theme(Theme::Light)),
                     "Dark" => Ok(AppSettingsKey::Theme(Theme::Dark)),
-                    _ => Err(AppError::Config(format!("Invalid conversion of tuple value '{value}' to theme"))),
+                    _ => Err(AppError::Config(format!(
+                        "Invalid conversion of tuple value '{value}' to theme"
+                    ))),
                 },
                 "resolution" => match Resolution::new(value) {
                     Ok(r) => Ok(AppSettingsKey::Resolution(r)),
@@ -105,7 +123,8 @@ pub fn write_settings_field(app: &AppHandle, value: AppSettingsKey) -> Result<()
 
     let (key, json_value) = kv_as_tuple(value);
     settings.set(key, json_value);
-    settings.save()
+    settings
+        .save()
         .map_err(|e| AppError::Config(e.to_string()))?;
     Ok(())
 }
@@ -115,16 +134,14 @@ pub fn write_settings(app: &AppHandle, new_settings: &AppSettings) -> Result<(),
         .store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
 
-    let (theme_key, theme_val) =
-        kv_as_tuple(AppSettingsKey::Theme(new_settings.theme));
-    let (res_key, res_val) =
-        kv_as_tuple(AppSettingsKey::Resolution(new_settings.resolution));
-    let (fs_key, fs_val) =
-        kv_as_tuple(AppSettingsKey::Fullscreen(new_settings.fullscreen));
+    let (theme_key, theme_val) = kv_as_tuple(AppSettingsKey::Theme(new_settings.theme));
+    let (res_key, res_val) = kv_as_tuple(AppSettingsKey::Resolution(new_settings.resolution));
+    let (fs_key, fs_val) = kv_as_tuple(AppSettingsKey::Fullscreen(new_settings.fullscreen));
     settings.set(theme_key, theme_val);
     settings.set(res_key, res_val);
     settings.set(fs_key, fs_val);
-    settings.save()
+    settings
+        .save()
         .map_err(|e| AppError::Config(e.to_string()))?;
     Ok(())
 }

@@ -123,11 +123,11 @@ vi.mock("svelte/reactivity", () => ({
 
 ### CSS Generator Tests
 
-NOTE: This section is wrong The `gen/css.test.ts` tests module-level code
-(`flattenDesignToken`, `getDefaultCssValues`, `getNearestConfig`) with mocked
-`DesignTokens` and `Bun.write`. Uses `vi.hoisted` + `vi.mock` for
-`$data/design-tokens` and `vi.stubGlobal` for `Bun`. The integration test calls
-`genDesignTokens()` and asserts `@property` syntax in the output string.
+The `gen/css.test.ts` tests module-level code (`flattenDesignToken`,
+`getDefaultCssValues`, `getNearestConfig`) with mocked `DesignTokens` and
+`Bun.write`. Uses `vi.hoisted` + `vi.mock` for `$data/design-tokens` and
+`vi.stubGlobal` for `Bun`. The integration test calls `genDesignTokens()` and
+asserts `@property` syntax in the output string.
 
 ### Gen CSS Test Setup
 

@@ -4,22 +4,31 @@ Phased development plan. Each phase is self-contained and shippable.
 
 ## Architectural Decision
 
-**Unified storage via plugin-store.** Remove custom `config/serialize.rs`. All
-settings + app data backed by `@tauri-apps/plugin-store`. Same `AppSettings`
-struct, same specta types, same validation — less code, auto-sync via `watch()`.
+**Unified storage via plugin-store.** Replace custom `serialize.rs` with
+store-backed read/write. Use `kv_as_tuple` / `tuple_as_kv` helpers with a macro
+to auto-generate `AppSettingsKey` / `AppSettingsKeyKind` enums and their
+conversion functions from a single field list.
 
 ## Phase 1 — Quick Wins
 
 - [ ] **Misc bugs:** `transtionParams` typo, `parseBezierCoords` regex,
       `initalised` typo, `+error.svelte` fallback, `ButtonGrid` color guard
 - [x] **Logging:** Add `tauri-plugin-log` + `log` crate, register in `setup.rs`
+      (release builds only via `#[cfg(not(debug_assertions))]`)
 - [x] **Security hardening:** Set CSP in `tauri.conf.json`, scope capabilities,
       isolation pattern, custom permissions
 
 ## Phase 2 — Storage & Backend
 
-- [ ] **Unified storage:** Remove `serialize.rs`, add store-backed
-      `load_settings` / `save_settings`, auto-sync via `watch()`
+- [x] **Unified storage:** Migrated `serialize.rs` to `tauri-plugin-store`.
+      Added `AppSettingsKey` / `AppSettingsKeyKind` enums with `kv_as_tuple` /
+      `tuple_as_kv` conversion helpers. Per-field read/write IPC commands
+      (`read_settings_field`, `write_settings_field`, `read_settings`,
+      `write_settings`).
+- [ ] **Macro-generate settings enums:** Replace hand-written `AppSettingsKey` /
+      `AppSettingsKeyKind` / `kv_as_tuple` / `tuple_as_kv` with a
+      `settings_fields!` macro. New field = one line in the invocation + one
+      `StoreValue` impl. Reduces touch points from 6 to 2 per field.
 - [ ] **Rust tests:** Co-located `#[cfg(test)]` for types,
       `tauri::test::mock_context()` for store-backed commands
 
