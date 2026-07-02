@@ -3,10 +3,6 @@
  *  Access anywhere via $AppSettings / $AppMetaData auto-subscription syntax.
  *  Import types from $bindings (auto-generated from Rust specta commands). */
 import { writable } from "svelte/store";
-import type {
-	AppMetaData as AppMetaDataType,
-	AppSettings as AppSettingsType,
-} from "$bindings";
+import type { AppMetadata as AppMetadataType } from "$tauri/bindings";
 
-export const AppSettings = writable<AppSettingsType | null>(null);
-export const AppMetaData = writable<AppMetaDataType | null>(null);
+export const AppMetadata = writable<AppMetadataType | null>(null);

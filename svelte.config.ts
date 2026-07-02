@@ -27,7 +27,7 @@ const config: Config = {
 			$data: "src/lib/data",
 			$scripts: "src/lib/scripts",
 			$styles: "src/lib/styles",
-			$bindings: "src/lib/bindings",
+			$tauri: "src/lib/tauri",
 			$types: "src/lib/types",
 		},
 		typescript: {
@@ -39,6 +39,9 @@ const config: Config = {
 	},
 	compilerOptions: {
 		runes: true,
+		experimental: {
+			async: true,
+		},
 	},
 };
 

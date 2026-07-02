@@ -8,7 +8,9 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"clean": "rm -rf .svelte-kit build src-tauri/target tests/report.xml",
+		"clean": "bun clean:assets && bun clean:build",
+		"clean:assets": "rm -rf .svelte-kit tests/report.xml src-tauri/gen src/lib/styles/gen.css src/lib/tauri/bindings.ts",
+		"clean:build": "rm -rf build src-tauri/target",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",
 		"gen": "bun run scripts/gen/index.ts",
@@ -28,7 +30,7 @@
 		"storybook:build": "storybook build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.1",
+		"@biomejs/biome": "^2.5.2",
 		"@chromatic-com/storybook": "^5.2.1",
 		"@dprint/markdown": "^0.22.1",
 		"@storybook/addon-a11y": "^10.4.6",
@@ -36,7 +38,7 @@
 		"@storybook/addon-svelte-csf": "^5.1.2",
 		"@storybook/sveltekit": "^10.4.6",
 		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.68.0",
+		"@sveltejs/kit": "^2.69.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tauri-apps/cli": "^2.11.4",
 		"@testing-library/dom": "^10.4.1",
@@ -44,8 +46,8 @@
 		"@testing-library/svelte": "^5.4.2",
 		"@testing-library/webdriverio": "^3.2.1",
 		"@types/bun": "^1.3.14",
-		"@types/node": "^26.0.1",
-		"@vitejs/devtools": "^0.3.3",
+		"@types/node": "^26.1.0",
+		"@vitejs/devtools": "^0.3.4",
 		"@vitest/coverage-istanbul": "4.1.9",
 		"@wdio/cli": "^9.29.1",
 		"@wdio/globals": "^9.29.1",
@@ -67,16 +69,16 @@
 		"svelte": "^5.56.4",
 		"svelte-check": "^4.7.1",
 		"typescript": "^6.0.3",
-		"vite": "^8.1.2",
+		"vite": "^8.1.3",
 		"vite-devtools-svelte": "^0.2.1",
 		"vite-plugin-run": "^0.9.0",
 		"vitest": "^4.1.9"
 	},
 	"dependencies": {
 		"@tauri-apps/api": "^2.11.1",
-		"@tauri-apps/plugin-log": "~2",
+		"@tauri-apps/plugin-log": "^2.8.0",
 		"@tauri-apps/plugin-opener": "^2.5.4",
-		"@tauri-apps/plugin-store": "~2.4.3",
+		"@tauri-apps/plugin-store": "^2.4.3",
 		"bezier-easing": "^3.0.1"
 	},
 	"trustedDependencies": [

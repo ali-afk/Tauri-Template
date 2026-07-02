@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
-import { AppMetaData } from "$data/config";
+import { AppMetadata } from "$data/stores/config";
 
 type Props = {
 	title: string;
@@ -9,7 +9,7 @@ type Props = {
 
 let { title, children }: Props = $props();
 
-let fullTitle = $derived(`${title} | ${$AppMetaData?.name}`);
+let fullTitle = $derived(`${title} | ${$AppMetadata?.name}`);
 </script>
 
 <svelte:head>
