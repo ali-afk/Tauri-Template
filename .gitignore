@@ -16,6 +16,7 @@ opencode.json
 
 # Generated Assets
 src/lib/styles/gen.css
+src-tauri/gen
 tests/report.xml
 
 *storybook.log
