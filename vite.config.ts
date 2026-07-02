@@ -54,7 +54,8 @@ export function getBuildTarget<T>(ifWebview: T, ifWebkit: T): T {
 
 export default defineConfig({
 	plugins: [
-		...(isTest ? [svelteDevtools(), DevTools(), svelteTesting()] : []),
+		...(isDebugBuild ? [svelteDevtools(), DevTools(), svelteTesting()] : []),
+		...(isTest ? [svelteTesting()] : []),
 		sveltekit(),
 		run({
 			name: "Gen Task",
@@ -76,7 +77,7 @@ export default defineConfig({
 		sourcemap: isDebugBuild,
 		target: getBuildTarget(browserVersions.webview, browserVersions.webkit),
 		rolldownOptions: {
-			...(isTest && { devtools: {} }),
+			...(isDebugBuild && { devtools: {} }),
 		},
 	},
 	clearScreen: false,
