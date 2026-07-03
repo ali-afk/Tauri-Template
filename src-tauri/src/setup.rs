@@ -1,14 +1,5 @@
-/// build(): sets up specta for type-safe IPC, registers commands,
-/// initializes app config state, and starts the Tauri runtime.
-///
-/// gen_bindings(): in debug mode, exports TypeScript types to
-/// src/lib/tauri/bindings.ts for the frontend.
-///
-/// To add a new IPC command:
-/// 1. Define fn in commands.rs with #[tauri::command] + #[specta::specta]
-/// 2. Add to collect_commands![] in lib.rs
-/// 3. Register in allow-commands.toml
-/// 4. Frontend auto-generates bindings on rebuild
+/// Sets up specta, registers plugins, and starts the Tauri runtime.
+/// Bindings exported to src/lib/tauri/bindings.ts in debug builds.
 use crate::config::{
     types::{ContactInfo, Email},
     AppMetadata,

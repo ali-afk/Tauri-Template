@@ -1,7 +1,3 @@
-/// Tauri IPC commands exposed to the frontend via specta.
-/// Each command is both #[tauri::command] (Tauri handler) and
-/// #[specta::specta] (TypeScript type generation).
-///
 /// Commands hit the store directly via tauri-plugin-store (set up in setup.rs).
 /// New commands: add here, register in collect_commands![] in lib.rs.
 use crate::config::serialize;

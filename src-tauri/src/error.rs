@@ -1,10 +1,7 @@
 use serde::Serialize;
 use specta::Type;
 
-/// Unified error type returned by all Rust backend operations.
-/// Mapped to `String` in IPC commands for specta compatibility.
-/// Variants: `Io` (filesystem), `Json` (serialization), `Config` (store/settings),
-/// `Validation` (input format, e.g. email or resolution parsing).
+/// Mapped to String in IPC commands for specta compatibility.
 #[derive(Debug, thiserror::Error, Serialize, Type)]
 pub enum AppError {
     #[error("IO error: {0}")]
