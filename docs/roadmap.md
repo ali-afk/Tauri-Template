@@ -1,61 +1,63 @@
 # Roadmap
 
-Phased development plan. Each phase is self-contained and shippable.
+tauri-template — Tauri v2 + SvelteKit v2 + Svelte 5 desktop app template.
 
-## Architectural Decision
+Current version: `1.3.1`
 
-**Unified storage via plugin-store.** Replace custom `serialize.rs` with
-store-backed read/write. Use `kv_as_tuple` / `tuple_as_kv` helpers with a macro
-to auto-generate `AppSettingsKey` / `AppSettingsKeyKind` enums and their
-conversion functions from a single field list.
+---
 
-## Phase 1 — Quick Wins
+### Phase 1 — Quick Wins (Done)
 
-- [ ] **Misc bugs:** `transtionParams` typo, `parseBezierCoords` regex,
-      `initalised` typo, `+error.svelte` fallback, `ButtonGrid` color guard
-- [x] **Logging:** Add `tauri-plugin-log` + `log` crate, register in `setup.rs`
-      (release builds only via `#[cfg(not(debug_assertions))]`)
-- [x] **Security hardening:** Set CSP in `tauri.conf.json`, scope capabilities,
-      isolation pattern, custom permissions
+- [x] Misc bugs cleanup
+- [x] Logging — `tauri-plugin-log` + `log` crate (release builds only)
+- [x] Security hardening — CSP, isolation pattern, scope capabilities, custom
+      permissions
 
-## Phase 2 — Storage & Backend
+### Phase 2 — Storage & Backend
 
-- [x] **Unified storage:** Migrated `serialize.rs` to `tauri-plugin-store`.
-      Added `AppSettingsKey` / `AppSettingsKeyKind` enums with `kv_as_tuple` /
-      `tuple_as_kv` conversion helpers. Per-field read/write IPC commands
-      (`read_settings_field`, `write_settings_field`, `read_settings`,
-      `write_settings`).
-- [ ] **Macro-generate settings enums:** Replace hand-written `AppSettingsKey` /
-      `AppSettingsKeyKind` / `kv_as_tuple` / `tuple_as_kv` with a
-      `settings_fields!` macro. New field = one line in the invocation + one
-      `StoreValue` impl. Reduces touch points from 6 to 2 per field.
-- [ ] **Rust tests:** Co-located `#[cfg(test)]` for types,
-      `tauri::test::mock_context()` for store-backed commands
+- [x] Unified storage — `serialize.rs` migrated to `tauri-plugin-store` with
+      per-field IPC
+- [ ] **Macro-generate settings enums** — `settings_fields!` macro +
+      `StoreValue` trait replacing hand-written boilerplate
+- [ ] Rust tests — `#[cfg(test)]` for types, `tauri::test::mock_context()` for
+      commands
+- [ ] Rust CI test gate — `cargo test` in `tauri.yml`
 
-## Phase 3 — Frontend Foundation
+### Phase 3 — Template Foundation
 
-- [ ] **Bits UI components:** Dialog, Toast, Toggle, Input, Tabs, Tooltip —
-      co-located `__tests__/`
-- [ ] **Storybook:** Stories in component `__tests__/`, remove boilerplate
-      `src/stories/`
-- [ ] **IPC error + loading states:** `invoke()` wrapper + `<Load>` component
-      (loading/error/ready)
-- [ ] **HeroImage alt fix** (carried from bugs, done in component phase)
+- [ ] **Clean architecture scaffold** —
+      `src/lib/{domain,application,infrastructure}/` dirs with example files per
+      layer
+- [ ] **IPC wrapper** — reactive Svelte 5 runes store per domain wrapping specta
+      commands
+- [ ] **Theme switcher** — `mode-watcher` + `<ThemeToggle>` component;
+      `light-dark()` tokens adapt automatically
+- [ ] **Native menu bar** — macOS standard layout via `tauri::menu` builder
 
-## Phase 4 — App-Ready Features
+### Phase 4 — Frontend Foundation
 
-- [ ] **Settings UI:** Bits primitives + unified storage
-- [ ] **Resolution handling:** Read window size (A), react to resize (B),
-      validate before apply (C)
+- [ ] **Bits UI components** — Dialog, Toast, Toggle, Input, Tabs, Tooltip
+      (co-located `__tests__/`)
+- [ ] **Command palette** — Bits UI `Dialog` + `Command`, Cmd+K, fuzzy search
+- [ ] **Layout shell** — `<AppShell>` with sidebar + header + main slot
+      (optional scaffold)
+- [ ] **Storybook** — stories co-located in `__tests__/`, remove `src/stories/`
+- [ ] **Fix HeroImage alt**
 
-## Phase 5 — Cross-Cutting
+### Phase 5 — App Features
 
-- [ ] **i18n:** `typesafe-i18n`, bilingual (English + Arabic), RTL, language
+- [ ] **Settings UI** — Bits primitives + unified storage
+- [ ] **Resolution handling** — read, watch, validate
+
+### Phase 6 — Cross-Cutting
+
+- [ ] **i18n** — `typesafe-i18n`, bilingual (English + Arabic), RTL, language
       switcher
-- [ ] **Integration + E2E:** Component tests in `__tests__/`, expanded WDIO
-      specs
+- [ ] **Release-please + CHANGELOG** — auto-bumps `package.json` / `Cargo.toml`
+      / `tauri.conf.json`
+- [ ] **Integration + E2E** — component tests, expanded WDIO specs
 
-## Future (not in active plan)
+### Future (not in active plan)
 
 - Property-based testing — `proptest` or `quickcheck` for fuzz-style assertions
 - CSS alias verification — `mask: url("$assets/externalLinkIcon.svg")` in

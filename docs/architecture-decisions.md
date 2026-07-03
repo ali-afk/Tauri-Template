@@ -31,12 +31,19 @@ until the DOM is ready for `matchMedia`.
 
 ## Rust Backend Decisions
 
-### Settings: `tauri-plugin-store`
+### Settings: `tauri-plugin-store` + Macro
 
-Settings stored in `settings.json` via the plugin. `kv_as_tuple` / `tuple_as_kv`
-convert between `AppSettingsKey` (Rust) and store entries.
-`if_empty_write_default()` seeds defaults on first launch. No managed
+Settings stored in `settings.json` via the plugin. No managed
 `Mutex<AppSettings>` — every command opens the same `Arc<Store>`.
+
+`kv_as_tuple` / `tuple_as_kv` convert between `AppSettingsKey` (Rust) and store
+entries. `if_empty_write_default()` seeds defaults on first launch.
+
+A `settings_fields!` macro auto-generates the `AppSettingsKey` /
+`AppSettingsKeyKind` enums and their conversion functions from a single field
+list. Each field is one line: `VariantName(Type, "store_key")`. A `StoreValue`
+trait (`from_store_value` / `to_store_value`) lets each type define its own
+store serialization. Adding a new field touches 2 places instead of 6.
 
 ## Build & Tooling
 
