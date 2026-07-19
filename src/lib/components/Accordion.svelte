@@ -23,7 +23,7 @@ let { title, name, children }: Props = $props();
 </script>
 
 <article class="wrapper card">
-	<details bind:open={isOpen} {name}>
+	<details bind:open="{isOpen}" {name}>
 		<summary
 			class="row--between"
 			aria-expanded={isOpen}
