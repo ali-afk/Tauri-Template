@@ -9,7 +9,7 @@
 			"!!.vitest",
 			"!!src/lib/assets",
 			"!src/lib/styles/gen.css",
-			"!src/lib/bindings.ts",
+			"!src/lib/tauri/bindings.ts",
 			"!bun-lock.yaml",
 			"!.env",
 			"!.env.*",
