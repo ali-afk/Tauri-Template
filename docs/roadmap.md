@@ -19,8 +19,8 @@ Current version: `1.3.1`
       per-field IPC
 - [x] Refactored config serialization through efficient usage of `serde` and
       `strum`
-- [ ] **Macro-generate settings enums** — `settings_fields!` macro +
-      `StoreValue` trait replacing hand-written boilerplate
+- [x] **Macro-generate settings enums** — `app_settings!` macro replacing
+      hand-written boilerplate and acting as single source of truth
 - [ ] Rust tests — `#[cfg(test)]` for types, `tauri::test::mock_context()` for
       commands
 - [ ] Rust CI test gate — `cargo test` in `tauri.yml`

@@ -1,7 +1,9 @@
+pub mod macros;
 pub mod serialize;
 pub mod types;
 
 use crate::{
+    app_settings,
     config::types::{ContactInfo, Resolution, Theme},
     error::AppError,
 };
@@ -21,70 +23,8 @@ pub struct AppMetadata {
     pub contacts: ContactInfo,
 }
 
-/// Persisted user settings. Backed by tauri-plugin-store (settings.json).
-/// Defaults written on first access via if_empty_write_default().
-#[derive(Deserialize, Serialize, Clone, Type, Copy, Default)]
-pub struct AppSettings {
-    pub theme: Theme,
-    pub resolution: Resolution,
-    pub fullscreen: bool,
-}
-
-/// IPC-compatible enum identifying which setting field to read/write.
-/// Use `as_ref()` to get the lowercase store key.
-/// TS type: `"Theme" | "Resolution" | "Fullscreen"`.
-#[derive(Deserialize, Serialize, Clone, Type, Display, AsRefStr, Copy, strum::EnumString)]
-#[strum(serialize_all = "lowercase")]
-pub enum AppSettingsKeyKind {
-    Theme,
-    Resolution,
-    Fullscreen,
-}
-
-/// A tagged union of a single setting value, used by read_settings_field
-/// and write_settings_field IPC commands. Exactly one variant is set.
-/// TS type: `{ Theme: Theme } | { Resolution: Resolution } | { Fullscreen: boolean }`.
-#[derive(Deserialize, Serialize, Clone, Type)]
-pub enum AppSettingsKey {
-    Theme(Theme),
-    Resolution(Resolution),
-    Fullscreen(bool),
-}
-
-impl AppSettingsKey {
-    pub fn kind(&self) -> AppSettingsKeyKind {
-        match self {
-            Self::Theme(_) => AppSettingsKeyKind::Theme,
-            Self::Resolution(_) => AppSettingsKeyKind::Resolution,
-            Self::Fullscreen(_) => AppSettingsKeyKind::Fullscreen,
-        }
-    }
-
-    pub fn to_json_value(&self) -> Result<serde_json::Value, AppError> {
-        let val = match self {
-            AppSettingsKey::Theme(t) => serde_json::to_value(t),
-            AppSettingsKey::Resolution(r) => serde_json::to_value(r),
-            AppSettingsKey::Fullscreen(f) => serde_json::to_value(f),
-        };
-        val.map_err(|e| AppError::Config(e.to_string()))
-    }
-
-    pub fn from_json_value(
-        kind: AppSettingsKeyKind,
-        val: Value,
-    ) -> Result<AppSettingsKey, AppError> {
-        fn parse<T: serde::de::DeserializeOwned>(
-            kind: &AppSettingsKeyKind,
-            val: Value,
-        ) -> Result<T, AppError> {
-            serde_json::from_value(val)
-                .map_err(|e| AppError::Config(format!("Setting '{kind}' is invalid: {e}")))
-        }
-
-        match kind {
-            AppSettingsKeyKind::Theme => Ok(Self::Theme(parse(&kind, val)?)),
-            AppSettingsKeyKind::Resolution => Ok(Self::Resolution(parse(&kind, val)?)),
-            AppSettingsKeyKind::Fullscreen => Ok(Self::Fullscreen(parse(&kind, val)?)),
-        }
-    }
+app_settings! {
+    theme: Theme(Theme),
+    resolution: Resolution(Resolution),
+    fullscreen: Fullscreen(bool),
 }

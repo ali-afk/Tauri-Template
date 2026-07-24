@@ -1,7 +1,6 @@
 use std::str::FromStr;
 use std::sync::Arc;
 
-use crate::config::types::{Resolution, Theme};
 use crate::config::{AppSettings, AppSettingsKey, AppSettingsKeyKind};
 use crate::error::AppError;
 use tauri::{AppHandle, Wry};
@@ -22,26 +21,18 @@ pub fn read_settings(app: &AppHandle) -> Result<AppSettings, AppError> {
         .store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
 
-    let entries = settings.entries();
+    let mut read_settings = AppSettings::default();
 
-    let mut theme = Theme::default();
-    let mut resolution = Resolution::default();
-    let mut fullscreen = false;
-
-    for (key, value) in entries {
+    for (key, value) in settings.entries() {
         let kind = AppSettingsKeyKind::from_str(key.as_ref())?;
         match AppSettingsKey::from_json_value(kind, value)? {
-            AppSettingsKey::Theme(t) => theme = t,
-            AppSettingsKey::Resolution(r) => resolution = r,
-            AppSettingsKey::Fullscreen(f) => fullscreen = f,
+            AppSettingsKey::Theme(t) => read_settings.theme = t,
+            AppSettingsKey::Resolution(r) => read_settings.resolution = r,
+            AppSettingsKey::Fullscreen(f) => read_settings.fullscreen = f,
         }
     }
 
-    Ok(AppSettings {
-        theme,
-        resolution,
-        fullscreen,
-    })
+    Ok(read_settings)
 }
 
 pub fn read_settings_field(
