@@ -33,27 +33,12 @@ pub struct AppSettings {
 /// IPC-compatible enum identifying which setting field to read/write.
 /// Use `as_ref()` to get the lowercase store key.
 /// TS type: `"Theme" | "Resolution" | "Fullscreen"`.
-#[derive(Deserialize, Serialize, Clone, Type, Display, AsRefStr, Copy)]
+#[derive(Deserialize, Serialize, Clone, Type, Display, AsRefStr, Copy, strum::EnumString)]
 #[strum(serialize_all = "lowercase")]
 pub enum AppSettingsKeyKind {
     Theme,
     Resolution,
     Fullscreen,
-}
-
-use std::str::FromStr;
-
-impl FromStr for AppSettingsKeyKind {
-    type Err = AppError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "theme" => Ok(AppSettingsKeyKind::Theme),
-            "resolution" => Ok(AppSettingsKeyKind::Resolution),
-            "fullscreen" => Ok(AppSettingsKeyKind::Fullscreen),
-            _ => Err(AppError::Config(format!("Invalid setting key '{s}'"))),
-        }
-    }
 }
 
 /// A tagged union of a single setting value, used by read_settings_field

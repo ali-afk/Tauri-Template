@@ -20,6 +20,12 @@ impl From<std::io::Error> for AppError {
     }
 }
 
+impl From<strum::ParseError> for AppError {
+    fn from(e: strum::ParseError) -> Self {
+        AppError::Io(e.to_string())
+    }
+}
+
 impl From<serde_json::Error> for AppError {
     fn from(e: serde_json::Error) -> Self {
         AppError::Json(e.to_string())
