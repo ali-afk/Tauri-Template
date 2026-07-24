@@ -26,13 +26,8 @@ describe(queryCssProperty, () => {
 	});
 });
 
-// Ensures media.current returns our value,
-// this allows us to pass the media query
-const mockMedia = vi.hoisted(() => ({
-	current: false,
-}));
+const mockMedia = { current: false };
 
-// Replace MediaQuery with our own
 vi.mock("svelte/reactivity", () => ({
 	MediaQuery: class {
 		get current() {

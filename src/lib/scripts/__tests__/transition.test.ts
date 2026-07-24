@@ -49,9 +49,7 @@ describe(parseBezierCoords, () => {
 	});
 });
 
-const mockPrefersReducedMotion = vi.hoisted(() => ({
-	current: false,
-}));
+const mockPrefersReducedMotion = { current: false };
 
 vi.mock("$scripts/media", () => ({
 	queryCssProperty() {

@@ -39,12 +39,12 @@ describe(getLoadPriority, () => {
 		{ result: "high", index: 0, comparison: "<" },
 		{ result: "low", index: threshold, comparison: "==" },
 		{ result: "low", index: 10, comparison: ">" },
-	])("returns ($resultPriority) if index ($comparison) threshold", ({
-		index,
-		result,
-	}) => {
-		expect(getLoadPriority(index, threshold)).toBe(result);
-	});
+	])(
+		"returns ($resultPriority) if index ($comparison) threshold",
+		({ index, result }) => {
+			expect(getLoadPriority(index, threshold)).toBe(result);
+		},
+	);
 });
 
 describe(cycleColorScale, () => {

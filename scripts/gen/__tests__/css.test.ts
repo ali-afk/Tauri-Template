@@ -6,18 +6,16 @@ import {
 	getNearestConfig,
 } from "../css";
 
-const mockTokens = vi.hoisted(() => ({
-	transition: {
-		config: { syntax: "<time>", inherits: true },
-		duration: {
+vi.mock("$data/design-tokens", () => ({
+	DesignTokens: {
+		transition: {
 			config: { syntax: "<time>", inherits: true },
-			medium: "0.3s",
+			duration: {
+				config: { syntax: "<time>", inherits: true },
+				medium: "0.3s",
+			},
 		},
 	},
-}));
-
-vi.mock("$data/design-tokens", () => ({
-	DesignTokens: mockTokens,
 }));
 
 vi.spyOn(Bun, "write").mockImplementation(vi.fn());
