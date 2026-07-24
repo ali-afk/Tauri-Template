@@ -4,18 +4,11 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 
 /** Commands */
 export const commands = {
-	appMetadata: () =>
-		typedError<AppMetadata, string>(__TAURI_INVOKE("app_metadata")),
-	writeSettings: (settings: AppSettings) =>
-		typedError<null, string>(__TAURI_INVOKE("write_settings", { settings })),
-	writeSettingsField: (value: AppSettingsKey) =>
-		typedError<null, string>(__TAURI_INVOKE("write_settings_field", { value })),
-	readSettings: () =>
-		typedError<AppSettings, string>(__TAURI_INVOKE("read_settings")),
-	readSettingsField: (key: AppSettingsKeyKind) =>
-		typedError<AppSettingsKey, string>(
-			__TAURI_INVOKE("read_settings_field", { key }),
-		),
+	appMetadata: () => typedError<AppMetadata, string>(__TAURI_INVOKE("app_metadata")),
+	writeSettings: (settings: AppSettings) => typedError<null, string>(__TAURI_INVOKE("write_settings", { settings })),
+	writeSettingsField: (value: AppSettingsKey) => typedError<null, string>(__TAURI_INVOKE("write_settings_field", { value })),
+	readSettings: () => typedError<AppSettings, string>(__TAURI_INVOKE("read_settings")),
+	readSettingsField: (key: AppSettingsKeyKind) => typedError<AppSettingsKey, string>(__TAURI_INVOKE("read_settings_field", { key })),
 };
 
 /* Types */
@@ -24,34 +17,40 @@ export const commands = {
  *  Displayed in window title, about dialogs, and contact sections.
  */
 export type AppMetadata = {
-	version: string;
-	name: string;
-	description: string;
-	url: string;
-	contacts: ContactInfo;
+	version: string,
+	name: string,
+	description: string,
+	url: string,
+	contacts: ContactInfo,
 };
 
 /**
- *  Persisted user settings. Read from `config.json` in
- *  `BaseDirectory::AppConfig` on startup. Falls back to
- *  defaults if the file doesn't exist yet.
+ *  Persisted user settings. Backed by tauri-plugin-store (settings.json).
+ *  Defaults written on first access via if_empty_write_default().
  */
 export type AppSettings = {
-	theme: Theme;
-	resolution: Resolution;
-	fullscreen: boolean;
+	theme: Theme,
+	resolution: Resolution,
+	fullscreen: boolean,
 };
 
-export type AppSettingsKey =
-	| ({ Theme: Theme } & { Fullscreen?: never; Resolution?: never })
-	| ({ Resolution: Resolution } & { Fullscreen?: never; Theme?: never })
-	| ({ Fullscreen: boolean } & { Resolution?: never; Theme?: never });
+/**
+ *  A tagged union of a single setting value, used by read_settings_field
+ *  and write_settings_field IPC commands. Exactly one variant is set.
+ *  TS type: `{ Theme: Theme } | { Resolution: Resolution } | { Fullscreen: boolean }`.
+ */
+export type AppSettingsKey = ({ Theme: Theme }) & { Fullscreen?: never; Resolution?: never } | ({ Resolution: Resolution }) & { Fullscreen?: never; Theme?: never } | ({ Fullscreen: boolean }) & { Resolution?: never; Theme?: never };
 
+/**
+ *  IPC-compatible enum identifying which setting field to read/write.
+ *  Use `as_ref()` to get the lowercase store key.
+ *  TS type: `"Theme" | "Resolution" | "Fullscreen"`.
+ */
 export type AppSettingsKeyKind = "Theme" | "Resolution" | "Fullscreen";
 
 export type ContactInfo = {
-	email: Email;
-	github: string;
+	email: Email,
+	github: string,
 };
 
 export type Email = string;
@@ -61,13 +60,12 @@ export type Resolution = [number, number];
 export type Theme = "Light" | "Dark" | "System";
 
 /* Tauri Specta runtime */
-async function typedError<T, E>(
-	result: Promise<T>,
-): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
-	try {
-		return { status: "ok", data: await result };
-	} catch (e) {
-		if (e instanceof Error) throw e;
-		return { status: "error", error: e as any };
-	}
+async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
+    try {
+        return { status: "ok", data: await result };
+    } catch (e) {
+        if (e instanceof Error) throw e;
+        return { status: "error", error: e as any };
+    }
 }
+
