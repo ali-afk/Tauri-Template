@@ -4,11 +4,11 @@ pre-commit:
   jobs:
     - name: biome
       glob: "*.{svelte,ts,json,css,html}"
-      run: bun lint:biome {staged_files}
+      run: bun check:biome {staged_files}
       stage_fixed: true
     - name: md
       glob: "*.md"
-      run: bun lint:md {staged_files}
+      run: bun check:md {staged_files}
       stage_fixed: true
 
 pre-push:

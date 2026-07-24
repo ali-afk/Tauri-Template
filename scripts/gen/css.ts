@@ -9,7 +9,7 @@
  * - A single `:root {}` block with all token values.
  *
  * Runs automatically via vite-plugin-run on design-tokens.ts changes,
- * and as part of `bun lint`.
+ * and as part of `bun check`.
  *
  * @see src/lib/data/design-tokens.ts for token definitions and structure
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/@property
