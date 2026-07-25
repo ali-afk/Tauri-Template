@@ -4,14 +4,16 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 
 /** Commands */
 export const commands = {
-	appMetadata: () => typedError<AppMetadata, string>(__TAURI_INVOKE("app_metadata")),
-	writeSettings: (settings: AppSettings) => typedError<null, string>(__TAURI_INVOKE("write_settings", { settings })),
-	writeSettingsField: (value: AppSettingsKey) => typedError<null, string>(__TAURI_INVOKE("write_settings_field", { value })),
-	readSettings: () => typedError<AppSettings, string>(__TAURI_INVOKE("read_settings")),
-	readSettingsField: (key: AppSettingsKeyKind) => typedError<AppSettingsKey, string>(__TAURI_INVOKE("read_settings_field", { key })),
+	appMetadata: () => typedError<AppMetadata, AppError>(__TAURI_INVOKE("app_metadata")),
+	writeSettings: (settings: AppSettings) => typedError<null, AppError>(__TAURI_INVOKE("write_settings", { settings })),
+	writeSettingsField: (value: AppSettingsKey) => typedError<null, AppError>(__TAURI_INVOKE("write_settings_field", { value })),
+	readSettings: () => typedError<AppSettings, AppError>(__TAURI_INVOKE("read_settings")),
+	readSettingsField: (key: AppSettingsKeyKind) => typedError<AppSettingsKey, AppError>(__TAURI_INVOKE("read_settings_field", { key })),
 };
 
 /* Types */
+export type AppError = { type: "Config"; data: string } | { type: "Validation"; data: string };
+
 /**
  *  Application metadata read from tauri.conf.json at startup.
  *  Displayed in window title, about dialogs, and contact sections.
