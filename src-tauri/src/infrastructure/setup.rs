@@ -1,10 +1,10 @@
+use crate::app::config::AppMetadata;
+use crate::domain::error::AppError;
+use crate::domain::types::ContactInfo;
+use crate::domain::types::Email;
+use crate::infrastructure::serialize;
 /// Sets up specta, registers plugins, and starts the Tauri runtime.
 /// Bindings exported to src/lib/tauri/bindings.ts in debug builds.
-use crate::config::{
-    types::{ContactInfo, Email},
-    AppMetadata,
-};
-use crate::{config::serialize, error::AppError};
 use tauri::{App, Wry};
 use tauri::{Config, Manager};
 use tauri_plugin_store::StoreExt;

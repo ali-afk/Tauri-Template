@@ -1,12 +1,14 @@
-pub mod commands;
-pub mod config;
-pub mod error;
-pub mod setup;
+pub mod app;
+pub mod domain;
+pub mod infrastructure;
 
-use crate::commands::{
-    app_metadata, read_settings, read_settings_field, write_settings, write_settings_field,
+use crate::{
+    app::commands::{
+        app_metadata, read_settings, read_settings_field, write_settings, write_settings_field,
+    },
+    infrastructure::setup,
 };
-use crate::setup::build;
+use setup::build;
 use tauri_specta::{collect_commands, Builder};
 
 pub fn run() {

@@ -13,7 +13,7 @@ macro_rules! app_settings {
         /// IPC-compatible enum identifying which setting field to read/write.
         /// Use `as_ref()` to get the lowercase store key.
         /// TS type: `"Theme" | "Resolution" | "Fullscreen"`.
-        #[derive(Deserialize, Serialize, Clone, Type, Display, AsRefStr, Copy, strum::EnumString)]
+        #[derive(Deserialize, Serialize, Clone, Type, Display, AsRefStr, Copy, strum::EnumString, Debug, PartialEq)]
         #[strum(serialize_all = "lowercase")]
         pub enum AppSettingsKeyKind {
             $(
@@ -69,4 +69,53 @@ macro_rules! app_settings {
             }
         }
     };
+}
+
+#[macro_export]
+macro_rules! app_error {
+    // Full form with per-variant inner types
+    ( $( $variant:ident ($type:ty) ),+ $(,)? ) => {
+        #[derive(Debug, Clone, Serialize, Deserialize, Type, thiserror::Error)]
+        #[serde(tag = "type", content = "data")]
+        pub enum AppError {
+            $(
+                #[error("{0}")]
+                $variant($type),
+            )+
+        }
+
+        #[derive(Debug, Clone, PartialEq, Eq)]
+        pub enum AppErrorKind {
+            $(
+                $variant,
+            )+
+        }
+
+        impl AppError {
+            pub fn kind(&self) -> AppErrorKind {
+                match self {
+                    $(
+                        Self::$variant(_) => AppErrorKind::$variant,
+                    )+
+                }
+            }
+        }
+    };
+    // Shorthand: defaults to String
+    ( $( $variant:ident ),+ $(,)? ) => {
+        app_error!($( $variant(String) ),+);
+    };
+}
+
+#[macro_export]
+macro_rules! to_app_error {
+    ( $( $type:ty ),+ ) => {
+        $(
+            impl From<$type> for AppError {
+                fn from(e: $type) -> Self {
+                    AppError::Config(e.to_string())
+                }
+            }
+        )+
+    }
 }

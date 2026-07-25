@@ -1,22 +1,25 @@
 use std::str::FromStr;
 use std::sync::Arc;
 
-use crate::config::{AppSettings, AppSettingsKey, AppSettingsKeyKind};
-use crate::error::AppError;
-use tauri::{AppHandle, Wry};
+use crate::app::config::{AppSettings, AppSettingsKey, AppSettingsKeyKind};
+use crate::domain::error::AppError;
+use tauri::{AppHandle, Runtime};
 use tauri_plugin_store::{Store, StoreExt};
 
 /// Writes default settings to the store if it's empty (first launch).
 /// Called as a side-effect guard by read functions — ensures the
 /// store always has valid data before reading.
-pub fn if_empty_write_default(app: &AppHandle, settings: &Arc<Store<Wry>>) -> Result<(), AppError> {
+pub fn if_empty_write_default<R: Runtime>(
+    app: &AppHandle<R>,
+    settings: &Arc<Store<R>>,
+) -> Result<(), AppError> {
     if settings.is_empty() {
         write_settings(app, &AppSettings::default())?
     }
     Ok(())
 }
 
-pub fn read_settings(app: &AppHandle) -> Result<AppSettings, AppError> {
+pub fn read_settings<R: Runtime>(app: &AppHandle<R>) -> Result<AppSettings, AppError> {
     let settings = app
         .store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
@@ -35,8 +38,8 @@ pub fn read_settings(app: &AppHandle) -> Result<AppSettings, AppError> {
     Ok(read_settings)
 }
 
-pub fn read_settings_field(
-    app: &AppHandle,
+pub fn read_settings_field<R: Runtime>(
+    app: &AppHandle<R>,
     key: &AppSettingsKeyKind,
 ) -> Result<AppSettingsKey, AppError> {
     let settings = app
@@ -50,7 +53,10 @@ pub fn read_settings_field(
     AppSettingsKey::from_json_value(*key, val)
 }
 
-pub fn write_settings_field(app: &AppHandle, value: AppSettingsKey) -> Result<(), AppError> {
+pub fn write_settings_field<R: Runtime>(
+    app: &AppHandle<R>,
+    value: AppSettingsKey,
+) -> Result<(), AppError> {
     let settings = app
         .store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
@@ -63,7 +69,10 @@ pub fn write_settings_field(app: &AppHandle, value: AppSettingsKey) -> Result<()
     Ok(())
 }
 
-pub fn write_settings(app: &AppHandle, new_settings: &AppSettings) -> Result<(), AppError> {
+pub fn write_settings<R: Runtime>(
+    app: &AppHandle<R>,
+    new_settings: &AppSettings,
+) -> Result<(), AppError> {
     let settings = app
         .store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
@@ -72,8 +81,8 @@ pub fn write_settings(app: &AppHandle, new_settings: &AppSettings) -> Result<(),
         serde_json::to_value(new_settings).map_err(|e| AppError::Config(e.to_string()))?;
 
     if let Some(settings_map) = settings_json.as_object() {
-        for (key, val) in settings_map.clone() {
-            settings.set(key, val);
+        for (key, val) in settings_map.iter() {
+            settings.set(key.clone(), val.clone());
         }
     }
     settings
