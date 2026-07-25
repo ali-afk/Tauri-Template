@@ -2,7 +2,7 @@
 
 tauri-template — Tauri v2 + SvelteKit v2 + Svelte 5 desktop app template.
 
-Current version: `1.3.1`
+Current version: `1.5.1`
 
 ---
 
@@ -13,7 +13,7 @@ Current version: `1.3.1`
 - [x] Security hardening — CSP, isolation pattern, scope capabilities, custom
       permissions
 
-## Phase 2 — Storage & Backend
+## Phase 2 — Storage & Backend (Done)
 
 - [x] Unified storage — `serialize.rs` migrated to `tauri-plugin-store` with
       per-field IPC
@@ -21,15 +21,19 @@ Current version: `1.3.1`
       `strum`
 - [x] **Macro-generate settings enums** — `app_settings!` macro replacing
       hand-written boilerplate and acting as single source of truth
-- [ ] Rust tests — `#[cfg(test)]` for types, `tauri::test::mock_context()` for
+- [x] Rust tests — `#[cfg(test)]` for types, `tauri::test::mock_context()` for
       commands
-- [ ] Rust CI test gate — `cargo test` in `tauri.yml`
+- [x] Rust CI test gate — `cargo test` in `tauri.yml`
 
 ## Phase 3 — Template Foundation
 
-- [ ] **Clean architecture scaffold** —
-      `src/lib/{domain,application,infrastructure}/` dirs with example files per
-      layer
+- [x] **Clean architecture scaffold** —
+      `src-tauri/src/{app,domain,infrastructure}/` dirs with files per layer.
+      Frontend `src/lib/{domain,application,infrastructure}/` not yet scoped.
+- [x] **Agent skills** — 7 skills in `.agents/skills/`: 5 registry (tauri-v2,
+      typescript-advanced-types, vitest, rust-best-practices,
+      svelte5-best-practices) + 2 custom (tauri-specta-integration,
+      design-token-pipeline)
 - [ ] **IPC wrapper** — reactive Svelte 5 runes store per domain wrapping specta
       commands
 - [ ] **Theme switcher** — `mode-watcher` + `<ThemeToggle>` component;

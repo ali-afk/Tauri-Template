@@ -77,14 +77,13 @@ Add `beforeEach` only if a test mutates state.
 
 ### Mocking
 
-#### Module Mock Pattern
+#### Module Mock Pattern (Vitest v4)
 
-Use `vi.hoisted` + `vi.mock`:
+Use module-level const + `vi.mock` — `vi.hoisted` is no longer needed in Vitest
+v4:
 
 ```ts
-const mockMedia = vi.hoisted(() => ({
-  current: false,
-}));
+const mockMedia = { current: false };
 
 vi.mock("$scripts/media", () => ({
   queryCssProperty() {
@@ -96,9 +95,9 @@ vi.mock("$scripts/media", () => ({
 }));
 ```
 
-- `vi.hoisted` runs before `vi.mock` (both are hoisted above imports)
-- Tests control the mock via the hoisted ref: `mockMedia.current = true`
-- Place at module level, not inside `describe` (vitest warns about nesting)
+- Module-level `const` is auto-hoisted before `vi.mock` in Vitest v4
+- Tests control the mock via the ref: `mockMedia.current = true`
+- Place at module level, not inside `describe`
 
 #### Mocking Svelte Reactivity Modules
 
