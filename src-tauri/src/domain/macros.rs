@@ -71,6 +71,20 @@ macro_rules! app_settings {
     };
 }
 
+/// Generates `AppError` (typed IPC error enum), `AppErrorKind` (discriminant)
+/// and `AppError::kind()` from a single variant list.
+///
+/// Errors serialize as `{"type": "Config"|"Validation", "data": string}`
+/// via `#[serde(tag = "type", content = "data")]`.
+///
+/// # Forms
+/// ```ignore
+/// // Shorthand — inner type defaults to String
+/// app_error! { Config, Validation }
+///
+/// // Full — explicit inner types
+/// app_error! { Config(String), Validation(CustomType) }
+/// ```
 #[macro_export]
 macro_rules! app_error {
     // Full form with per-variant inner types
@@ -106,7 +120,16 @@ macro_rules! app_error {
         app_error!($( $variant(String) ),+);
     };
 }
-
+/// Generates `From<T> for AppError` impls mapping external error types to
+/// `AppError::Config`.
+///
+/// # Example
+/// ```ignore
+/// to_app_error!(std::io::Error, serde_json::Error);
+/// // Expands to:
+/// // impl From<std::io::Error> for AppError { ... }
+/// // impl From<serde_json::Error> for AppError { ... }
+/// ```
 #[macro_export]
 macro_rules! to_app_error {
     ( $( $type:ty ),+ ) => {

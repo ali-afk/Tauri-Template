@@ -19,13 +19,12 @@ pub fn if_empty_write_default<R: Runtime>(
     Ok(())
 }
 
+/// Reads all settings from the store and returns them as an `AppSettings` struct.
 pub fn read_settings<R: Runtime>(app: &AppHandle<R>) -> Result<AppSettings, AppError> {
-    let settings = app
-        .store("settings.json")
+    let settings = app.store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
 
     let mut read_settings = AppSettings::default();
-
     for (key, value) in settings.entries() {
         let kind = AppSettingsKeyKind::from_str(key.as_ref())?;
         match AppSettingsKey::from_json_value(kind, value)? {
@@ -34,59 +33,49 @@ pub fn read_settings<R: Runtime>(app: &AppHandle<R>) -> Result<AppSettings, AppE
             AppSettingsKey::Fullscreen(f) => read_settings.fullscreen = f,
         }
     }
-
     Ok(read_settings)
 }
 
+/// Reads a single setting field by its `AppSettingsKeyKind` identifier.
 pub fn read_settings_field<R: Runtime>(
     app: &AppHandle<R>,
     key: &AppSettingsKeyKind,
 ) -> Result<AppSettingsKey, AppError> {
-    let settings = app
-        .store("settings.json")
+    let settings = app.store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
-
     let val = settings.get(key.as_ref()).ok_or_else(|| {
         AppError::Config(format!("Setting '{key}' does not exist in app settings"))
     })?;
-
     AppSettingsKey::from_json_value(*key, val)
 }
 
+/// Writes a single setting field, leaving other fields unchanged.
 pub fn write_settings_field<R: Runtime>(
     app: &AppHandle<R>,
     value: AppSettingsKey,
 ) -> Result<(), AppError> {
-    let settings = app
-        .store("settings.json")
+    let settings = app.store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
-
     let (key, val) = (value.kind(), value.to_json_value()?);
     settings.set(key.as_ref(), val);
-    settings
-        .save()
-        .map_err(|e| AppError::Config(e.to_string()))?;
+    settings.save().map_err(|e| AppError::Config(e.to_string()))?;
     Ok(())
 }
 
+/// Writes all settings to the store, overwriting the entire config.
 pub fn write_settings<R: Runtime>(
     app: &AppHandle<R>,
     new_settings: &AppSettings,
 ) -> Result<(), AppError> {
-    let settings = app
-        .store("settings.json")
+    let settings = app.store("settings.json")
         .map_err(|e| AppError::Config(e.to_string()))?;
-
     let settings_json =
         serde_json::to_value(new_settings).map_err(|e| AppError::Config(e.to_string()))?;
-
     if let Some(settings_map) = settings_json.as_object() {
         for (key, val) in settings_map.iter() {
             settings.set(key.clone(), val.clone());
         }
     }
-    settings
-        .save()
-        .map_err(|e| AppError::Config(e.to_string()))?;
+    settings.save().map_err(|e| AppError::Config(e.to_string()))?;
     Ok(())
 }
