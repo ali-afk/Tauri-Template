@@ -2,7 +2,7 @@
 
 tauri-template — Tauri v2 + SvelteKit v2 + Svelte 5 desktop app template.
 
-Current version: `1.5.1`
+Current version: `1.6.0`
 
 ---
 

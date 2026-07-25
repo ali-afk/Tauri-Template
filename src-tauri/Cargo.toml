@@ -1,6 +1,6 @@
 [package]
 name = "tauri-template"
-version = "1.5.1"
+version = "1.6.0"
 description = "Modern, flexible Tauri+Sveltekit template"
 authors = ["Ali Hussain"]
 license = "MIT"
