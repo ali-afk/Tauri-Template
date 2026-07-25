@@ -15,6 +15,8 @@ pre-push:
   jobs:
     - name: test
       run: bun run test
+    - name: rust-test
+      run: cargo test --manifest-path src-tauri/Cargo.toml
 
 commit-msg:
   jobs:
