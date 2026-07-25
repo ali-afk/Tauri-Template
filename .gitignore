@@ -1,8 +1,8 @@
 # Build output and package storage
-node_modules/
-.svelte-kit/
-src-tauri/target/
-build/
+node_modules
+.svelte-kit
+src-tauri/target
+build
 
 # Backups & Secrets
 *.bak
@@ -11,8 +11,10 @@ build/
 !.env.example
 
 # AI Agent configs
-.agents/
-opencode.json
+.agents
+.omo
+.opencode
+skills-lock.json
 
 # Generated Assets
 src/lib/styles/gen.css

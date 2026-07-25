@@ -4,6 +4,5 @@
 	"markdown": {
 		"textWrap": "always"
 	},
-	"excludes": ["!.agents"],
 	"plugins": ["node_modules/@dprint/markdown/plugin.wasm"]
 }
