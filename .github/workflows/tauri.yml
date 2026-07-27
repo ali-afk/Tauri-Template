@@ -55,7 +55,7 @@ jobs:
             ${{ matrix.os }}-cargo-target-
 
       - name: Rust tests
-        run: cargo test --manifest-path src-tauri/Cargo.toml
+        run: cargo test --lib --manifest-path src-tauri/Cargo.toml
 
       - run: bun tauri:build
       - uses: actions/upload-artifact@v6

@@ -4,10 +4,15 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 
 /** Commands */
 export const commands = {
+	/**  Reads application metadata from the managed `AppMetadata` state. */
 	appMetadata: () => typedError<AppMetadata, AppError>(__TAURI_INVOKE("app_metadata")),
+	/**  Writes all settings to the store, overwriting the entire config. */
 	writeSettings: (settings: AppSettings) => typedError<null, AppError>(__TAURI_INVOKE("write_settings", { settings })),
+	/**  Writes a single setting field, leaving other fields unchanged. */
 	writeSettingsField: (value: AppSettingsKey) => typedError<null, AppError>(__TAURI_INVOKE("write_settings_field", { value })),
+	/**  Reads all settings from the store. Returns the full `AppSettings` struct. */
 	readSettings: () => typedError<AppSettings, AppError>(__TAURI_INVOKE("read_settings")),
+	/**  Reads a single setting field by its `AppSettingsKeyKind` identifier. */
 	readSettingsField: (key: AppSettingsKeyKind) => typedError<AppSettingsKey, AppError>(__TAURI_INVOKE("read_settings_field", { key })),
 };
 
