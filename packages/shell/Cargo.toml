@@ -1,0 +1,45 @@
+[package]
+name = "shell"
+version.workspace = true
+description.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "tauri_template_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[features]
+# Native e2e testing: embeds the WebDriver server + WDIO plugin. Never enabled in release builds.
+e2e = ["dep:tauri-plugin-wdio", "dep:tauri-plugin-wdio-webdriver"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+app = { workspace = true }
+domain = { workspace = true }
+infrastructure = { workspace = true }
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+specta = { workspace = true }
+tauri-specta = { workspace = true }
+specta-typescript = { workspace = true }
+regex = { workspace = true }
+thiserror = { workspace = true }
+tauri-plugin-opener = { workspace = true }
+tauri-plugin-store = { workspace = true }
+tokio = { workspace = true }
+tauri-plugin-log = { workspace = true }
+log = { workspace = true }
+tauri-plugin-fs = { workspace = true }
+strum = { workspace = true }
+tauri-plugin-devtools = { workspace = true }
+tauri-plugin-wdio = { workspace = true, optional = true }
+tauri-plugin-wdio-webdriver = { workspace = true, optional = true }

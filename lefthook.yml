@@ -1,24 +1,15 @@
-source_dir: scripts
 pre-commit:
-  parallel: true
   jobs:
-    - name: biome
-      glob: "*.{svelte,ts,json,css,html}"
-      run: bun check:biome {staged_files}
-      stage_fixed: true
-    - name: md
-      glob: "*.md"
-      run: bun check:md {staged_files}
+    - name: Check
+      run: just check-all
       stage_fixed: true
 
 pre-push:
   jobs:
-    - name: test
-      run: bun run test
-    - name: rust-test
-      run: cargo test --manifest-path src-tauri/Cargo.toml
+    - name: Unit Tests
+      run: just test-all --unit
 
 commit-msg:
   jobs:
-    - script: lint-title.ts
-      runner: bun
+    - name: Lint title
+      run: just lint-title {1}

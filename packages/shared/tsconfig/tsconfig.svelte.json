@@ -1,0 +1,19 @@
+{
+	"extends": ["./fragments/tsconfig.bundler", "./fragments/tsconfig.lint"],
+	"compilerOptions": {
+		"types": [
+			"bun",
+			"vite-plus/test/globals",
+			"@testing-library/jest-dom",
+			"vite-plus/client",
+			"$app/types"
+		]
+	},
+	"include": ["${configDir}/**/*.ts", "${configDir}/**/*.svelte"],
+	"exclude": [
+		"${configDir}/**/.svelte-kit/**",
+		"${configDir}/**/.out/**",
+		"${configDir}/**/.cache/**",
+		"${configDir}/**/node_modules/**"
+	]
+}

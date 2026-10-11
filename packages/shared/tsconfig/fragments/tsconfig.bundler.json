@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"verbatimModuleSyntax": true,
+		"moduleDetection": "force"
+	}
+}

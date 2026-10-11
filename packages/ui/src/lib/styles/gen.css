@@ -1,0 +1,383 @@
+/* Auto-generated — DO NOT EDIT */
+/* Source: ./src/data/design-tokens.ts */
+
+@property --color-primary-100 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-primary-300 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-primary-500 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-primary-700 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-primary-900 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-secondary-100 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-secondary-300 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-secondary-500 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-secondary-700 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-secondary-900 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-base-100 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-base-300 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-base-500 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-base-700 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-base-900 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-status-danger {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-status-warn {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-status-info {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --color-status-success {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --_background {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --fw-light {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fw-regular {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fw-semibold {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fw-bold {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fs-1 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fs-2 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fs-3 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --fs-4 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --lh-1 {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --lh-2 {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --lh-3 {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --lh-4 {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --text-main {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --text-mute {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --space-1 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-2 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-3 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-4 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-5 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-6 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-7 {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-gutter {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-min {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --space-max {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --breakpoint-sm {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --breakpoint-md {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --breakpoint-lg {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --breakpoint-xl {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --border-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+@property --transition-easing {
+	syntax: "*";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --transition-duration-short {
+	syntax: "<time>";
+	inherits: true;
+	initial-value: 0s;
+}
+
+@property --transition-duration-medium {
+	syntax: "<time>";
+	inherits: true;
+	initial-value: 0s;
+}
+
+@property --transition-duration-long {
+	syntax: "<time>";
+	inherits: true;
+	initial-value: 0s;
+}
+
+@property --shadow-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #fff;
+}
+
+:root {
+	--color-primary-100: #d9aecf;
+	--color-primary-300: #d192d6;
+	--color-primary-500: #934599;
+	--color-primary-700: #653568;
+	--color-primary-900: #381446;
+	--color-secondary-100: #f4d7e6;
+	--color-secondary-300: #d66da4;
+	--color-secondary-500: #b00e63;
+	--color-secondary-700: #940c53;
+	--color-secondary-900: #5d0634;
+	--color-base-100: color-mix(in srgb, #fff, var(--color-primary-500) var(--color-mix-strength));
+	--color-base-300: color-mix(in srgb, #ccc, var(--color-primary-500) var(--color-mix-strength));
+	--color-base-500: color-mix(in srgb, #888, var(--color-primary-500) var(--color-mix-strength));
+	--color-base-700: color-mix(in srgb, #444, var(--color-primary-500) var(--color-mix-strength));
+	--color-base-900: color-mix(in srgb, #000, var(--color-primary-500) var(--color-mix-strength));
+	--color-status-danger: #dc2626;
+	--color-status-warn: #d97706;
+	--color-status-info: #00b4d8;
+	--color-status-success: #16a34a;
+	--_background: light-dark(var(--color-base-100), var(--color-base-700));
+	--fw-light: var(--font-weight-3);
+	--fw-regular: var(--font-weight-4);
+	--fw-semibold: var(--font-weight-6);
+	--fw-bold: var(--font-weight-7);
+	--fs-1: var(--font-size-fluid-0);
+	--fs-2: var(--font-size-fluid-1);
+	--fs-3: var(--font-size-fluid-2);
+	--fs-4: var(--font-size-fluid-3);
+	--lh-1: var(--font-lineheight-0);
+	--lh-2: var(--font-lineheight-1);
+	--lh-3: var(--font-lineheight-3);
+	--lh-4: var(--font-lineheight-4);
+	--text-main: light-dark(var(--color-base-900), var(--color-base-100));
+	--text-mute: light-dark(var(--color-base-700), var(--color-base-300));
+	--space-1: var(--size-fluid-1);
+	--space-2: var(--size-fluid-2);
+	--space-3: var(--size-fluid-3);
+	--space-4: var(--size-fluid-4);
+	--space-5: var(--size-fluid-6);
+	--space-6: var(--size-fluid-7);
+	--space-7: var(--size-fluid-8);
+	--space-gutter: calc((100% - var(--space-max)) / 2);
+	--space-min: 480px;
+	--space-max: 1440px;
+	--breakpoint-sm: 480px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 1024px;
+	--breakpoint-xl: 1440px;
+	--border-color: var(--color-base-300);
+	--transition-easing: var(--ease-in-out-3);
+	--transition-duration-short: 120ms;
+	--transition-duration-medium: 180ms;
+	--transition-duration-long: 320ms;
+	--shadow-color: color-mix(in srgb, var(--color-base-900), transparent 80%);
+}

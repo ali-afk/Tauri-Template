@@ -1,0 +1,9 @@
+{
+	"extends": ["../shared/tsconfig/tsconfig.base"],
+	"exclude": [
+		"${configDir}/src/tauri/bindings.ts",
+		"${configDir}/**/.out/**",
+		"${configDir}/**/.cache/**",
+		"${configDir}/**/node_modules/**"
+	]
+}

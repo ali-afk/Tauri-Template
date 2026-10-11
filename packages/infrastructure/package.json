@@ -1,0 +1,28 @@
+{
+	"name": "@tauri-template/infrastructure",
+	"version": "2.0.0",
+	"private": true,
+	"description": "Infrastructure layer",
+	"license": "MPL-2.0",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./tauri/bindings": "./src/tauri/bindings.ts",
+		"./adapters/*": "./src/adapters/*.ts",
+		"./factories/*": "./src/factories/*.ts",
+		"./ports": "./src/ports/index.ts"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "^2.12.1",
+		"@tauri-template/app": "workspace:*",
+		"@tauri-template/domain": "workspace:*",
+		"@tauri-template/shared": "workspace:*"
+	},
+	"devDependencies": {
+		"happy-dom": "^20.14.5",
+		"typescript": "^6.0.3",
+		"vite": "catalog:",
+		"vite-plus": "catalog:",
+		"vitest": "catalog:"
+	}
+}

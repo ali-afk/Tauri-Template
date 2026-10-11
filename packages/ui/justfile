@@ -1,0 +1,10 @@
+# ui — component library. Run via `just ui <recipe>`.
+import '../shared/just/_frontend.just'
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list
+
+# Regenerate design tokens into styles/gen.css.
+css-gen *FLAGS:
+	bun vp run css-gen {{FLAGS}}

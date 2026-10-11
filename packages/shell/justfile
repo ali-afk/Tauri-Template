@@ -1,0 +1,14 @@
+# shell — Tauri application. Run via `just shell <recipe>`.
+import '../shared/just/_rust.just'
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list
+
+# Run the Tauri dev server.
+dev *FLAGS:
+	bun tauri dev {{FLAGS}}
+
+# Build the Tauri bundle.
+build *FLAGS:
+	bun tauri build {{FLAGS}}

@@ -1,0 +1,25 @@
+[package]
+name = "infrastructure"
+version.workspace = true
+description.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+domain = { workspace = true }
+app = { workspace = true }
+tauri = { workspace = true }
+tauri-plugin-store = { workspace = true }
+tauri-plugin-fs = { workspace = true }
+tauri-plugin-opener = { workspace = true }
+tauri-plugin-log = { workspace = true }
+tauri-plugin-devtools = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+specta = { workspace = true }
+tauri-specta = { workspace = true }
+specta-typescript = { workspace = true }
+tokio = { workspace = true }
+log = { workspace = true }

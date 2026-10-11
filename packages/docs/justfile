@@ -1,0 +1,6 @@
+# docs — documentation package. Run via `just docs <recipe>`.
+import '../shared/just/_frontend.just'
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list

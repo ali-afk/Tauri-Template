@@ -1,0 +1,25 @@
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list
+
+# Check shared (format + lint + types).
+check *FLAGS:
+	bun vp check --fix {{FLAGS}}
+
+# Run shared's tests.
+[arg('unit', long, value='1')]
+[arg('e2e', long, value='1')]
+test unit='' e2e='' *FLAGS:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	if [[ -z '{{unit}}' && -z '{{e2e}}' ]]; then
+		bun vp test {{FLAGS}}
+	else
+		if [[ -n '{{unit}}' ]]; then bun vp test {{FLAGS}}; fi
+		if [[ -n '{{e2e}}' ]]; then echo "no e2e runner configured for $(basename "$PWD")" >&2; fi
+	fi
+
+# Clean build/cache artifacts.
+clean *FLAGS:
+	rm -rf .out .cache

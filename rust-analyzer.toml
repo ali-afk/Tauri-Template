@@ -1,0 +1,2 @@
+[cargo]
+targetDir = ".cache/rust-analyzer"

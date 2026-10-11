@@ -1,0 +1,12 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "e2e",
+  "description": "Capability set for native e2e testing. Only loaded when the `e2e` feature is enabled, because the wdio plugin crates are optional dependencies.",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "wdio:default",
+    "wdio-webdriver:default"
+  ]
+}

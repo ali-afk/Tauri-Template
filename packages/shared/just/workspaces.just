@@ -1,0 +1,1 @@
+WORKSPACES := "app domain infrastructure shell ui web docs shared"

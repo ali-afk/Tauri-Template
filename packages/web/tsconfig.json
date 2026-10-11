@@ -1,0 +1,3 @@
+{
+	"extends": ["$app/tsconfig", "../shared/tsconfig/tsconfig.svelte"]
+}

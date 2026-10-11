@@ -1,0 +1,22 @@
+{
+	"name": "@tauri-template/app",
+	"version": "2.0.0",
+	"private": true,
+	"description": "Application layer",
+	"license": "MPL-2.0",
+	"type": "module",
+	"exports": {
+		"./controllers": "./src/controllers/index.ts"
+	},
+	"dependencies": {
+		"@tauri-template/domain": "workspace:*",
+		"@tauri-template/infrastructure": "workspace:*"
+	},
+	"devDependencies": {
+		"happy-dom": "^20.14.5",
+		"typescript": "^6.0.3",
+		"vite": "catalog:",
+		"vite-plus": "catalog:",
+		"vitest": "catalog:"
+	}
+}

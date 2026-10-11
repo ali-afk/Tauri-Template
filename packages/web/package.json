@@ -1,0 +1,31 @@
+{
+	"name": "@tauri-template/web",
+	"version": "2.0.0",
+	"private": true,
+	"description": "SvelteKit web app",
+	"license": "MPL-2.0",
+	"type": "module",
+	"imports": {
+		"#lib/*": "./src/lib/*"
+	},
+	"scripts": {
+		"prepare": "svelte-kit sync"
+	},
+	"dependencies": {
+		"@tauri-template/app": "workspace:*",
+		"@tauri-template/domain": "workspace:*",
+		"@tauri-template/infrastructure": "workspace:*",
+		"@tauri-template/shared": "workspace:*",
+		"@tauri-template/ui": "workspace:*",
+		"svelte": "^5.57.1"
+	},
+	"devDependencies": {
+		"@testing-library/dom": "^10.4.2",
+		"@testing-library/jest-dom": "^7.0.1",
+		"@testing-library/svelte": "^5.4.2",
+		"@vitejs/devtools": "^0.7.6",
+		"happy-dom": "^20.14.5",
+		"svelte-check-rs": "^0.11.2",
+		"vite-devtools-svelte": "^0.5.0"
+	}
+}

@@ -1,0 +1,44 @@
+[workspace]
+resolver = "3"
+
+members = [
+  "packages/app",
+  "packages/shell",
+  "packages/infrastructure",
+  "packages/domain",
+]
+
+[workspace.package]
+license = "MPL-2.0"
+repository = "https://github.com/ali-afk/Tauri-Template"
+version = "2.0.0"
+authors = ["ali-afk"]
+description = "Personal SvelteKit starter template with design tokens, auto-contrast colors, and component library"
+edition = "2024"
+
+[workspace.dependencies]
+# internal crates
+domain = { path = "packages/domain" }
+app = { path = "packages/app" }
+infrastructure = { path = "packages/infrastructure" }
+# shared external dependencies
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+specta = { version = "2.0.0-rc", features = ["derive"] }
+specta-typescript = "0"
+tauri-specta = { version = "2.0.0-rc", features = ["derive", "typescript"] }
+thiserror = "2"
+strum = { version = "0", features = ["derive"] }
+regex = "1"
+log = "0"
+tokio = "1"
+tauri = { version = "2", features = ["isolation", "test"] }
+tauri-build = { version = "2", features = ["isolation"] }
+tauri-plugin-store = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-log = "2"
+tauri-plugin-devtools = "2"
+# e2e testing (optional, enabled via the shell `e2e` feature)
+tauri-plugin-wdio = "1"
+tauri-plugin-wdio-webdriver = "1"

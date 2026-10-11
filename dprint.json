@@ -1,8 +1,0 @@
-{
-	"$schema": "https://plugins.dprint.dev/dprint/dprint-plugin-markdown/latest/schema.json",
-	"useTabs": true,
-	"markdown": {
-		"textWrap": "always"
-	},
-	"plugins": ["node_modules/@dprint/markdown/plugin.wasm"]
-}

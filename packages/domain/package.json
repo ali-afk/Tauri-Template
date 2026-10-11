@@ -1,0 +1,15 @@
+{
+	"name": "@tauri-template/domain",
+	"version": "2.0.0",
+	"private": true,
+	"description": "Domain layer",
+	"license": "MPL-2.0",
+	"type": "module",
+	"exports": {
+		"./ports": "./src/ports/index.ts"
+	},
+	"dependencies": {
+		"@tauri-template/infrastructure": "workspace:*",
+		"@tauri-template/shared": "workspace:*"
+	}
+}

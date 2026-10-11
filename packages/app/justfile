@@ -1,0 +1,7 @@
+# app — Rust library crate. Run via `just app <recipe>`.
+import '../shared/just/_rust.just'
+import '../shared/just/_rust-build.just'
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list

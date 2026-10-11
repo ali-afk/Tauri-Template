@@ -1,0 +1,57 @@
+{
+	"name": "@tauri-template/ui",
+	"version": "2.0.0",
+	"private": true,
+	"description": "Component library",
+	"license": "MPL-2.0",
+	"files": [
+		".out/build",
+		"!.out/build/**/*.test.*",
+		"!.out/build/**/*.spec.*"
+	],
+	"type": "module",
+	"imports": {
+		"#assets/*": "./src/lib/assets/*",
+		"#components/*": "./src/lib/components/*",
+		"#data/*": "./src/lib/data/*",
+		"#gen/*": "./gen/*",
+		"#styles/*": "./src/lib/styles/*",
+		"#tauri/*": "./src/lib/tauri/*",
+		"#types/*": "./src/lib/types/*",
+		"#utils/*": "./src/lib/utils/*"
+	},
+	"exports": {
+		".": {
+			"types": "./.out/build/index.d.ts",
+			"svelte": "./.out/build/index.js"
+		},
+		"./components/*": {
+			"types": "./.out/build/components/*.d.ts",
+			"svelte": "./.out/build/components/*"
+		},
+		"./data/*": "./.out/build/data/*",
+		"./styles/*": "./.out/build/styles/*",
+		"./tauri/*": "./.out/build/tauri/*",
+		"./types/*": "./.out/build/types/*",
+		"./utils/*": "./.out/build/utils/*"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "^2.12.1",
+		"@tauri-template/infrastructure": "workspace:*",
+		"@tauri-template/shared": "workspace:*",
+		"bezier-easing": "^3.1.0"
+	},
+	"devDependencies": {
+		"@sveltejs/package": "^3.0.0",
+		"@testing-library/dom": "^10.4.2",
+		"@testing-library/jest-dom": "^7.0.1",
+		"@testing-library/svelte": "^5.4.2",
+		"lightningcss": "^1.33.0",
+		"open-props": "^1.7.23",
+		"svelte-check-rs": "^0.11.2",
+		"vite-plugin-run": "^0.9.1"
+	},
+	"peerDependencies": {
+		"svelte": "^5.57.1"
+	}
+}

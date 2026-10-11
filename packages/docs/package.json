@@ -1,0 +1,11 @@
+{
+	"name": "@tauri-template/docs",
+	"version": "2.0.0",
+	"private": true,
+	"description": "Documentation",
+	"license": "MPL-2.0",
+	"type": "module",
+	"dependencies": {
+		"@tauri-template/shared": "workspace:*"
+	}
+}

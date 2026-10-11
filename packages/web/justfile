@@ -1,0 +1,6 @@
+# web — SvelteKit web app. Run via `just web <recipe>`.
+import '../shared/just/_frontend.just'
+
+# List every recipe, including the per-package modules.
+default:
+	@just --list
