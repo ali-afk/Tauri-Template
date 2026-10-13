@@ -20,6 +20,8 @@ jobs:
           bun-version: ${{ env.BUN_VERSION }}
       - run: bun install --frozen-lockfile
 
+      - uses: extractions/setup-just@v4
+
       - name: E2E Tests
         run: just test-all --e2e
 

@@ -54,6 +54,8 @@ jobs:
           restore-keys: |
             ${{ matrix.os }}-cargo-target-
 
+      - uses: extractions/setup-just@v4
+
       - name: E2E Tests
         run: just test-all --e2e
 
